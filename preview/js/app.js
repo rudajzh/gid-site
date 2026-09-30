@@ -117,6 +117,9 @@
     $('.sheet__fictional').hidden = !place.fictional;
     $('.sheet').hidden = false;
     markPins();
+    // Ресторан — над шторкой, а не под ней: на телефоне шторка снизу, на широком экране слева.
+    var wide = window.matchMedia('(min-width: 720px)').matches;
+    state.map.easeTo({ center: place.coords, offset: wide ? [210, 0] : [0, -150], duration: 450 });
   }
 
   function closeSheet() {
@@ -210,11 +213,11 @@
       minZoom: 10,
       maxZoom: 18,
       maxBounds: state.city.bounds,
-      attributionControl: { compact: true },
-      dragRotate: false,
-      pitchWithRotate: false
+      attributionControl: { compact: true }
     });
-    state.map.touchZoomRotate.disableRotation();
+    fitPlaces(false);
+    state.map.on('rotate', updateCompass);
+    state.map.on('pitch', updateCompass);
     state.map.on('click', closeSheet);
     state.map.on('error', function (e) { console.error(e && e.error ? e.error : e); });
     state.places.forEach(function (place) {
@@ -225,6 +228,26 @@
     });
   }
 
+  // Все рестораны города в кадре: сверху место под шапку, снизу — под подпись карты.
+  function fitPlaces(animate) {
+    if (state.places.length < 2) return;
+    var bounds = new maplibregl.LngLatBounds();
+    state.places.forEach(function (p) { bounds.extend(p.coords); });
+    state.map.fitBounds(bounds, {
+      padding: { top: 140, bottom: 90, left: 70, right: 70 },
+      maxZoom: 16, animate: animate
+    });
+  }
+
+  // Компас: появляется, когда карту повернули или наклонили, и возвращает её прямо.
+
+  function updateCompass() {
+    var bearing = state.map.getBearing();
+    var turned = Math.abs(bearing) > 1 || state.map.getPitch() > 1;
+    $('.compass').hidden = !turned;
+    $('.compass svg').style.transform = 'rotate(' + (-bearing) + 'deg)';
+  }
+
   // Запуск
 
   function bindUI() {
@@ -233,6 +256,9 @@
     });
     $('.city__button').addEventListener('click', function (e) { e.stopPropagation(); toggleCityMenu(); });
     $('.sheet__close').addEventListener('click', closeSheet);
+    $('.compass').addEventListener('click', function () {
+      state.map.easeTo({ bearing: 0, pitch: 0, duration: 400 });
+    });
     document.addEventListener('click', function (e) {
       if (!e.target.closest('.city')) toggleCityMenu(false);
     });
@@ -247,6 +273,7 @@
     $('meta[name="description"]').setAttribute('content', t.page_description);
     document.querySelectorAll('[data-text]').forEach(function (el) { el.textContent = t[el.dataset.text]; });
     $('.sheet__close').setAttribute('aria-label', t.close);
+    $('.compass').setAttribute('aria-label', t.compass);
     $('.env-badge').hidden = window.GID_ENV !== 'preview';
   }
 

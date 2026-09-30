@@ -120,6 +120,14 @@ h2, p { margin: 0; }
 }
 [data-theme="dark"] .icon-moon, [data-theme="light"] .icon-sun { display: none; }
 
+/* Компас — под кнопкой темы, только когда карту повернули или наклонили */
+.compass {
+  position: absolute; z-index: 10; right: 16px;
+  top: calc(max(18px, env(safe-area-inset-top)) + 54px);
+}
+.compass svg { transition: transform 0.1s linear; }
+@media (min-width: 720px) { .compass { right: 24px; top: 74px; } }
+
 /* Выбор города */
 .city { position: relative; }
 .city__menu {

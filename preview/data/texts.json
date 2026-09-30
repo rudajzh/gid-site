@@ -7,6 +7,7 @@
   "theme_to_dark": "Включить тёмную тему",
   "theme_to_light": "Включить светлую тему",
   "close": "Закрыть",
+  "compass": "Повернуть карту на север",
   "checked": "Проверено РестоГидом · {date}",
   "avg_check": "≈ {sum} ₽",
   "hours": "{area} · {open}–{close}",

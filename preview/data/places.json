@@ -5,11 +5,37 @@
     "fictional": true,
     "name": "Чернозём",
     "cuisine": "Современная кухня Черноземья",
-    "area": "Центр",
+    "area": "Театральная улица",
     "open": "12:00",
     "close": "00:00",
     "avgCheck": 2000,
     "checkedAt": "2026-09-18",
     "coords": [39.2071, 51.6641]
+  },
+  {
+    "id": "bely-klyon",
+    "city": "voronezh",
+    "fictional": true,
+    "name": "Белый клён",
+    "cuisine": "Завтраки весь день и авторский кофе",
+    "area": "Никитинская улица",
+    "open": "08:00",
+    "close": "22:00",
+    "avgCheck": 900,
+    "checkedAt": "2026-09-22",
+    "coords": [39.1990, 51.6668]
+  },
+  {
+    "id": "ladya",
+    "city": "voronezh",
+    "fictional": true,
+    "name": "Ладья",
+    "cuisine": "Речная кухня: судак, раки, уха",
+    "area": "Улица Декабристов",
+    "open": "13:00",
+    "close": "23:00",
+    "avgCheck": 2500,
+    "checkedAt": "2026-09-12",
+    "coords": [39.2125, 51.6580]
   }
 ]
