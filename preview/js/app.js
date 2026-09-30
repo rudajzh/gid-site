@@ -49,7 +49,29 @@
     if (remember) { try { localStorage.setItem('theme', theme); } catch (e) {} }
     $('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#2B231F' : '#F4EFE7');
     $('.theme-toggle').setAttribute('aria-label', state.texts[theme === 'dark' ? 'theme_to_light' : 'theme_to_dark']);
-    if (state.map) state.map.setStyle(mapStyle(theme));
+    if (state.map) switchMapTheme(theme);
+  }
+
+  // Смена темы у карты: карта растворяется в фоне, перекрашивается и проявляется,
+  // вместо того чтобы полсекунды мигать недорисованными слоями.
+  var switchToken = 0;
+
+  function switchMapTheme(theme) {
+    var el = $('#map');
+    var token = ++switchToken;
+    el.classList.add('map--switching');
+    setTimeout(function () {
+      if (token !== switchToken) return;
+      state.map.setStyle(mapStyle(theme), { diff: false });
+      var shown = false;
+      var show = function () {
+        if (shown || token !== switchToken) return;
+        shown = true;
+        el.classList.remove('map--switching');
+      };
+      state.map.once('idle', show);
+      setTimeout(show, 1500);
+    }, 180);
   }
 
   // Города
@@ -183,6 +205,7 @@
           attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>'
         }
       },
+      transition: { duration: 0, delay: 0 },
       layers: layers
     };
   }

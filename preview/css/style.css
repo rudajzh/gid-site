@@ -77,6 +77,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 button { font: inherit; color: inherit; cursor: pointer; }
+/* Смена темы — плавно, одновременно с картой. */
+body, .pill, .icon-button, .sheet, .sheet__close, .city__menu, .pin__dot, .pin__label, .env-badge, .app::before {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
 h2, p { margin: 0; }
 
 .app { position: fixed; inset: 0; overflow: hidden; }
@@ -147,7 +151,11 @@ h2, p { margin: 0; }
 
 /* Карта */
 /* Своя стопка слоёв: слои карты не перекрывают шапку и шторку. */
-.map { position: absolute; inset: 0; z-index: 0; isolation: isolate; background: var(--bg); }
+.map {
+  position: absolute; inset: 0; z-index: 0; isolation: isolate; background: var(--bg);
+  transition: opacity 0.18s ease, background-color 0.35s ease;
+}
+.map--switching { opacity: 0; }
 /* Подпись «© OpenStreetMap» — маленькая кнопка «i» в углу, в цветах темы. */
 .map .maplibregl-ctrl-attrib {
   background: var(--glass); color: var(--muted); font: 500 11px/1.4 'Manrope', sans-serif;
