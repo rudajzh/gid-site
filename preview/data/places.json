@@ -116,7 +116,130 @@
           }
         ]
       }
-    ]
+    ],
+    "hall": {
+      "ratio": 0.72,
+      "zones": [
+        {
+          "name": "Окна на Театральную",
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 3,
+          "kind": "window"
+        },
+        {
+          "name": "Бар",
+          "x": 74,
+          "y": 30,
+          "w": 26,
+          "h": 70,
+          "kind": "bar"
+        },
+        {
+          "name": "Вход",
+          "x": 0,
+          "y": 88,
+          "w": 18,
+          "h": 12,
+          "kind": "door"
+        }
+      ],
+      "tables": [
+        {
+          "id": "1",
+          "x": 12,
+          "y": 14,
+          "w": 12,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "2",
+          "x": 34,
+          "y": 14,
+          "w": 12,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у окна",
+          "busy": true
+        },
+        {
+          "id": "3",
+          "x": 56,
+          "y": 14,
+          "w": 12,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "4",
+          "x": 10,
+          "y": 42,
+          "w": 20,
+          "h": 14,
+          "shape": "rect",
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "5",
+          "x": 40,
+          "y": 42,
+          "w": 20,
+          "h": 14,
+          "shape": "rect",
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "6",
+          "x": 10,
+          "y": 68,
+          "w": 20,
+          "h": 14,
+          "shape": "rect",
+          "seats": 4,
+          "zone": "в зале",
+          "busy": true
+        },
+        {
+          "id": "7",
+          "x": 38,
+          "y": 66,
+          "w": 26,
+          "h": 16,
+          "shape": "rect",
+          "seats": 6,
+          "zone": "в зале"
+        },
+        {
+          "id": "8",
+          "x": 80,
+          "y": 40,
+          "w": 14,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у бара"
+        },
+        {
+          "id": "9",
+          "x": 80,
+          "y": 62,
+          "w": 14,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у бара"
+        }
+      ]
+    }
   },
   {
     "id": "bely-klyon",
@@ -142,25 +265,19 @@
             "name": "Сырники из фермерского творога",
             "desc": "Сметана, джем из облепихи",
             "weight": "220 г",
-            "price": 420,
-            "photo": "img/dishes/syrniki.webp",
-            "photoBy": "Masha Koko"
+            "price": 420
           },
           {
             "name": "Яйцо пашот на бриоши",
             "desc": "Голландский соус, шпинат, лосось слабой соли",
             "weight": "240 г",
-            "price": 590,
-            "photo": "img/dishes/pashot.webp",
-            "photoBy": "Scott Eckersley"
+            "price": 590
           },
           {
             "name": "Каша из трёх круп",
             "desc": "Топлёное молоко, печёное яблоко, орехи",
             "weight": "280 г",
-            "price": 360,
-            "photo": "img/dishes/kasha.webp",
-            "photoBy": "K8"
+            "price": 360
           }
         ]
       },
@@ -171,17 +288,13 @@
             "name": "Круассан с миндальным кремом",
             "desc": "Своя выпечка каждое утро",
             "weight": "110 г",
-            "price": 290,
-            "photo": "img/dishes/kruassan.webp",
-            "photoBy": "Ngo Ngoc Khai Huyen"
+            "price": 290
           },
           {
             "name": "Булочка с кардамоном",
             "desc": "Сливочное масло, сахарная глазурь",
             "weight": "90 г",
-            "price": 220,
-            "photo": "img/dishes/bulochka.webp",
-            "photoBy": "Chris Curry"
+            "price": 220
           }
         ]
       },
@@ -192,29 +305,115 @@
             "name": "Флэт уайт",
             "desc": "Двойной эспрессо, молоко",
             "weight": "200 мл",
-            "price": 260,
-            "photo": "img/dishes/flat-white.webp",
-            "photoBy": "Robbie Down"
+            "price": 260
           },
           {
             "name": "Раф с липовым мёдом",
             "desc": "Сливки, эспрессо, мёд",
             "weight": "300 мл",
-            "price": 320,
-            "photo": "img/dishes/raf.webp",
-            "photoBy": "Jeanie de Klerk"
+            "price": 320
           },
           {
             "name": "Фильтр-кофе дня",
             "desc": "Спросите бариста о зерне",
             "weight": "250 мл",
-            "price": 240,
-            "photo": "img/dishes/filtr.webp",
-            "photoBy": "Karl Fredrickson"
+            "price": 240
           }
         ]
       }
-    ]
+    ],
+    "hall": {
+      "ratio": 0.62,
+      "zones": [
+        {
+          "name": "Окна на Никитинскую",
+          "x": 0,
+          "y": 0,
+          "w": 100,
+          "h": 3,
+          "kind": "window"
+        },
+        {
+          "name": "Кофейная стойка",
+          "x": 64,
+          "y": 70,
+          "w": 36,
+          "h": 30,
+          "kind": "bar"
+        },
+        {
+          "name": "Вход",
+          "x": 0,
+          "y": 86,
+          "w": 16,
+          "h": 14,
+          "kind": "door"
+        }
+      ],
+      "tables": [
+        {
+          "id": "1",
+          "x": 6,
+          "y": 12,
+          "w": 12,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "2",
+          "x": 30,
+          "y": 12,
+          "w": 12,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "3",
+          "x": 54,
+          "y": 12,
+          "w": 12,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у окна",
+          "busy": true
+        },
+        {
+          "id": "4",
+          "x": 78,
+          "y": 12,
+          "w": 12,
+          "h": 12,
+          "shape": "round",
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "5",
+          "x": 16,
+          "y": 44,
+          "w": 40,
+          "h": 14,
+          "shape": "rect",
+          "seats": 8,
+          "zone": "общий стол"
+        },
+        {
+          "id": "6",
+          "x": 68,
+          "y": 42,
+          "w": 18,
+          "h": 16,
+          "shape": "rect",
+          "seats": 4,
+          "zone": "в зале"
+        }
+      ]
+    }
   },
   {
     "id": "ladya",
@@ -304,6 +503,111 @@
           }
         ]
       }
-    ]
+    ],
+    "hall": {
+      "ratio": 0.8,
+      "zones": [
+        {
+          "name": "Терраса у воды",
+          "x": 0,
+          "y": 62,
+          "w": 100,
+          "h": 38,
+          "kind": "terrace"
+        },
+        {
+          "name": "Вход",
+          "x": 82,
+          "y": 0,
+          "w": 18,
+          "h": 10,
+          "kind": "door"
+        }
+      ],
+      "tables": [
+        {
+          "id": "1",
+          "x": 8,
+          "y": 10,
+          "w": 20,
+          "h": 14,
+          "shape": "rect",
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "2",
+          "x": 40,
+          "y": 10,
+          "w": 20,
+          "h": 14,
+          "shape": "rect",
+          "seats": 4,
+          "zone": "в зале",
+          "busy": true
+        },
+        {
+          "id": "3",
+          "x": 8,
+          "y": 36,
+          "w": 20,
+          "h": 14,
+          "shape": "rect",
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "4",
+          "x": 40,
+          "y": 34,
+          "w": 28,
+          "h": 16,
+          "shape": "rect",
+          "seats": 6,
+          "zone": "в зале"
+        },
+        {
+          "id": "5",
+          "x": 10,
+          "y": 74,
+          "w": 13,
+          "h": 13,
+          "shape": "round",
+          "seats": 2,
+          "zone": "на террасе"
+        },
+        {
+          "id": "6",
+          "x": 34,
+          "y": 74,
+          "w": 13,
+          "h": 13,
+          "shape": "round",
+          "seats": 2,
+          "zone": "на террасе"
+        },
+        {
+          "id": "7",
+          "x": 58,
+          "y": 72,
+          "w": 16,
+          "h": 16,
+          "shape": "round",
+          "seats": 4,
+          "zone": "на террасе",
+          "busy": true
+        },
+        {
+          "id": "8",
+          "x": 82,
+          "y": 72,
+          "w": 16,
+          "h": 16,
+          "shape": "round",
+          "seats": 4,
+          "zone": "на террасе"
+        }
+      ]
+    }
   }
 ]

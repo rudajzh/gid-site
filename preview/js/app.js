@@ -6,7 +6,8 @@
 
   var maplibregl = window.maplibregl;
   var root = document.documentElement;
-  var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false };
+  var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false,
+    cart: {}, order: { table: null, time: null }, orderPushed: false };
 
   // Цвета карты — из orders/gid/design.md. Карта — тихий фон: почти без контуров,
   // парки чуть темнее земли, яркое на ней только наши рестораны.
@@ -210,29 +211,278 @@
         row.querySelector('.dish__desc').textContent = item.desc;
         row.querySelector('.dish__sum').textContent = price(item.price);
         row.querySelector('.dish__weight').textContent = item.weight;
+        var qty = document.createElement('div');
+        qty.className = 'qty';
+        qty.dataset.name = item.name;
+        row.querySelector('.dish__price').appendChild(qty);
         list.appendChild(row);
       });
       menu.appendChild(block);
     });
   }
 
+  // Корзина: у каждого ресторана своя, живёт в браузере и переживает перезагрузку.
+
+  function loadCart() {
+    try { return JSON.parse(localStorage.getItem('cart')) || {}; } catch (e) { return {}; }
+  }
+
+  function saveCart() {
+    try { localStorage.setItem('cart', JSON.stringify(state.cart)); } catch (e) {}
+  }
+
+  function cartOf(place) {
+    if (!state.cart[place.id]) state.cart[place.id] = {};
+    return state.cart[place.id];
+  }
+
+  function cartLines(place) {
+    var cart = cartOf(place);
+    var lines = [];
+    place.menu.forEach(function (section) {
+      section.items.forEach(function (item) {
+        if (cart[item.name]) lines.push({ item: item, qty: cart[item.name] });
+      });
+    });
+    return lines;
+  }
+
+  function cartTotals(place) {
+    return cartLines(place).reduce(function (acc, line) {
+      acc.count += line.qty;
+      acc.sum += line.qty * line.item.price;
+      return acc;
+    }, { count: 0, sum: 0 });
+  }
+
+  function plural(n, forms) {
+    var n10 = n % 10, n100 = n % 100;
+    if (n10 === 1 && n100 !== 11) return forms[0];
+    if (n10 >= 2 && n10 <= 4 && (n100 < 12 || n100 > 14)) return forms[1];
+    return forms[2];
+  }
+
+  function setQty(place, name, qty) {
+    var cart = cartOf(place);
+    if (qty > 0) cart[name] = qty; else delete cart[name];
+    saveCart();
+    refreshCart(place);
+  }
+
+  // Кнопка «+» у блюда, а когда блюдо в заказе — «− 2 +».
+  function renderQty(el, place) {
+    var t = state.texts;
+    var name = el.dataset.name;
+    var qty = cartOf(place)[name] || 0;
+    el.innerHTML = '';
+    var plus = document.createElement('button');
+    plus.type = 'button';
+    plus.className = 'qty__btn qty__btn--plus';
+    plus.setAttribute('aria-label', fmt(t.add, { name: name }));
+    plus.textContent = '+';
+    plus.addEventListener('click', function () { setQty(place, name, qty + 1); });
+    if (qty > 0) {
+      var minus = document.createElement('button');
+      minus.type = 'button';
+      minus.className = 'qty__btn';
+      minus.setAttribute('aria-label', fmt(t.remove, { name: name }));
+      minus.textContent = '−';
+      minus.addEventListener('click', function () { setQty(place, name, qty - 1); });
+      var count = document.createElement('span');
+      count.className = 'qty__count';
+      count.textContent = qty;
+      el.append(minus, count, plus);
+      el.classList.add('qty--active');
+    } else {
+      el.appendChild(plus);
+      el.classList.remove('qty--active');
+    }
+  }
+
+  function refreshCart(place) {
+    var t = state.texts;
+    document.querySelectorAll('.qty').forEach(function (el) { renderQty(el, place); });
+    var totals = cartTotals(place);
+    var bar = $('.cartbar');
+    bar.hidden = totals.count === 0;
+    $('.place').classList.toggle('place--with-cart', totals.count > 0);
+    $('.cartbar__sum').textContent = fmt(t.order_bar_sum, {
+      count: totals.count, dishes: plural(totals.count, t.dishes), sum: price(totals.sum)
+    });
+    if (!$('.order').hidden) renderOrderLines(place);
+  }
+
+  // Экран заказа: блюда, столик на схеме зала, время прихода.
+
+  function renderOrder(place) {
+    $('.order__place').textContent = place.name;
+    state.order = { table: null, time: null };
+    renderHall(place);
+    renderTimes();
+    renderOrderLines(place);
+  }
+
+  function renderOrderLines(place) {
+    var box = $('.order-lines');
+    var lines = cartLines(place);
+    box.innerHTML = '';
+    box.hidden = lines.length === 0;
+    $('.order__empty').hidden = lines.length > 0;
+    lines.forEach(function (line) {
+      var row = document.createElement('div');
+      row.className = 'order-line';
+      row.innerHTML = '<div class="order-line__text"><span class="order-line__name"></span><span class="order-line__sum"></span></div>';
+      row.querySelector('.order-line__name').textContent = line.item.name;
+      row.querySelector('.order-line__sum').textContent = price(line.item.price * line.qty);
+      var qty = document.createElement('div');
+      qty.className = 'qty';
+      qty.dataset.name = line.item.name;
+      row.appendChild(qty);
+      box.appendChild(row);
+      renderQty(qty, place);
+    });
+    $('.order__sum').textContent = price(cartTotals(place).sum);
+    updateSend(place);
+  }
+
+  function tableText(key, table) {
+    var t = state.texts;
+    return fmt(t[key], { id: table.id, seats: table.seats, seatsWord: plural(table.seats, t.seats), zone: table.zone });
+  }
+
+  function renderHall(place) {
+    var t = state.texts;
+    var hall = $('.hall');
+    hall.innerHTML = '';
+    hall.style.aspectRatio = String(1 / place.hall.ratio);
+    place.hall.zones.forEach(function (z) {
+      var zone = document.createElement('div');
+      zone.className = 'hall__zone hall__zone--' + z.kind + (z.y === 0 ? ' hall__zone--top' : '');
+      zone.style.cssText = 'left:' + z.x + '%;top:' + z.y + '%;width:' + z.w + '%;height:' + z.h + '%';
+      var label = document.createElement('span');
+      label.textContent = z.name;
+      zone.appendChild(label);
+      hall.appendChild(zone);
+    });
+    place.hall.tables.forEach(function (tb) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hall__table hall__table--' + tb.shape;
+      btn.style.left = tb.x + '%';
+      btn.style.top = tb.y + '%';
+      btn.style.width = tb.w + '%';
+      if (tb.shape === 'rect') btn.style.height = tb.h + '%';
+      btn.innerHTML = '<span class="hall__num"></span><span class="hall__seats"></span>';
+      btn.querySelector('.hall__num').textContent = tb.id;
+      btn.querySelector('.hall__seats').textContent = tb.seats;
+      var label = tableText('order_table_label', tb);
+      if (tb.busy) {
+        btn.disabled = true;
+        btn.classList.add('hall__table--busy');
+        label += ', ' + t.order_busy;
+      }
+      btn.setAttribute('aria-label', label);
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', function () {
+        state.order.table = tb;
+        hall.querySelectorAll('.hall__table').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
+        $('.hall__status').textContent = tableText('order_table_chosen', tb);
+        updateSend(place);
+      });
+      hall.appendChild(btn);
+    });
+    $('.hall__status').textContent = t.order_table_hint;
+  }
+
+  function renderTimes() {
+    var t = state.texts;
+    var box = $('.times');
+    box.innerHTML = '';
+    t.order_times.forEach(function (min) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'chip';
+      chip.setAttribute('role', 'radio');
+      chip.setAttribute('aria-checked', 'false');
+      chip.textContent = fmt(t.order_time_option, { min: min });
+      chip.addEventListener('click', function () {
+        state.order.time = min;
+        box.querySelectorAll('.chip').forEach(function (c) { c.setAttribute('aria-checked', String(c === chip)); });
+        updateSend(currentPlace());
+      });
+      box.appendChild(chip);
+    });
+  }
+
+  function updateSend(place) {
+    var t = state.texts;
+    var btn = $('.send');
+    var totals = cartTotals(place);
+    var need = totals.count === 0 ? t.send_need_dishes
+      : !state.order.table ? t.send_need_table
+      : !state.order.time ? t.send_need_time : null;
+    btn.disabled = !!need;
+    btn.textContent = need || fmt(t.send, { sum: price(totals.sum) });
+  }
+
+  function sendOrder() {
+    // Из Телеграма заказ уйдёт боту — это следующий шаг. На обычном сайте
+    // объясняем, что заказы идут через Телеграм, и даём ссылку на бота.
+    var bot = state.config.bot;
+    var link = $('.tg__open');
+    link.hidden = !bot;
+    if (bot) link.href = 'https://t.me/' + bot;
+    $('.tg__soon').hidden = !!bot;
+    $('.tg').hidden = false;
+    (bot ? link : $('.tg__close')).focus();
+  }
+
+  function currentPlace() {
+    return state.places.find(function (p) { return p.id === state.place; });
+  }
+
+  // Адреса: #<ресторан> — меню, #<ресторан>/order — заказ.
   function showRoute() {
-    var id = decodeURIComponent(location.hash.slice(1));
-    var place = state.places.find(function (p) { return p.id === id; });
+    var parts = decodeURIComponent(location.hash.slice(1)).split('/');
+    var place = state.places.find(function (p) { return p.id === parts[0]; });
     var page = $('.place');
+    var order = $('.order');
     if (place) {
       if (state.place !== place.id) {
+        state.place = place.id;
         renderPlace(place);
         $('.place__scroll').scrollTop = 0;
       }
-      state.place = place.id;
       page.hidden = false;
+      refreshCart(place);
+      var wantOrder = parts[1] === 'order';
+      if (wantOrder && order.hidden) {
+        renderOrder(place);
+        $('.order__scroll').scrollTop = 0;
+      }
+      order.hidden = !wantOrder;
       document.title = place.name + ' — ' + state.texts.brand;
-      $('.place__back').focus({ preventScroll: true });
+      (wantOrder ? $('.order__back') : $('.place__back')).focus({ preventScroll: true });
     } else {
       state.place = null;
       page.hidden = true;
+      order.hidden = true;
       document.title = state.texts.page_title;
+    }
+  }
+
+  function openOrder() {
+    state.orderPushed = true;
+    location.hash = encodeURIComponent(state.place) + '/order';
+  }
+
+  function closeOrder() {
+    if (state.orderPushed) {
+      state.orderPushed = false;
+      history.back();
+    } else {
+      history.replaceState(null, '', '#' + encodeURIComponent(state.place));
+      showRoute();
     }
   }
 
@@ -388,6 +638,10 @@
     $('.sheet__close').addEventListener('click', closeSheet);
     $('.sheet__open').addEventListener('click', function () { if (state.selected) openPlace(state.selected); });
     $('.place__back').addEventListener('click', closePlace);
+    $('.cartbar__button').addEventListener('click', openOrder);
+    $('.order__back').addEventListener('click', closeOrder);
+    $('.send').addEventListener('click', sendOrder);
+    $('.tg__close').addEventListener('click', function () { $('.tg').hidden = true; $('.send').focus(); });
     window.addEventListener('hashchange', showRoute);
     $('.compass').addEventListener('click', function () {
       state.map.easeTo({ bearing: 0, pitch: 0, duration: 400 });
@@ -398,7 +652,10 @@
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
       toggleCityMenu(false);
-      if (state.place) closePlace(); else closeSheet();
+      if (!$('.tg').hidden) { $('.tg').hidden = true; return; }
+      if (!$('.order').hidden) closeOrder();
+      else if (state.place) closePlace();
+      else closeSheet();
     });
   }
 
@@ -415,6 +672,7 @@
   Promise.all([loadJSON('data/config.json'), loadJSON('data/texts.json'), loadJSON('data/places.json')])
     .then(function (data) {
       state.config = data[0];
+      state.cart = loadCart();
       state.texts = data[1];
       state.city = state.config.cities.find(function (c) { return c.id === state.config.defaultCity; });
       state.places = data[2].filter(function (p) { return p.city === state.city.id; });

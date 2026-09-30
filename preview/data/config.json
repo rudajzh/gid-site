@@ -2,12 +2,37 @@
   "defaultCity": "voronezh",
   "cities": [
     {
-      "id": "voronezh", "name": "Воронеж", "active": true,
-      "center": [39.2068, 51.6618], "zoom": 14.5,
-      "map": "map/voronezh.pmtiles", "bounds": [38.95, 51.55, 39.45, 51.80]
+      "id": "voronezh",
+      "name": "Воронеж",
+      "active": true,
+      "center": [
+        39.2068,
+        51.6618
+      ],
+      "zoom": 14.5,
+      "map": "map/voronezh.pmtiles",
+      "bounds": [
+        38.95,
+        51.55,
+        39.45,
+        51.8
+      ]
     },
-    { "id": "moscow", "name": "Москва", "active": false },
-    { "id": "spb", "name": "Санкт-Петербург", "active": false },
-    { "id": "krasnodar", "name": "Краснодар", "active": false }
-  ]
+    {
+      "id": "moscow",
+      "name": "Москва",
+      "active": false
+    },
+    {
+      "id": "spb",
+      "name": "Санкт-Петербург",
+      "active": false
+    },
+    {
+      "id": "krasnodar",
+      "name": "Краснодар",
+      "active": false
+    }
+  ],
+  "bot": ""
 }

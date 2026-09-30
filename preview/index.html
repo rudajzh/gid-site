@@ -19,8 +19,8 @@
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/cormorant-garamond-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
-<link rel="stylesheet" href="css/style.css?v=20260930222152">
-<script src="env.js?v=20260930222152"></script>
+<link rel="stylesheet" href="css/style.css?v=20260930223055">
+<script src="env.js?v=20260930223055"></script>
 </head>
 <body>
 <div class="app">
@@ -105,11 +105,60 @@
       <nav class="place__tabs" aria-label="Разделы меню"></nav>
       <div class="place__menu"></div>
     </div>
+    <div class="cartbar" hidden>
+      <button class="button cartbar__button" type="button">
+        <span data-text="order_bar"></span>
+        <span class="cartbar__sum"></span>
+      </button>
+    </div>
   </section>
+
+  <section class="order" hidden aria-labelledby="order-title">
+    <div class="place__bar">
+      <button class="pill order__back" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        <span data-text="back_to_menu"></span>
+      </button>
+    </div>
+    <div class="order__scroll">
+      <header class="order__head">
+        <h1 class="order__title" id="order-title" data-text="order_title"></h1>
+        <p class="order__place"></p>
+      </header>
+      <div class="order-lines"></div>
+      <p class="order__empty" hidden data-text="order_empty"></p>
+      <div class="order__total"><span data-text="order_total"></span><span class="order__sum"></span></div>
+
+      <h2 class="order__label" data-text="order_table"></h2>
+      <div class="hall" role="group" aria-labelledby="hall-label"></div>
+      <p class="hall__status" id="hall-label" aria-live="polite"></p>
+      <ul class="hall__legend">
+        <li><i class="dot dot--free"></i><span data-text="legend_free"></span></li>
+        <li><i class="dot dot--busy"></i><span data-text="legend_busy"></span></li>
+        <li><i class="dot dot--mine"></i><span data-text="legend_selected"></span></li>
+      </ul>
+
+      <h2 class="order__label" data-text="order_time"></h2>
+      <div class="times" role="radiogroup"></div>
+    </div>
+    <div class="order__send">
+      <button class="button send" type="button"></button>
+    </div>
+  </section>
+
+  <div class="tg" hidden role="dialog" aria-modal="true" aria-labelledby="tg-title">
+    <div class="tg__card">
+      <h2 class="tg__title" id="tg-title" data-text="tg_title"></h2>
+      <p class="tg__text" data-text="tg_text"></p>
+      <p class="tg__soon" data-text="tg_soon"></p>
+      <a class="button tg__open" target="_blank" rel="noopener" data-text="tg_open"></a>
+      <button class="tg__close" type="button" data-text="ok"></button>
+    </div>
+  </div>
 </div>
 <script src="vendor/maplibre-gl.js"></script>
 <script src="vendor/pmtiles.js"></script>
 <script src="vendor/basemaps.js"></script>
-<script src="js/app.js?v=20260930222152"></script>
+<script src="js/app.js?v=20260930223055"></script>
 </body>
 </html>
