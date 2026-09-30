@@ -17,9 +17,9 @@
       label: '#6E6256', labelMinor: '#85786B', halo: '#EAE3D6'
     },
     dark: {
-      land: '#29211D', park: '#2E2C24', scrub: '#2C2821', water: '#22302F', building: '#30271F',
-      minor: '#3A3029', major: '#4A3E34', rail: '#3E332B',
-      label: '#B0A294', labelMinor: '#8E8073', halo: '#29211D'
+      land: '#221B18', park: '#282620', scrub: '#26221C', water: '#1D2827', building: '#29211C',
+      minor: '#2F2722', major: '#3B312A', rail: '#332A24',
+      label: '#A89A8C', labelMinor: '#857869', halo: '#221B18'
     }
   };
 
@@ -47,7 +47,7 @@
   function applyTheme(theme, remember) {
     root.dataset.theme = theme;
     if (remember) { try { localStorage.setItem('theme', theme); } catch (e) {} }
-    $('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#2B231F' : '#F4EFE7');
+    $('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1E1815' : '#F1EBE1');
     $('.theme-toggle').setAttribute('aria-label', state.texts[theme === 'dark' ? 'theme_to_light' : 'theme_to_dark']);
     if (state.map) switchMapTheme(theme);
   }
@@ -157,10 +157,9 @@
     $('.place__cuisine').textContent = place.cuisine;
     var date = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(new Date(place.checkedAt + 'T12:00:00'));
     $('.place__checked span').textContent = fmt(t.checked, { date: date });
-    $('.place__meta').textContent = fmt(t.place_meta, {
-      area: place.area, open: place.open, close: place.close,
-      sum: new Intl.NumberFormat('ru-RU').format(place.avgCheck)
-    });
+    $('.place__address').textContent = place.area;
+    $('.place__hours').textContent = fmt(t.place_hours, { open: place.open, close: place.close });
+    $('.place__avg').textContent = fmt(t.place_avg, { sum: new Intl.NumberFormat('ru-RU').format(place.avgCheck) });
     $('.place__about').textContent = place.about;
     $('.place__fictional').hidden = !place.fictional;
 
@@ -180,8 +179,6 @@
         var scroller = $('.place__scroll');
         var top = scroller.scrollTop + target.getBoundingClientRect().top - scroller.getBoundingClientRect().top - tabs.offsetHeight;
         scroller.scrollTo({ top: top, behavior: 'smooth' });
-        markTab(i);
-        tabLockUntil = Date.now() + 700;
       });
       tabs.appendChild(tab);
 
@@ -192,46 +189,31 @@
       h.className = 'menu-section__title';
       h.textContent = section.title;
       block.appendChild(h);
+      var list = document.createElement('div');
+      list.className = 'menu-card';
+      block.appendChild(list);
       section.items.forEach(function (item) {
         var row = document.createElement('article');
         row.className = 'dish';
-        row.innerHTML = '<div class="dish__text"><h3 class="dish__name"></h3><p class="dish__desc"></p></div>' +
-          '<p class="dish__price"><span class="dish__sum"></span><span class="dish__weight"></span></p>';
+        row.innerHTML = '<div class="dish__text"><h3 class="dish__name"></h3><p class="dish__desc"></p>' +
+          '<p class="dish__price"><span class="dish__sum"></span><span class="dish__weight"></span></p></div>';
+        if (item.photo) {
+          var img = document.createElement('img');
+          img.className = 'dish__photo';
+          img.src = item.photo;
+          img.alt = '';
+          img.loading = 'lazy';
+          img.decoding = 'async';
+          row.appendChild(img);
+        }
         row.querySelector('.dish__name').textContent = item.name;
         row.querySelector('.dish__desc').textContent = item.desc;
         row.querySelector('.dish__sum').textContent = price(item.price);
         row.querySelector('.dish__weight').textContent = item.weight;
-        block.appendChild(row);
+        list.appendChild(row);
       });
       menu.appendChild(block);
     });
-    markTab(0);
-  }
-
-  function markTab(index) {
-    document.querySelectorAll('.place__tab').forEach(function (tab, i) {
-      tab.setAttribute('aria-current', String(i === index));
-      if (i === index) tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-    });
-  }
-
-  // Подсветка раздела, который сейчас на экране. После нажатия на вкладку подсветка
-  // не прыгает, пока меню докручивается до раздела.
-  var tabLockUntil = 0;
-
-  function onMenuScroll() {
-    if (Date.now() < tabLockUntil) return;
-    var scroller = $('.place__scroll');
-    var sections = document.querySelectorAll('.menu-section');
-    var tabsBottom = $('.place__tabs').getBoundingClientRect().bottom;
-    var line = tabsBottom + (window.innerHeight - tabsBottom) * 0.35;
-    var current = 0;
-    sections.forEach(function (sec, i) {
-      if (sec.getBoundingClientRect().top < line) current = i;
-    });
-    if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2) current = sections.length - 1;
-    var tabs = document.querySelectorAll('.place__tab');
-    if (tabs[current] && tabs[current].getAttribute('aria-current') !== 'true') markTab(current);
   }
 
   function showRoute() {
@@ -406,7 +388,6 @@
     $('.sheet__close').addEventListener('click', closeSheet);
     $('.sheet__open').addEventListener('click', function () { if (state.selected) openPlace(state.selected); });
     $('.place__back').addEventListener('click', closePlace);
-    $('.place__scroll').addEventListener('scroll', onMenuScroll, { passive: true });
     window.addEventListener('hashchange', showRoute);
     $('.compass').addEventListener('click', function () {
       state.map.easeTo({ bearing: 0, pitch: 0, duration: 400 });

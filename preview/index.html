@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>РестоГид</title>
 <meta name="description" content="">
-<meta name="theme-color" content="#2B231F">
+<meta name="theme-color" content="#1E1815">
 <script>
   // Тема до отрисовки, чтобы экран не мигал светлым.
   (function () {
@@ -19,8 +19,8 @@
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/cormorant-garamond-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
-<link rel="stylesheet" href="css/style.css?v=20260930215322">
-<script src="env.js?v=20260930215322"></script>
+<link rel="stylesheet" href="css/style.css?v=20260930215954">
+<script src="env.js?v=20260930215954"></script>
 </head>
 <body>
 <div class="app">
@@ -81,14 +81,27 @@
         <span class="place__mono" aria-hidden="true"></span>
         <h1 class="place__name" id="place-name"></h1>
         <p class="place__cuisine"></p>
-        <p class="place__checked">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
-          <span></span>
-        </p>
-        <p class="place__meta"></p>
-        <p class="place__about"></p>
-        <p class="place__fictional" hidden data-text="fictional"></p>
       </header>
+      <ul class="place__facts">
+        <li class="place__fact place__checked">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <span></span>
+        </li>
+        <li class="place__fact">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <span class="place__address"></span>
+        </li>
+        <li class="place__fact">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span class="place__hours"></span>
+        </li>
+        <li class="place__fact">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2.5"/><path d="M3 10h18"/></svg>
+          <span class="place__avg"></span>
+        </li>
+      </ul>
+      <p class="place__about"></p>
+      <p class="place__fictional" hidden data-text="fictional"></p>
       <nav class="place__tabs" aria-label="Разделы меню"></nav>
       <div class="place__menu"></div>
     </div>
@@ -97,6 +110,6 @@
 <script src="vendor/maplibre-gl.js"></script>
 <script src="vendor/pmtiles.js"></script>
 <script src="vendor/basemaps.js"></script>
-<script src="js/app.js?v=20260930215322"></script>
+<script src="js/app.js?v=20260930215954"></script>
 </body>
 </html>
