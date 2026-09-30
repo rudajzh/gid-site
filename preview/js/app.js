@@ -12,14 +12,14 @@
   // парки чуть темнее земли, яркое на ней только наши рестораны.
   var MAP_COLORS = {
     light: {
-      land: '#EFE9DF', park: '#E4E5D5', scrub: '#E9E7DA', water: '#D2DDDA', building: '#EAE3D8',
-      minor: '#F7F3EC', major: '#FFFFFF', rail: '#DDD4C6',
-      label: '#8A7D70', labelMinor: '#A09385', halo: '#EFE9DF'
+      land: '#EAE3D6', park: '#DFDFCC', scrub: '#E4E1D1', water: '#C6D5D2', building: '#E2D9CA',
+      minor: '#F7F2EA', major: '#FFFFFF', rail: '#D3C9B9',
+      label: '#6E6256', labelMinor: '#85786B', halo: '#EAE3D6'
     },
     dark: {
-      land: '#2A221E', park: '#2F2E25', scrub: '#2D2A22', water: '#263130', building: '#2E2621',
-      minor: '#342B25', major: '#3E342C', rail: '#3A3029',
-      label: '#9C8E80', labelMinor: '#7F7265', halo: '#2A221E'
+      land: '#29211D', park: '#2E2C24', scrub: '#2C2821', water: '#22302F', building: '#30271F',
+      minor: '#3A3029', major: '#4A3E34', rail: '#3E332B',
+      label: '#B0A294', labelMinor: '#8E8073', halo: '#29211D'
     }
   };
 
