@@ -8,19 +8,24 @@
   var root = document.documentElement;
   var state = { config: null, texts: null, places: [], city: null, map: null, selected: null };
 
-  // Цвета карты — из orders/gid/design.md. Всё, чего здесь нет, берётся из стандартной палитры.
+  // Цвета карты — из orders/gid/design.md. Карта — тихий фон: почти без контуров,
+  // парки чуть темнее земли, яркое на ней только наши рестораны.
   var MAP_COLORS = {
     light: {
-      land: '#EEE7DB', park: '#DDE4D1', scrub: '#E3E6D6', special: '#EAE2D4', water: '#CCDBD7',
-      building: '#E4DBCD', casing: '#E6DDCF', minor: '#F8F3EA', major: '#FFFFFF', rail: '#CFC3B2',
-      label: '#6B5F54', labelMinor: '#7A6D61', halo: '#F4EFE7'
+      land: '#EFE9DF', park: '#E4E5D5', scrub: '#E9E7DA', water: '#D2DDDA', building: '#EAE3D8',
+      minor: '#F7F3EC', major: '#FFFFFF', rail: '#DDD4C6',
+      label: '#8A7D70', labelMinor: '#A09385', halo: '#EFE9DF'
     },
     dark: {
-      land: '#312823', park: '#37402F', scrub: '#353B2D', special: '#342A24', water: '#34403D',
-      building: '#3A2F29', casing: '#3A2F28', minor: '#3A2F28', major: '#41362E', rail: '#4B3F37',
-      label: '#BBAEA2', labelMinor: '#948476', halo: '#2B231F'
+      land: '#2A221E', park: '#2F2E25', scrub: '#2D2A22', water: '#263130', building: '#2E2621',
+      minor: '#342B25', major: '#3E342C', rail: '#3A3029',
+      label: '#9C8E80', labelMinor: '#7F7265', halo: '#2A221E'
     }
   };
+
+  // Слои карты, которых не показываем: чужие заведения, значки, названия районов и городов,
+  // номера домов, служебная застройка — всё, что делает карту похожей на навигатор.
+  var HIDDEN_LAYERS = /^(pois|roads_shields|roads_oneway|places_|address_label|earth_label|boundaries|roads_runway|roads_taxiway|landuse_(hospital|industrial|school|beach|zoo|aerodrome|runway|pedestrian|pier)|roads_pier)/;
 
   function $(sel) { return document.querySelector(sel); }
 
@@ -133,22 +138,19 @@
     var f = Object.assign({}, window.basemaps.namedFlavor(theme));
     Object.keys(f).forEach(function (key) {
       if (typeof f[key] !== 'string') return;
-      if (/casing/.test(key)) f[key] = c.casing;
-      else if (/^(tunnel|bridges)_/.test(key) || /^(minor|other|link)/.test(key)) f[key] = /major|highway|link/.test(key) ? c.major : c.minor;
+      // Обводки дорог — в цвет земли: без них карта спокойнее.
+      if (/casing/.test(key)) f[key] = c.land;
+      else if (/^(tunnel|bridges)_/.test(key) || /^(minor|other|link)/.test(key)) f[key] = /major|highway/.test(key) ? c.major : c.minor;
     });
     Object.assign(f, {
       background: c.land, earth: c.land,
       park_a: c.park, park_b: c.park, wood_a: c.park, wood_b: c.park, scrub_a: c.scrub, scrub_b: c.scrub,
-      hospital: c.special, industrial: c.special, school: c.special, pedestrian: c.special, beach: c.special,
-      sand: c.special, aerodrome: c.special, zoo: c.special, military: c.special, glacier: c.land, pier: c.casing,
-      water: c.water, buildings: c.building, railway: c.rail, boundaries: c.rail,
-      major: c.major, highway: c.major, minor_b: c.major,
+      glacier: c.land, water: c.water, buildings: c.building, railway: c.rail,
+      major: c.major, highway: c.major, link: c.minor, minor_b: c.minor,
       roads_label_minor: c.labelMinor, roads_label_minor_halo: c.halo,
       roads_label_major: c.label, roads_label_major_halo: c.halo,
-      address_label: c.labelMinor, address_label_halo: c.halo,
-      city_label: c.label, city_label_halo: c.halo, subplace_label: c.labelMinor, subplace_label_halo: c.halo,
       landcover: {
-        grassland: c.scrub, barren: c.special, urban_area: c.land, farmland: c.special,
+        grassland: c.scrub, barren: c.land, urban_area: c.land, farmland: c.land,
         glacier: c.land, scrub: c.scrub, forest: c.park
       }
     });
@@ -157,13 +159,15 @@
 
   function mapStyle(theme) {
     var layers = window.basemaps.layers('city', flavor(theme), { lang: 'ru' })
-      // Чужие заведения и значки не показываем: на карте только рестораны РестоГида.
-      .filter(function (l) { return ['pois', 'roads_shields', 'roads_oneway'].indexOf(l.id) === -1; })
+      .filter(function (l) { return !HIDDEN_LAYERS.test(l.id); })
       .map(function (l) {
-        if (l.layout && l.layout['icon-image']) {
-          l.layout = Object.assign({}, l.layout);
-          delete l.layout['icon-image'];
-        }
+        if (l.type !== 'symbol') return l;
+        l.layout = Object.assign({}, l.layout, {
+          'text-size': ['interpolate', ['linear'], ['zoom'], 13, 10, 17, 12.5],
+          'text-letter-spacing': 0.04
+        });
+        delete l.layout['icon-image'];
+        l.paint = Object.assign({}, l.paint, { 'text-halo-width': 1.5, 'text-halo-blur': 0.5 });
         return l;
       });
     return {
@@ -187,9 +191,8 @@
     pin.className = 'pin';
     pin.dataset.id = place.id;
     pin.setAttribute('aria-pressed', 'false');
-    pin.innerHTML =
-      '<span class="pin__dot"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v8a2 2 0 0 0 2 2v8"/><path d="M11 3v6"/><path d="M3 3v6a4 4 0 0 0 4 4"/><path d="M17 21V3c2.5 1 4 4 4 7h-4"/></svg></span>' +
-      '<span class="pin__label"></span>';
+    pin.innerHTML = '<span class="pin__dot" aria-hidden="true"></span><span class="pin__label"></span>';
+    pin.querySelector('.pin__dot').textContent = place.name.charAt(0);
     pin.querySelector('.pin__label').textContent = place.name;
     pin.addEventListener('click', function (e) { e.stopPropagation(); openSheet(place); });
     wrap.appendChild(pin);
@@ -216,7 +219,7 @@
     state.map.on('error', function (e) { console.error(e && e.error ? e.error : e); });
     state.places.forEach(function (place) {
       // Точка ресторана — центр кружка, подпись висит под ним.
-      new maplibregl.Marker({ element: pinElement(place), anchor: 'top', offset: [0, -26] })
+      new maplibregl.Marker({ element: pinElement(place), anchor: 'top', offset: [0, -19] })
         .setLngLat(place.coords)
         .addTo(state.map);
     });
