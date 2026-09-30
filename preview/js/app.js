@@ -162,7 +162,9 @@
       state.map = new y.YMap($('#map'), {
         location: { center: state.city.center, zoom: state.city.zoom },
         theme: theme,
-        showScaleInCopyrights: false
+        showScaleInCopyrights: false,
+        // Кнопку «Открыть Яндекс Карты» — наверх, под шапку: внизу она налезала на надпись Яндекса.
+        distributionPosition: 'top right'
       });
       state.scheme = new y.YMapDefaultSchemeLayer({ customization: mapStyle(theme) });
       state.map.addChild(state.scheme);
