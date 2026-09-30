@@ -1,0 +1,176 @@
+/* Оформление — orders/gid/design.md. Цвета только через переменные темы. */
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('../fonts/manrope-cyrillic-wght-normal.woff2') format('woff2');
+  font-weight: 200 800; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Manrope';
+  src: url('../fonts/manrope-latin-wght-normal.woff2') format('woff2');
+  font-weight: 200 800; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+20BD, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-garamond-cyrillic-wght-normal.woff2') format('woff2');
+  font-weight: 300 700; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-garamond-latin-wght-normal.woff2') format('woff2');
+  font-weight: 300 700; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+20BD, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root, [data-theme="dark"] {
+  --bg: #2B231F;
+  --surface: #372D28;
+  --surface-2: #42362F;
+  --divider: #42362F;
+  --card-border: #4B3F37;
+  --outline: #56504A;
+  --text: #F0E8E0;
+  --muted: #BBAEA2;
+  --dim: #948476;
+  --accent: #CDAE72;
+  --on-accent: #2B231F;
+  --detail: #A9C2A0;
+  --glass: rgba(43, 35, 31, 0.88);
+  --shadow: none;
+  --halo: rgba(205, 174, 114, 0.18);
+  color-scheme: dark;
+}
+[data-theme="light"] {
+  --bg: #F4EFE7;
+  --surface: #FBF8F3;
+  --surface-2: #E6DDCF;
+  --divider: #E3D9CB;
+  --card-border: transparent;
+  --outline: #CFC3B2;
+  --text: #2A221D;
+  --muted: #6B5F54;
+  --dim: #7A6D61;
+  --accent: #4F6B55;
+  --on-accent: #F7F3EC;
+  --detail: #7D5F32;
+  --glass: rgba(251, 248, 243, 0.94);
+  --shadow: 0 2px 10px rgba(42, 34, 29, 0.08);
+  --halo: rgba(79, 107, 85, 0.16);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+h2, p { margin: 0; }
+
+.app { position: fixed; inset: 0; overflow: hidden; }
+
+/* Шапка */
+.topbar {
+  position: absolute; z-index: 10; left: 0; right: 0; top: 0;
+  padding: max(18px, env(safe-area-inset-top)) 16px 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  pointer-events: none;
+}
+.topbar > * { pointer-events: auto; }
+.topbar__left, .topbar__right { display: flex; align-items: center; gap: 10px; }
+.wordmark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 32px; font-weight: 700; letter-spacing: 0.01em; line-height: 1;
+  color: var(--text);
+  text-shadow: 0 0 12px var(--bg);
+}
+.pill {
+  border: 0; background: var(--glass); box-shadow: var(--shadow);
+  font-size: 14px; font-weight: 600; padding: 0 12px; height: 36px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.icon-button {
+  width: 44px; height: 44px; border: 0; border-radius: 50%;
+  background: var(--glass); box-shadow: var(--shadow);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.env-badge {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 6px 10px; border-radius: 999px; background: var(--detail); color: var(--bg);
+}
+[data-theme="dark"] .icon-moon, [data-theme="light"] .icon-sun { display: none; }
+
+/* Выбор города */
+.city { position: relative; }
+.city__menu {
+  position: absolute; top: 44px; left: 0; min-width: 220px; margin: 0; padding: 6px;
+  list-style: none; background: var(--surface); border: 1px solid var(--card-border);
+  border-radius: 16px; box-shadow: 0 12px 34px rgba(0, 0, 0, 0.18);
+}
+.city__option {
+  width: 100%; min-height: 44px; border: 0; background: transparent; border-radius: 10px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+  font-size: 15px; font-weight: 600; text-align: left;
+}
+.city__option[aria-selected="true"] { color: var(--accent); }
+.city__option:disabled { color: var(--dim); cursor: default; }
+.city__option:not(:disabled):hover { background: var(--surface-2); }
+.city__soon { font-size: 12px; font-weight: 500; }
+
+/* Карта */
+.map { position: absolute; inset: 0; background: var(--bg); }
+.map-error {
+  position: absolute; z-index: 5; left: 16px; right: 16px; top: 45%;
+  text-align: center; color: var(--muted); font-size: 15px;
+}
+.pin {
+  transform: translate(-50%, -26px);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  border: 0; background: none; padding: 0;
+}
+.pin__dot {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--accent); color: var(--on-accent);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 10px var(--halo);
+  transition: transform 0.15s ease;
+}
+.pin[aria-pressed="true"] .pin__dot { transform: scale(1.08); }
+.pin__label {
+  font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 999px;
+  background: var(--surface); color: var(--text); box-shadow: var(--shadow); white-space: nowrap;
+}
+
+/* Шторка ресторана */
+.sheet {
+  position: absolute; z-index: 10; left: 12px; right: 12px;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  background: var(--surface); border: 1px solid var(--card-border); border-radius: 24px;
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.16);
+  padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 12px;
+  animation: sheet-in 0.2s ease-out;
+}
+@keyframes sheet-in { from { transform: translateY(16px); opacity: 0; } }
+.sheet__close { position: absolute; top: 12px; right: 12px; background: var(--surface-2); box-shadow: none; }
+.sheet__head { display: flex; align-items: baseline; gap: 12px; padding-right: 52px; }
+.sheet__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 34px; font-weight: 600; line-height: 1;
+}
+.sheet__check-sum { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.sheet__cuisine, .sheet__hours { font-size: 14px; color: var(--muted); }
+.sheet__checked { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--detail); }
+.sheet__fictional { font-size: 12px; color: var(--dim); }
+
+@media (min-width: 720px) {
+  .topbar { padding: 20px 24px 0; }
+  .sheet { left: 24px; right: auto; bottom: 24px; width: 400px; }
+}

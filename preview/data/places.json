@@ -1,0 +1,15 @@
+[
+  {
+    "id": "chernozem",
+    "city": "voronezh",
+    "fictional": true,
+    "name": "Чернозём",
+    "cuisine": "Современная кухня Черноземья",
+    "area": "Центр",
+    "open": "12:00",
+    "close": "00:00",
+    "avgCheck": 2000,
+    "checkedAt": "2026-09-18",
+    "coords": [39.2071, 51.6641]
+  }
+]

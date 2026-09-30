@@ -1,0 +1,5 @@
+Manrope — Copyright 2019 The Manrope Project Authors (https://github.com/sharanda/manrope)
+Cormorant Garamond — Copyright 2015 The Cormorant Project Authors (https://github.com/CatharsisFonts/Cormorant)
+
+Both fonts are licensed under the SIL Open Font License, Version 1.1: https://openfontlicense.org
+Files taken from Fontsource (@fontsource-variable).

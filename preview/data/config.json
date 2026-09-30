@@ -1,0 +1,10 @@
+{
+  "yandexMapsKey": "34ace5f0-4bb3-463a-88f8-f3447687a308",
+  "defaultCity": "voronezh",
+  "cities": [
+    { "id": "voronezh", "name": "Воронеж", "active": true, "center": [39.2035, 51.6625], "zoom": 14.5 },
+    { "id": "moscow", "name": "Москва", "active": false },
+    { "id": "spb", "name": "Санкт-Петербург", "active": false },
+    { "id": "krasnodar", "name": "Краснодар", "active": false }
+  ]
+}
