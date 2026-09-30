@@ -7,7 +7,7 @@
   var maplibregl = window.maplibregl;
   var root = document.documentElement;
   var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false,
-    cart: {}, order: { table: null, time: null }, orderPushed: false };
+    cart: {}, book: null, bookDays: [], orderPushed: false };
 
   // Цвета карты — из orders/gid/design.md. Карта — тихий фон: почти без контуров,
   // парки чуть темнее земли, яркое на ней только наши рестораны.
@@ -312,14 +312,328 @@
     if (!$('.order').hidden) renderOrderLines(place);
   }
 
-  // Экран заказа: блюда, столик на схеме зала, время прихода.
+  // Бронь: день → гости → время → столик на плане зала → блюда по желанию.
+  // Занятость столов в макете придуманная, но для одного дня и времени всегда одинаковая.
 
-  function renderOrder(place) {
+  var SVG = 'http://www.w3.org/2000/svg';
+
+  function minutes(hhmm) { var p = hhmm.split(':'); return +p[0] * 60 + +p[1]; }
+  function hhmm(min) { return String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0'); }
+
+  function hash(str) {
+    var h = 2166136261;
+    for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return h >>> 0;
+  }
+
+  function bookDays(place) {
+    var out = [];
+    var base = new Date();
+    base.setHours(0, 0, 0, 0);
+    for (var i = 0; i < place.booking.days; i++) {
+      var d = new Date(base);
+      d.setDate(base.getDate() + i);
+      out.push(d);
+    }
+    return out;
+  }
+
+  function dayKey(d) { return d.toISOString().slice(0, 10); }
+
+  function isBusy(place, day, slot, table) {
+    var peak = slot >= minutes('18:30') && slot <= minutes('21:00');
+    return hash(place.id + dayKey(day) + slot + table.id) % 100 < (peak ? 55 : 25);
+  }
+
+  function slotsFor(place, dayIndex) {
+    var b = place.booking;
+    var list = [];
+    var earliest = -1;
+    if (dayIndex === 0) {
+      var now = new Date();
+      earliest = now.getHours() * 60 + now.getMinutes() + b.leadMinutes;
+    }
+    for (var m = minutes(b.from); m <= minutes(b.to); m += b.step) {
+      if (m < earliest) continue;
+      list.push(m);
+    }
+    return list;
+  }
+
+  function tableFree(place, table) {
+    var bk = state.book;
+    if (bk.slot == null) return true;
+    return !isBusy(place, state.bookDays[bk.day], bk.slot, table);
+  }
+
+  function slotOpen(place, dayIndex, slot) {
+    return place.plan.tables.some(function (tb) {
+      return tb.seats >= state.book.guests && !isBusy(place, state.bookDays[dayIndex], slot, tb);
+    });
+  }
+
+  function renderBooking(place) {
     $('.order__place').textContent = place.name;
-    state.order = { table: null, time: null };
-    renderHall(place);
-    renderTimes();
+    state.bookDays = bookDays(place);
+    state.book = { day: 0, guests: Math.min(2, place.booking.maxGuests), slot: null, table: null };
+    // Если сегодня уже нечего бронировать — сразу завтра.
+    if (!slotsFor(place, 0).some(function (m) { return slotOpen(place, 0, m); })) state.book.day = 1;
+    renderDays(place);
+    renderGuests(place);
+    renderSlots(place);
+    renderPlan(place);
     renderOrderLines(place);
+  }
+
+  function renderDays(place) {
+    var t = state.texts;
+    var box = $('.days');
+    box.innerHTML = '';
+    state.bookDays.forEach(function (d, i) {
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'chip chip--day';
+      chip.setAttribute('role', 'radio');
+      chip.setAttribute('aria-checked', String(i === state.book.day));
+      var top = i === 0 ? t.book_today : i === 1 ? t.book_tomorrow
+        : new Intl.DateTimeFormat('ru-RU', { weekday: 'short' }).format(d);
+      chip.innerHTML = '<span class="chip__top"></span><span class="chip__bottom"></span>';
+      chip.querySelector('.chip__top').textContent = top;
+      chip.querySelector('.chip__bottom').textContent = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'short' }).format(d).replace('.', '');
+      chip.addEventListener('click', function () {
+        state.book.day = i;
+        state.book.slot = null;
+        state.book.table = null;
+        box.querySelectorAll('.chip').forEach(function (c, j) { c.setAttribute('aria-checked', String(j === i)); });
+        renderSlots(place);
+        renderPlan(place);
+      });
+      box.appendChild(chip);
+    });
+  }
+
+  function renderGuests(place) {
+    var t = state.texts;
+    var n = state.book.guests;
+    $('.guests__count').textContent = n + ' ' + plural(n, t.guests);
+    $('.guests__less').disabled = n <= 1;
+    $('.guests__more').disabled = n >= place.booking.maxGuests;
+  }
+
+  function changeGuests(delta) {
+    var place = currentPlace();
+    var n = Math.max(1, Math.min(place.booking.maxGuests, state.book.guests + delta));
+    state.book.guests = n;
+    if (state.book.table && state.book.table.seats < n) state.book.table = null;
+    if (state.book.slot != null && !slotOpen(place, state.book.day, state.book.slot)) {
+      state.book.slot = null;
+      state.book.table = null;
+    }
+    renderGuests(place);
+    renderSlots(place);
+    renderPlan(place);
+  }
+
+  function renderSlots(place) {
+    var box = $('.slots');
+    box.innerHTML = '';
+    var any = false;
+    slotsFor(place, state.book.day).forEach(function (m) {
+      var open = slotOpen(place, state.book.day, m);
+      any = any || open;
+      var chip = document.createElement('button');
+      chip.type = 'button';
+      chip.className = 'chip chip--slot';
+      chip.setAttribute('role', 'radio');
+      chip.setAttribute('aria-checked', String(m === state.book.slot));
+      chip.textContent = hhmm(m);
+      chip.disabled = !open;
+      chip.addEventListener('click', function () {
+        state.book.slot = m;
+        if (state.book.table && !tableFree(place, state.book.table)) state.book.table = null;
+        box.querySelectorAll('.chip').forEach(function (c) { c.setAttribute('aria-checked', String(c === chip)); });
+        renderPlan(place);
+      });
+      box.appendChild(chip);
+    });
+    $('.slots__empty').hidden = any;
+    updateSend(place);
+  }
+
+  function svg(tag, attrs, parent) {
+    var el = document.createElementNS(SVG, tag);
+    Object.keys(attrs || {}).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+    if (parent) parent.appendChild(el);
+    return el;
+  }
+
+  // Стул — скруглённый прямоугольник, развёрнутый спинкой от стола.
+  function chair(g, x, y, angle) {
+    svg('rect', { x: x - 17, y: y - 13, width: 34, height: 26, rx: 8, class: 'plan__chair',
+      transform: 'rotate(' + angle + ' ' + x + ' ' + y + ')' }, g);
+  }
+
+  function drawChairs(g, tb) {
+    if (tb.shape === 'round') {
+      for (var i = 0; i < tb.seats; i++) {
+        var a = (360 / tb.seats) * i - 90 + (tb.seats === 2 ? 90 : 0);
+        var rad = a * Math.PI / 180;
+        var d = tb.r + 24;
+        chair(g, tb.x + Math.cos(rad) * d, tb.y + Math.sin(rad) * d, a + 90);
+      }
+      return;
+    }
+    var left = tb.x - tb.w / 2, top = tb.y - tb.h / 2;
+    if (tb.sofa) {
+      // Со стороны дивана стульев нет, остальные — напротив него.
+      var n = Math.max(1, tb.seats - 2);
+      for (var k = 0; k < n; k++) {
+        var yy = top + tb.h * (k + 1) / (n + 1);
+        chair(g, tb.sofa === 'right' ? left - 22 : left + tb.w + 22, yy, tb.sofa === 'right' ? 90 : -90);
+      }
+      return;
+    }
+    var perSide = Math.ceil(tb.seats / 2);
+    var bottom = tb.seats - perSide;
+    for (var j = 0; j < perSide; j++) chair(g, left + tb.w * (j + 1) / (perSide + 1), top - 22, 0);
+    for (var q = 0; q < bottom; q++) chair(g, left + tb.w * (q + 1) / (bottom + 1), top + tb.h + 22, 180);
+  }
+
+  function wallGap(plan, item, hallH) {
+    var H = hallH || plan.h;
+    var from = item.from != null ? item.from : item.at;
+    var to = item.to != null ? item.to : item.at + item.width;
+    switch (item.side) {
+      case 'top': return { x1: from, y1: 0, x2: to, y2: 0, horiz: true };
+      case 'bottom': return { x1: from, y1: H, x2: to, y2: H, horiz: true };
+      case 'hallBottom': return { x1: from, y1: H, x2: to, y2: H, horiz: true };
+      case 'left': return { x1: 0, y1: from, x2: 0, y2: to, horiz: false };
+      default: return { x1: plan.w, y1: from, x2: plan.w, y2: to, horiz: false };
+    }
+  }
+
+  function renderPlan(place) {
+    var t = state.texts;
+    var plan = place.plan;
+    var hallH = plan.hall ? plan.hall.h : plan.h;
+    var box = $('.plan');
+    box.innerHTML = '';
+    var root = svg('svg', { viewBox: '-12 -12 ' + (plan.w + 24) + ' ' + (plan.h + 24), class: 'plan__svg',
+      role: 'group', 'aria-label': fmt(t.plan_label, { name: place.name }) }, box);
+    var defs = svg('defs', {}, root);
+    var hatch = svg('pattern', { id: 'hatch', width: 12, height: 12, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+    svg('line', { x1: 0, y1: 0, x2: 0, y2: 12, class: 'plan__hatch' }, hatch);
+
+    // Терраса и вода — снаружи зала.
+    if (plan.terrace) {
+      svg('rect', { x: 0, y: plan.terrace.y, width: plan.w, height: plan.terrace.h, class: 'plan__terrace' }, root);
+      var tl = svg('text', { x: 24, y: plan.terrace.y + plan.terrace.h - 22, class: 'plan__label' }, root);
+      tl.textContent = plan.terrace.label;
+    }
+    if (plan.water) {
+      svg('rect', { x: -12, y: plan.water.y, width: plan.w + 24, height: plan.water.h + 12, class: 'plan__water' }, root);
+      var wl = svg('text', { x: plan.w / 2, y: plan.water.y + 32, class: 'plan__label plan__label--center plan__label--water' }, root);
+      wl.textContent = plan.water.label;
+    }
+
+    // Пол и стены зала.
+    svg('rect', { x: 0, y: 0, width: plan.w, height: hallH, class: 'plan__floor' }, root);
+    (plan.rooms || []).forEach(function (rm) {
+      svg('rect', { x: rm.x, y: rm.y, width: rm.w, height: rm.h, class: 'plan__room', fill: 'url(#hatch)' }, root);
+      svg('rect', { x: rm.x, y: rm.y, width: rm.w, height: rm.h, class: 'plan__room-wall' }, root);
+      var l = svg('text', { x: rm.x + rm.w / 2, y: rm.y + rm.h / 2 + 8, class: 'plan__label plan__label--center plan__label--room' }, root);
+      l.textContent = rm.label;
+    });
+    svg('rect', { x: 0, y: 0, width: plan.w, height: hallH, class: 'plan__wall' }, root);
+
+    // Окна — светлые проёмы в стене, двери — проём с дугой открывания.
+    (plan.windows || []).forEach(function (w) {
+      var g = wallGap(plan, w, hallH);
+      svg('line', { x1: g.x1, y1: g.y1, x2: g.x2, y2: g.y2, class: 'plan__window-gap' }, root);
+      svg('line', { x1: g.x1, y1: g.y1, x2: g.x2, y2: g.y2, class: 'plan__window' }, root);
+    });
+    (plan.doors || []).forEach(function (d) {
+      var g = wallGap(plan, d, hallH);
+      svg('line', { x1: g.x1, y1: g.y1, x2: g.x2, y2: g.y2, class: 'plan__window-gap' }, root);
+      // Дверь открывается внутрь зала, дверь на террасу — наружу.
+      var inward = d.side === 'top' || d.side === 'left' || d.side === 'hallBottom' ? 1 : -1;
+      var path;
+      if (g.horiz) {
+        path = 'M' + g.x1 + ' ' + g.y1 + ' L' + g.x1 + ' ' + (g.y1 + inward * d.width) +
+          ' A' + d.width + ' ' + d.width + ' 0 0 ' + (inward > 0 ? 0 : 1) + ' ' + g.x2 + ' ' + g.y2;
+      } else {
+        path = 'M' + g.x1 + ' ' + g.y1 + ' L' + (g.x1 + inward * d.width) + ' ' + g.y1 +
+          ' A' + d.width + ' ' + d.width + ' 0 0 ' + (inward > 0 ? 1 : 0) + ' ' + g.x2 + ' ' + g.y2;
+      }
+      svg('path', { d: path, class: 'plan__door' }, root);
+      var lx = g.horiz ? (g.x1 + g.x2) / 2 : g.x1 + inward * (d.width + 70);
+      var ly = g.horiz ? g.y1 + inward * (d.width + 34) : (g.y1 + g.y2) / 2 + 8;
+      var dl = svg('text', { x: lx, y: ly, class: 'plan__label plan__label--center' }, root);
+      dl.textContent = d.label;
+    });
+
+    (plan.sofas || []).forEach(function (sf) {
+      svg('rect', { x: sf.x, y: sf.y, width: sf.w, height: sf.h, rx: 16, class: 'plan__sofa' }, root);
+    });
+    (plan.bars || []).forEach(function (b) {
+      svg('rect', { x: b.x, y: b.y, width: b.w, height: b.h, rx: 12, class: 'plan__bar' }, root);
+      var vertical = b.h > b.w;
+      for (var i = 0; i < b.stools; i++) {
+        var sx = vertical ? b.x - 30 : b.x + b.w * (i + 1) / (b.stools + 1);
+        var sy = vertical ? b.y + b.h * (i + 1) / (b.stools + 1) : b.y - 30;
+        svg('circle', { cx: sx, cy: sy, r: 16, class: 'plan__stool' }, root);
+      }
+      var bl = svg('text', { x: b.x + b.w / 2, y: b.y + b.h / 2 + 8, class: 'plan__label plan__label--center',
+        transform: vertical ? 'rotate(-90 ' + (b.x + b.w / 2) + ' ' + (b.y + b.h / 2) + ')' : '' }, root);
+      bl.textContent = b.label;
+    });
+    (plan.labels || []).forEach(function (lb) {
+      var el = svg('text', { x: lb.x, y: lb.y, class: 'plan__label plan__label--center plan__label--soft' }, root);
+      el.textContent = lb.text;
+    });
+
+    // Столы: стулья, столешница, номер. Занятые и маленькие для компании не нажимаются.
+    plan.tables.forEach(function (tb) {
+      var free = tableFree(place, tb);
+      var fits = tb.seats >= state.book.guests;
+      var mine = state.book.table && state.book.table.id === tb.id;
+      var enabled = state.book.slot != null && free && fits;
+      var g = svg('g', { class: 'plan__table' + (mine ? ' is-mine' : '') + (!free ? ' is-busy' : '') + (!fits ? ' is-small' : '') }, root);
+      drawChairs(g, tb);
+      if (tb.shape === 'round') svg('circle', { cx: tb.x, cy: tb.y, r: tb.r, class: 'plan__top' }, g);
+      else svg('rect', { x: tb.x - tb.w / 2, y: tb.y - tb.h / 2, width: tb.w, height: tb.h, rx: 12, class: 'plan__top' }, g);
+      if (!free) {
+        if (tb.shape === 'round') svg('circle', { cx: tb.x, cy: tb.y, r: tb.r, fill: 'url(#hatch)', class: 'plan__busy' }, g);
+        else svg('rect', { x: tb.x - tb.w / 2, y: tb.y - tb.h / 2, width: tb.w, height: tb.h, rx: 12, fill: 'url(#hatch)', class: 'plan__busy' }, g);
+      }
+      var num = svg('text', { x: tb.x, y: tb.y + 14, class: 'plan__num' }, g);
+      num.textContent = tb.id;
+      var label = tableText('order_table_label', tb);
+      if (!free) label += ', ' + t.order_busy;
+      else if (!fits) label += ', ' + t.book_table_small;
+      g.setAttribute('role', 'button');
+      g.setAttribute('aria-label', label);
+      g.setAttribute('aria-pressed', String(!!mine));
+      g.setAttribute('aria-disabled', String(!enabled));
+      if (enabled) {
+        g.setAttribute('tabindex', '0');
+        var pick = function () {
+          state.book.table = tb;
+          renderPlan(place);
+          var again = $('.plan [aria-pressed="true"]');
+          if (again) again.focus({ preventScroll: true });
+        };
+        g.addEventListener('click', pick);
+        g.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); }
+        });
+      }
+    });
+
+    $('.plan__status').textContent = state.book.slot == null ? t.book_table_need_time
+      : state.book.table ? tableText('order_table_chosen', state.book.table) : t.book_table_hint;
+    box.classList.toggle('plan--waiting', state.book.slot == null);
+    updateSend(place);
   }
 
   function renderOrderLines(place) {
@@ -327,7 +641,9 @@
     var lines = cartLines(place);
     box.innerHTML = '';
     box.hidden = lines.length === 0;
+    $('.order__total').hidden = lines.length === 0;
     $('.order__empty').hidden = lines.length > 0;
+    $('.order__pick').hidden = lines.length > 0;
     lines.forEach(function (line) {
       var row = document.createElement('div');
       row.className = 'order-line';
@@ -350,84 +666,31 @@
     return fmt(t[key], { id: table.id, seats: table.seats, seatsWord: plural(table.seats, t.seats), zone: table.zone });
   }
 
-  function renderHall(place) {
+  function whenText() {
     var t = state.texts;
-    var hall = $('.hall');
-    hall.innerHTML = '';
-    hall.style.aspectRatio = String(1 / place.hall.ratio);
-    place.hall.zones.forEach(function (z) {
-      var zone = document.createElement('div');
-      zone.className = 'hall__zone hall__zone--' + z.kind + (z.y === 0 ? ' hall__zone--top' : '');
-      zone.style.cssText = 'left:' + z.x + '%;top:' + z.y + '%;width:' + z.w + '%;height:' + z.h + '%';
-      var label = document.createElement('span');
-      label.textContent = z.name;
-      zone.appendChild(label);
-      hall.appendChild(zone);
-    });
-    place.hall.tables.forEach(function (tb) {
-      var btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'hall__table hall__table--' + tb.shape;
-      btn.style.left = tb.x + '%';
-      btn.style.top = tb.y + '%';
-      btn.style.width = tb.w + '%';
-      if (tb.shape === 'rect') btn.style.height = tb.h + '%';
-      btn.innerHTML = '<span class="hall__num"></span><span class="hall__seats"></span>';
-      btn.querySelector('.hall__num').textContent = tb.id;
-      btn.querySelector('.hall__seats').textContent = tb.seats;
-      var label = tableText('order_table_label', tb);
-      if (tb.busy) {
-        btn.disabled = true;
-        btn.classList.add('hall__table--busy');
-        label += ', ' + t.order_busy;
-      }
-      btn.setAttribute('aria-label', label);
-      btn.setAttribute('aria-pressed', 'false');
-      btn.addEventListener('click', function () {
-        state.order.table = tb;
-        hall.querySelectorAll('.hall__table').forEach(function (b) { b.setAttribute('aria-pressed', String(b === btn)); });
-        $('.hall__status').textContent = tableText('order_table_chosen', tb);
-        updateSend(place);
-      });
-      hall.appendChild(btn);
-    });
-    $('.hall__status').textContent = t.order_table_hint;
-  }
-
-  function renderTimes() {
-    var t = state.texts;
-    var box = $('.times');
-    box.innerHTML = '';
-    t.order_times.forEach(function (min) {
-      var chip = document.createElement('button');
-      chip.type = 'button';
-      chip.className = 'chip';
-      chip.setAttribute('role', 'radio');
-      chip.setAttribute('aria-checked', 'false');
-      chip.textContent = fmt(t.order_time_option, { min: min });
-      chip.addEventListener('click', function () {
-        state.order.time = min;
-        box.querySelectorAll('.chip').forEach(function (c) { c.setAttribute('aria-checked', String(c === chip)); });
-        updateSend(currentPlace());
-      });
-      box.appendChild(chip);
-    });
+    var bk = state.book;
+    var time = hhmm(bk.slot);
+    if (bk.day === 0) return fmt(t.when_today, { time: time });
+    if (bk.day === 1) return fmt(t.when_tomorrow, { time: time });
+    var date = new Intl.DateTimeFormat('ru-RU', { weekday: 'short', day: 'numeric', month: 'short' }).format(state.bookDays[bk.day]).replace('.', '');
+    return fmt(t.when_date, { date: date, time: time });
   }
 
   function updateSend(place) {
+    if (!state.book) return;
     var t = state.texts;
     var btn = $('.send');
     var totals = cartTotals(place);
-    var need = totals.count === 0 ? t.send_need_dishes
-      : !state.order.table ? t.send_need_table
-      : !state.order.time ? t.send_need_time : null;
+    var need = state.book.slot == null ? t.send_need_time : !state.book.table ? t.send_need_table : null;
     btn.disabled = !!need;
-    btn.textContent = need || fmt(t.send, { sum: price(totals.sum) });
+    btn.textContent = need || (totals.count
+      ? fmt(t.book_send_order, { sum: price(totals.sum) })
+      : fmt(t.book_send, { when: whenText() }));
   }
 
   function sendOrder() {
-    // Из Телеграма заказ уйдёт боту — это следующий шаг. На обычном сайте
-    // объясняем, что заказы идут через Телеграм, и даём ссылку на бота.
+    // Из Телеграма бронь уйдёт боту — это следующий шаг. На обычном сайте
+    // объясняем, что брони идут через Телеграм, и даём ссылку на бота.
     var bot = state.config.bot;
     var link = $('.tg__open');
     link.hidden = !bot;
@@ -455,9 +718,9 @@
       }
       page.hidden = false;
       refreshCart(place);
-      var wantOrder = parts[1] === 'order';
+      var wantOrder = parts[1] === 'book';
       if (wantOrder && order.hidden) {
-        renderOrder(place);
+        renderBooking(place);
         $('.order__scroll').scrollTop = 0;
       }
       order.hidden = !wantOrder;
@@ -473,7 +736,7 @@
 
   function openOrder() {
     state.orderPushed = true;
-    location.hash = encodeURIComponent(state.place) + '/order';
+    location.hash = encodeURIComponent(state.place) + '/book';
   }
 
   function closeOrder() {
@@ -637,6 +900,15 @@
     $('.city__button').addEventListener('click', function (e) { e.stopPropagation(); toggleCityMenu(); });
     $('.sheet__close').addEventListener('click', closeSheet);
     $('.sheet__open').addEventListener('click', function () { if (state.selected) openPlace(state.selected); });
+    $('.sheet__book').addEventListener('click', function () {
+      if (!state.selected) return;
+      openPlace(state.selected);
+      setTimeout(openOrder, 0);
+    });
+    $('.place__book').addEventListener('click', openOrder);
+    $('.order__pick').addEventListener('click', closeOrder);
+    $('.guests__less').addEventListener('click', function () { changeGuests(-1); });
+    $('.guests__more').addEventListener('click', function () { changeGuests(1); });
     $('.place__back').addEventListener('click', closePlace);
     $('.cartbar__button').addEventListener('click', openOrder);
     $('.order__back').addEventListener('click', closeOrder);
@@ -666,6 +938,8 @@
     document.querySelectorAll('[data-text]').forEach(function (el) { el.textContent = t[el.dataset.text]; });
     $('.sheet__close').setAttribute('aria-label', t.close);
     $('.compass').setAttribute('aria-label', t.compass);
+    $('.guests__less').setAttribute('aria-label', t.book_less);
+    $('.guests__more').setAttribute('aria-label', t.book_more);
     $('.env-badge').hidden = window.GID_ENV !== 'preview';
   }
 

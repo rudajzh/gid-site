@@ -19,8 +19,8 @@
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/cormorant-garamond-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
-<link rel="stylesheet" href="css/style.css?v=20260930223055">
-<script src="env.js?v=20260930223055"></script>
+<link rel="stylesheet" href="css/style.css?v=20260930224915">
+<script src="env.js?v=20260930224915"></script>
 </head>
 <body>
 <div class="app">
@@ -66,7 +66,10 @@
     </p>
     <p class="sheet__hours"></p>
     <p class="sheet__fictional" hidden data-text="fictional"></p>
-    <button class="button sheet__open" type="button" data-text="open_menu"></button>
+    <div class="sheet__actions">
+      <button class="button sheet__book" type="button" data-text="sheet_book"></button>
+      <button class="button button--ghost sheet__open" type="button" data-text="sheet_menu"></button>
+    </div>
   </section>
 
   <section class="place" hidden aria-labelledby="place-name">
@@ -100,6 +103,7 @@
           <span class="place__avg"></span>
         </li>
       </ul>
+      <button class="button place__book" type="button" data-text="book_button"></button>
       <p class="place__about"></p>
       <p class="place__fictional" hidden data-text="fictional"></p>
       <nav class="place__tabs" aria-label="Разделы меню"></nav>
@@ -122,24 +126,40 @@
     </div>
     <div class="order__scroll">
       <header class="order__head">
-        <h1 class="order__title" id="order-title" data-text="order_title"></h1>
+        <h1 class="order__title" id="order-title" data-text="book_title"></h1>
         <p class="order__place"></p>
       </header>
-      <div class="order-lines"></div>
-      <p class="order__empty" hidden data-text="order_empty"></p>
-      <div class="order__total"><span data-text="order_total"></span><span class="order__sum"></span></div>
 
-      <h2 class="order__label" data-text="order_table"></h2>
-      <div class="hall" role="group" aria-labelledby="hall-label"></div>
-      <p class="hall__status" id="hall-label" aria-live="polite"></p>
-      <ul class="hall__legend">
-        <li><i class="dot dot--free"></i><span data-text="legend_free"></span></li>
+      <h2 class="order__label" data-text="book_day"></h2>
+      <div class="days" role="radiogroup"></div>
+
+      <div class="guests">
+        <h2 class="order__label order__label--inline" data-text="book_guests"></h2>
+        <div class="stepper">
+          <button class="qty__btn guests__less" type="button">−</button>
+          <span class="guests__count" aria-live="polite"></span>
+          <button class="qty__btn guests__more" type="button">+</button>
+        </div>
+      </div>
+
+      <h2 class="order__label" data-text="book_time"></h2>
+      <div class="slots" role="radiogroup"></div>
+      <p class="slots__empty" hidden data-text="book_no_slots"></p>
+
+      <h2 class="order__label" data-text="book_table"></h2>
+      <div class="plan"></div>
+      <p class="plan__status" aria-live="polite"></p>
+      <ul class="plan__legend">
+        <li><i class="dot"></i><span data-text="legend_free"></span></li>
         <li><i class="dot dot--busy"></i><span data-text="legend_busy"></span></li>
-        <li><i class="dot dot--mine"></i><span data-text="legend_selected"></span></li>
+        <li><i class="dot dot--mine"></i><span data-text="legend_mine"></span></li>
       </ul>
 
-      <h2 class="order__label" data-text="order_time"></h2>
-      <div class="times" role="radiogroup"></div>
+      <h2 class="order__label" data-text="book_dishes"></h2>
+      <div class="order-lines"></div>
+      <div class="order__total"><span data-text="order_total"></span><span class="order__sum"></span></div>
+      <p class="order__empty" data-text="book_dishes_none"></p>
+      <button class="button button--ghost order__pick" type="button" data-text="book_pick_dishes"></button>
     </div>
     <div class="order__send">
       <button class="button send" type="button"></button>
@@ -159,6 +179,6 @@
 <script src="vendor/maplibre-gl.js"></script>
 <script src="vendor/pmtiles.js"></script>
 <script src="vendor/basemaps.js"></script>
-<script src="js/app.js?v=20260930223055"></script>
+<script src="js/app.js?v=20260930224915"></script>
 </body>
 </html>
