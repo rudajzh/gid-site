@@ -10,3 +10,8 @@ basemaps.js — Protomaps Basemaps 5.7.2, BSD-3-Clause
 ../map/*.pmtiles — данные © участники OpenStreetMap, ODbL (https://www.openstreetmap.org/copyright),
   сборка Protomaps (https://protomaps.com). Подпись «© OpenStreetMap» на карте обязательна.
 ../map/fonts/ — Noto Sans, SIL Open Font License 1.1, из protomaps/basemaps-assets.
+
+../img/dishes/*.webp — фото блюд с Unsplash (https://unsplash.com/license): бесплатно,
+  в том числе для коммерческого использования, без обязательной подписи. Авторы —
+  в data/places.json, поле photoBy. Блюда на фото похожи на блюда меню, но сняты
+  в других местах: рестораны придуманы для примера.
