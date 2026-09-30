@@ -1,0 +1,12 @@
+Сторонние части сайта РестоГида
+
+maplibre-gl.js, maplibre-gl.css — MapLibre GL JS 5.24.0, BSD-3-Clause (LICENSE-maplibre.txt)
+  https://github.com/maplibre/maplibre-gl-js
+pmtiles.js — PMTiles 4.5.0, BSD-3-Clause
+  https://github.com/protomaps/PMTiles
+basemaps.js — Protomaps Basemaps 5.7.2, BSD-3-Clause
+  https://github.com/protomaps/basemaps
+
+../map/*.pmtiles — данные © участники OpenStreetMap, ODbL (https://www.openstreetmap.org/copyright),
+  сборка Protomaps (https://protomaps.com). Подпись «© OpenStreetMap» на карте обязательна.
+../map/fonts/ — Noto Sans, SIL Open Font License 1.1, из protomaps/basemaps-assets.

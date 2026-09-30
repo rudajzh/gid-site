@@ -129,14 +129,19 @@ h2, p { margin: 0; }
 /* Карта */
 /* Своя стопка слоёв: слои карты не перекрывают шапку и шторку. */
 .map { position: absolute; inset: 0; z-index: 0; isolation: isolate; background: var(--bg); }
-/* Кнопка Яндекса «Открыть Яндекс Карты» стоит сверху — опускаем её под шапку. */
-.map .ymaps3--controls_top { margin-top: calc(62px + env(safe-area-inset-top)); }
+/* Подпись «© OpenStreetMap» — маленькая кнопка «i» в углу, в цветах темы. */
+.map .maplibregl-ctrl-attrib {
+  background: var(--glass); color: var(--muted); font: 500 11px/1.4 'Manrope', sans-serif;
+  border-radius: 999px; box-shadow: var(--shadow);
+}
+.map .maplibregl-ctrl-attrib a { color: var(--muted); }
+.map .maplibregl-ctrl-attrib-button { filter: var(--attrib-icon, none); }
+[data-theme="dark"] { --attrib-icon: invert(0.85); }
 .map-error {
   position: absolute; z-index: 5; left: 16px; right: 16px; top: 45%;
   text-align: center; color: var(--muted); font-size: 15px;
 }
 .pin {
-  transform: translate(-50%, -26px);
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   border: 0; background: none; padding: 0;
 }
@@ -156,7 +161,7 @@ h2, p { margin: 0; }
 /* Шторка ресторана */
 .sheet {
   position: absolute; z-index: 10; left: 12px; right: 12px;
-  /* Над надписью и кнопкой Яндекса: закрывать их нельзя по условиям Яндекса. */
+  /* Над подписью «© OpenStreetMap»: её закрывать нельзя. */
   bottom: calc(44px + env(safe-area-inset-bottom));
   background: var(--surface); border: 1px solid var(--card-border); border-radius: 24px;
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.16);
@@ -180,5 +185,5 @@ h2, p { margin: 0; }
 }
 @media (min-width: 720px) {
   .topbar { padding: 20px 24px 0; }
-  .sheet { left: 24px; right: auto; bottom: 60px; width: 400px; }
+  .sheet { left: 24px; right: auto; bottom: 44px; width: 400px; }
 }

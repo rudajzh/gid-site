@@ -1,14 +1,25 @@
 // РестоГид — сайт и мини-приложение. Тексты, города и рестораны — в data/*.json.
+// Карта — MapLibre по данным OpenStreetMap, файл карты города лежит в map/.
+
 (function () {
   'use strict';
 
+  var maplibregl = window.maplibregl;
   var root = document.documentElement;
-  var state = { config: null, texts: null, places: [], city: null, map: null, scheme: null, selected: null };
+  var state = { config: null, texts: null, places: [], city: null, map: null, selected: null };
 
-  // Цвета карты для каждой темы — из orders/gid/design.md.
+  // Цвета карты — из orders/gid/design.md. Всё, чего здесь нет, берётся из стандартной палитры.
   var MAP_COLORS = {
-    dark: { land: '#312823', building: '#3A2F29', park: '#37402F', water: '#34403D', road: '#41362E', label: '#BBAEA2', halo: '#2B231F' },
-    light: { land: '#EEE7DB', building: '#E6DDCF', park: '#DDE4D1', water: '#CCDBD7', road: '#FFFFFF', label: '#6B5F54', halo: '#F4EFE7' }
+    light: {
+      land: '#EEE7DB', park: '#DDE4D1', scrub: '#E3E6D6', special: '#EAE2D4', water: '#CCDBD7',
+      building: '#E4DBCD', casing: '#E6DDCF', minor: '#F8F3EA', major: '#FFFFFF', rail: '#CFC3B2',
+      label: '#6B5F54', labelMinor: '#7A6D61', halo: '#F4EFE7'
+    },
+    dark: {
+      land: '#312823', park: '#37402F', scrub: '#353B2D', special: '#342A24', water: '#34403D',
+      building: '#3A2F29', casing: '#3A2F28', minor: '#3A2F28', major: '#41362E', rail: '#4B3F37',
+      label: '#BBAEA2', labelMinor: '#948476', halo: '#2B231F'
+    }
   };
 
   function $(sel) { return document.querySelector(sel); }
@@ -32,12 +43,8 @@
     root.dataset.theme = theme;
     if (remember) { try { localStorage.setItem('theme', theme); } catch (e) {} }
     $('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#2B231F' : '#F4EFE7');
-    var toggle = $('.theme-toggle');
-    toggle.setAttribute('aria-label', state.texts[theme === 'dark' ? 'theme_to_light' : 'theme_to_dark']);
-    if (state.map) {
-      state.map.update({ theme: theme });
-      state.scheme.update({ customization: mapStyle(theme) });
-    }
+    $('.theme-toggle').setAttribute('aria-label', state.texts[theme === 'dark' ? 'theme_to_light' : 'theme_to_dark']);
+    if (state.map) state.map.setStyle(mapStyle(theme));
   }
 
   // Города
@@ -84,7 +91,11 @@
     state.city = city;
     renderCities();
     closeSheet();
-    if (state.map) state.map.update({ location: { center: city.center, zoom: city.zoom, duration: 400 } });
+    if (state.map) {
+      state.map.setStyle(mapStyle(currentTheme()));
+      state.map.setMaxBounds(city.bounds);
+      state.map.flyTo({ center: city.center, zoom: city.zoom });
+    }
   }
 
   // Шторка ресторана
@@ -117,21 +128,60 @@
 
   // Карта
 
-  function mapStyle(theme) {
+  function flavor(theme) {
     var c = MAP_COLORS[theme];
-    return [
-      { tags: { any: ['poi'] }, stylers: [{ visibility: 'off' }] },
-      { tags: { any: ['landscape', 'admin'] }, elements: 'geometry', stylers: [{ color: c.land }] },
-      { tags: { any: ['building'] }, elements: 'geometry', stylers: [{ color: c.building }] },
-      { tags: { any: ['park', 'vegetation'] }, elements: 'geometry', stylers: [{ color: c.park }] },
-      { tags: { any: ['water'] }, elements: 'geometry', stylers: [{ color: c.water }] },
-      { tags: { any: ['road'] }, elements: 'geometry', stylers: [{ color: c.road }] },
-      { elements: 'label.text.fill', stylers: [{ color: c.label }] },
-      { elements: 'label.text.outline', stylers: [{ color: c.halo }] }
-    ];
+    var f = Object.assign({}, window.basemaps.namedFlavor(theme));
+    Object.keys(f).forEach(function (key) {
+      if (typeof f[key] !== 'string') return;
+      if (/casing/.test(key)) f[key] = c.casing;
+      else if (/^(tunnel|bridges)_/.test(key) || /^(minor|other|link)/.test(key)) f[key] = /major|highway|link/.test(key) ? c.major : c.minor;
+    });
+    Object.assign(f, {
+      background: c.land, earth: c.land,
+      park_a: c.park, park_b: c.park, wood_a: c.park, wood_b: c.park, scrub_a: c.scrub, scrub_b: c.scrub,
+      hospital: c.special, industrial: c.special, school: c.special, pedestrian: c.special, beach: c.special,
+      sand: c.special, aerodrome: c.special, zoo: c.special, military: c.special, glacier: c.land, pier: c.casing,
+      water: c.water, buildings: c.building, railway: c.rail, boundaries: c.rail,
+      major: c.major, highway: c.major, minor_b: c.major,
+      roads_label_minor: c.labelMinor, roads_label_minor_halo: c.halo,
+      roads_label_major: c.label, roads_label_major_halo: c.halo,
+      address_label: c.labelMinor, address_label_halo: c.halo,
+      city_label: c.label, city_label_halo: c.halo, subplace_label: c.labelMinor, subplace_label_halo: c.halo,
+      landcover: {
+        grassland: c.scrub, barren: c.special, urban_area: c.land, farmland: c.special,
+        glacier: c.land, scrub: c.scrub, forest: c.park
+      }
+    });
+    return f;
+  }
+
+  function mapStyle(theme) {
+    var layers = window.basemaps.layers('city', flavor(theme), { lang: 'ru' })
+      // Чужие заведения и значки не показываем: на карте только рестораны РестоГида.
+      .filter(function (l) { return ['pois', 'roads_shields', 'roads_oneway'].indexOf(l.id) === -1; })
+      .map(function (l) {
+        if (l.layout && l.layout['icon-image']) {
+          l.layout = Object.assign({}, l.layout);
+          delete l.layout['icon-image'];
+        }
+        return l;
+      });
+    return {
+      version: 8,
+      glyphs: new URL('map/fonts/', location.href).href + '{fontstack}/{range}.pbf',
+      sources: {
+        city: {
+          type: 'vector',
+          url: 'pmtiles://' + new URL(state.city.map, location.href).href,
+          attribution: '<a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>'
+        }
+      },
+      layers: layers
+    };
   }
 
   function pinElement(place) {
+    var wrap = document.createElement('div');
     var pin = document.createElement('button');
     pin.type = 'button';
     pin.className = 'pin';
@@ -142,37 +192,33 @@
       '<span class="pin__label"></span>';
     pin.querySelector('.pin__label').textContent = place.name;
     pin.addEventListener('click', function (e) { e.stopPropagation(); openSheet(place); });
-    return pin;
-  }
-
-  function loadYandex(key) {
-    return new Promise(function (resolve, reject) {
-      var s = document.createElement('script');
-      s.src = 'https://api-maps.yandex.ru/v3/?apikey=' + encodeURIComponent(key) + '&lang=ru_RU';
-      s.onload = function () { window.ymaps3.ready.then(resolve, reject); };
-      s.onerror = function () { reject(new Error('карта не загрузилась')); };
-      document.head.appendChild(s);
-    });
+    wrap.appendChild(pin);
+    return wrap;
   }
 
   function initMap() {
-    return loadYandex(state.config.yandexMapsKey).then(function () {
-      var y = window.ymaps3;
-      var theme = currentTheme();
-      state.map = new y.YMap($('#map'), {
-        location: { center: state.city.center, zoom: state.city.zoom },
-        theme: theme,
-        showScaleInCopyrights: false,
-        // Кнопку «Открыть Яндекс Карты» — наверх, под шапку: внизу она налезала на надпись Яндекса.
-        distributionPosition: 'top right'
-      });
-      state.scheme = new y.YMapDefaultSchemeLayer({ customization: mapStyle(theme) });
-      state.map.addChild(state.scheme);
-      state.map.addChild(new y.YMapDefaultFeaturesLayer());
-      state.map.addChild(new y.YMapListener({ onClick: function (obj) { if (!obj) closeSheet(); } }));
-      state.places.forEach(function (place) {
-        state.map.addChild(new y.YMapMarker({ coordinates: place.coords }, pinElement(place)));
-      });
+    var protocol = new window.pmtiles.Protocol();
+    maplibregl.addProtocol('pmtiles', protocol.tile);
+    state.map = new maplibregl.Map({
+      container: 'map',
+      style: mapStyle(currentTheme()),
+      center: state.city.center,
+      zoom: state.city.zoom,
+      minZoom: 10,
+      maxZoom: 18,
+      maxBounds: state.city.bounds,
+      attributionControl: { compact: true },
+      dragRotate: false,
+      pitchWithRotate: false
+    });
+    state.map.touchZoomRotate.disableRotation();
+    state.map.on('click', closeSheet);
+    state.map.on('error', function (e) { console.error(e && e.error ? e.error : e); });
+    state.places.forEach(function (place) {
+      // Точка ресторана — центр кружка, подпись висит под ним.
+      new maplibregl.Marker({ element: pinElement(place), anchor: 'top', offset: [0, -26] })
+        .setLngLat(place.coords)
+        .addTo(state.map);
     });
   }
 
@@ -211,7 +257,7 @@
       applyTheme(currentTheme(), false);
       renderCities();
       bindUI();
-      return initMap();
+      initMap();
     })
     .catch(function (err) {
       console.error(err);
