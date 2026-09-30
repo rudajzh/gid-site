@@ -6,7 +6,7 @@
 
   var maplibregl = window.maplibregl;
   var root = document.documentElement;
-  var state = { config: null, texts: null, places: [], city: null, map: null, selected: null };
+  var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false };
 
   // Цвета карты — из orders/gid/design.md. Карта — тихий фон: почти без контуров,
   // парки чуть темнее земли, яркое на ней только наши рестораны.
@@ -144,6 +144,131 @@
     state.map.easeTo({ center: place.coords, offset: wide ? [210, 0] : [0, -150], duration: 450 });
   }
 
+  // Страница ресторана. Адрес — #<id ресторана>: работает кнопка «назад» и жест назад на айфоне.
+
+  function price(value) {
+    return fmt(state.texts.price, { price: new Intl.NumberFormat('ru-RU').format(value) });
+  }
+
+  function renderPlace(place) {
+    var t = state.texts;
+    $('.place__mono').textContent = place.name.charAt(0);
+    $('.place__name').textContent = place.name;
+    $('.place__cuisine').textContent = place.cuisine;
+    var date = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(new Date(place.checkedAt + 'T12:00:00'));
+    $('.place__checked span').textContent = fmt(t.checked, { date: date });
+    $('.place__meta').textContent = fmt(t.place_meta, {
+      area: place.area, open: place.open, close: place.close,
+      sum: new Intl.NumberFormat('ru-RU').format(place.avgCheck)
+    });
+    $('.place__about').textContent = place.about;
+    $('.place__fictional').hidden = !place.fictional;
+
+    var tabs = $('.place__tabs');
+    var menu = $('.place__menu');
+    tabs.innerHTML = '';
+    menu.innerHTML = '';
+    place.menu.forEach(function (section, i) {
+      var id = 'menu-' + i;
+      var tab = document.createElement('button');
+      tab.type = 'button';
+      tab.className = 'place__tab';
+      tab.dataset.target = id;
+      tab.textContent = section.title;
+      tab.addEventListener('click', function () {
+        var target = document.getElementById(id);
+        var scroller = $('.place__scroll');
+        var top = scroller.scrollTop + target.getBoundingClientRect().top - scroller.getBoundingClientRect().top - tabs.offsetHeight;
+        scroller.scrollTo({ top: top, behavior: 'smooth' });
+        markTab(i);
+        tabLockUntil = Date.now() + 700;
+      });
+      tabs.appendChild(tab);
+
+      var block = document.createElement('section');
+      block.className = 'menu-section';
+      block.id = id;
+      var h = document.createElement('h2');
+      h.className = 'menu-section__title';
+      h.textContent = section.title;
+      block.appendChild(h);
+      section.items.forEach(function (item) {
+        var row = document.createElement('article');
+        row.className = 'dish';
+        row.innerHTML = '<div class="dish__text"><h3 class="dish__name"></h3><p class="dish__desc"></p></div>' +
+          '<p class="dish__price"><span class="dish__sum"></span><span class="dish__weight"></span></p>';
+        row.querySelector('.dish__name').textContent = item.name;
+        row.querySelector('.dish__desc').textContent = item.desc;
+        row.querySelector('.dish__sum').textContent = price(item.price);
+        row.querySelector('.dish__weight').textContent = item.weight;
+        block.appendChild(row);
+      });
+      menu.appendChild(block);
+    });
+    markTab(0);
+  }
+
+  function markTab(index) {
+    document.querySelectorAll('.place__tab').forEach(function (tab, i) {
+      tab.setAttribute('aria-current', String(i === index));
+      if (i === index) tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    });
+  }
+
+  // Подсветка раздела, который сейчас на экране. После нажатия на вкладку подсветка
+  // не прыгает, пока меню докручивается до раздела.
+  var tabLockUntil = 0;
+
+  function onMenuScroll() {
+    if (Date.now() < tabLockUntil) return;
+    var scroller = $('.place__scroll');
+    var sections = document.querySelectorAll('.menu-section');
+    var tabsBottom = $('.place__tabs').getBoundingClientRect().bottom;
+    var line = tabsBottom + (window.innerHeight - tabsBottom) * 0.35;
+    var current = 0;
+    sections.forEach(function (sec, i) {
+      if (sec.getBoundingClientRect().top < line) current = i;
+    });
+    if (scroller.scrollTop + scroller.clientHeight >= scroller.scrollHeight - 2) current = sections.length - 1;
+    var tabs = document.querySelectorAll('.place__tab');
+    if (tabs[current] && tabs[current].getAttribute('aria-current') !== 'true') markTab(current);
+  }
+
+  function showRoute() {
+    var id = decodeURIComponent(location.hash.slice(1));
+    var place = state.places.find(function (p) { return p.id === id; });
+    var page = $('.place');
+    if (place) {
+      if (state.place !== place.id) {
+        renderPlace(place);
+        $('.place__scroll').scrollTop = 0;
+      }
+      state.place = place.id;
+      page.hidden = false;
+      document.title = place.name + ' — ' + state.texts.brand;
+      $('.place__back').focus({ preventScroll: true });
+    } else {
+      state.place = null;
+      page.hidden = true;
+      document.title = state.texts.page_title;
+    }
+  }
+
+  function openPlace(id) {
+    state.pushed = true;
+    location.hash = encodeURIComponent(id);
+  }
+
+  function closePlace() {
+    if (state.pushed) {
+      state.pushed = false;
+      history.back();
+    } else {
+      history.replaceState(null, '', location.pathname + location.search);
+      showRoute();
+    }
+  }
+
   function closeSheet() {
     state.selected = null;
     $('.sheet').hidden = true;
@@ -279,6 +404,10 @@
     });
     $('.city__button').addEventListener('click', function (e) { e.stopPropagation(); toggleCityMenu(); });
     $('.sheet__close').addEventListener('click', closeSheet);
+    $('.sheet__open').addEventListener('click', function () { if (state.selected) openPlace(state.selected); });
+    $('.place__back').addEventListener('click', closePlace);
+    $('.place__scroll').addEventListener('scroll', onMenuScroll, { passive: true });
+    window.addEventListener('hashchange', showRoute);
     $('.compass').addEventListener('click', function () {
       state.map.easeTo({ bearing: 0, pitch: 0, duration: 400 });
     });
@@ -286,7 +415,9 @@
       if (!e.target.closest('.city')) toggleCityMenu(false);
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') { toggleCityMenu(false); closeSheet(); }
+      if (e.key !== 'Escape') return;
+      toggleCityMenu(false);
+      if (state.place) closePlace(); else closeSheet();
     });
   }
 
@@ -311,6 +442,7 @@
       renderCities();
       bindUI();
       initMap();
+      showRoute();
     })
     .catch(function (err) {
       console.error(err);

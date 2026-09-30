@@ -19,8 +19,8 @@
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/cormorant-garamond-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
-<link rel="stylesheet" href="css/style.css?v=20260930214757">
-<script src="env.js?v=20260930214757"></script>
+<link rel="stylesheet" href="css/style.css?v=20260930215322">
+<script src="env.js?v=20260930215322"></script>
 </head>
 <body>
 <div class="app">
@@ -66,11 +66,37 @@
     </p>
     <p class="sheet__hours"></p>
     <p class="sheet__fictional" hidden data-text="fictional"></p>
+    <button class="button sheet__open" type="button" data-text="open_menu"></button>
+  </section>
+
+  <section class="place" hidden aria-labelledby="place-name">
+    <div class="place__bar">
+      <button class="pill place__back" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        <span data-text="back_to_map"></span>
+      </button>
+    </div>
+    <div class="place__scroll">
+      <header class="place__hero">
+        <span class="place__mono" aria-hidden="true"></span>
+        <h1 class="place__name" id="place-name"></h1>
+        <p class="place__cuisine"></p>
+        <p class="place__checked">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <span></span>
+        </p>
+        <p class="place__meta"></p>
+        <p class="place__about"></p>
+        <p class="place__fictional" hidden data-text="fictional"></p>
+      </header>
+      <nav class="place__tabs" aria-label="Разделы меню"></nav>
+      <div class="place__menu"></div>
+    </div>
   </section>
 </div>
 <script src="vendor/maplibre-gl.js"></script>
 <script src="vendor/pmtiles.js"></script>
 <script src="vendor/basemaps.js"></script>
-<script src="js/app.js?v=20260930214757"></script>
+<script src="js/app.js?v=20260930215322"></script>
 </body>
 </html>

@@ -12,6 +12,10 @@
   "avg_check": "≈ {sum} ₽",
   "hours": "{area} · {open}–{close}",
   "fictional": "Ресторан придуман для примера",
+  "open_menu": "Открыть меню",
+  "back_to_map": "Карта",
+  "price": "{price} ₽",
+  "place_meta": "{area} · {open}–{close} · средний чек {sum} ₽",
   "map_error": "Карта не загрузилась. Проверьте интернет и обновите страницу.",
   "env_preview": "Проверка"
 }
