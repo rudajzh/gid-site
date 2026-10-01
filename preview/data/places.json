@@ -121,7 +121,8 @@
       "from": "12:00",
       "to": "22:30",
       "step": 30,
-      "leadMinutes": 30,
+      "leadMinutes": 15,
+      "confirmMinutes": 60,
       "days": 7,
       "maxGuests": 8
     },
@@ -356,7 +357,8 @@
       "from": "08:00",
       "to": "20:30",
       "step": 30,
-      "leadMinutes": 30,
+      "leadMinutes": 15,
+      "confirmMinutes": 60,
       "days": 7,
       "maxGuests": 8
     },
@@ -560,7 +562,8 @@
       "from": "13:00",
       "to": "21:30",
       "step": 30,
-      "leadMinutes": 30,
+      "leadMinutes": 15,
+      "confirmMinutes": 60,
       "days": 7,
       "maxGuests": 8
     },

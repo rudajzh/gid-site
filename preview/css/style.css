@@ -353,6 +353,19 @@ h2, p { margin: 0; }
   font-size: 28px; font-weight: 600; line-height: 1.1;
 }
 
+.order__note { margin: 12px 20px 0; font-size: 14px; color: var(--muted); }
+
+/* Я в ресторане / приду ко времени */
+.mode {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 0 16px; padding: 4px;
+  background: var(--surface); border: 1px solid var(--card-border); border-radius: 999px;
+}
+.mode__btn {
+  height: 40px; border: 0; border-radius: 999px; background: transparent; color: var(--muted);
+  font-size: 14.5px; font-weight: 700; transition: background-color 0.2s ease, color 0.2s ease;
+}
+.mode__btn[aria-checked="true"] { background: var(--accent); color: var(--on-accent); }
+
 /* Бронь: дни, гости, время */
 .chip {
   height: 42px; padding: 0 16px; border-radius: 999px;
@@ -374,6 +387,7 @@ h2, p { margin: 0; }
 .guests__count { min-width: 84px; text-align: center; font-size: 15px; font-weight: 700; }
 .slots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 0 16px; }
 .chip--slot { padding: 0; font-variant-numeric: tabular-nums; }
+.chip--soon { grid-column: span 2; }
 .chip:disabled { opacity: 0.35; text-decoration: line-through; cursor: default; }
 .slots__empty { margin: 10px 20px 0; font-size: 14px; color: var(--muted); }
 

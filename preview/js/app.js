@@ -7,7 +7,7 @@
   var maplibregl = window.maplibregl;
   var root = document.documentElement;
   var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false,
-    cart: {}, book: null, bookDays: [], orderPushed: false, loyalty: null, cardPushed: false, cardFresh: false, cardDrawn: false };
+    cart: {}, book: null, bookWant: null, bookDays: [], orderPushed: false, loyalty: null, cardPushed: false, cardFresh: false, cardDrawn: false };
 
   // Цвета карты — из orders/gid/design.md. Карта — тихий фон: почти без контуров,
   // парки чуть темнее земли, яркое на ней только наши рестораны.
@@ -312,7 +312,8 @@
     if (!$('.order').hidden) renderOrderLines(place);
   }
 
-  // Бронь: день → гости → время → столик на плане зала → блюда по желанию.
+  // Заказ и бронь. Два случая: гость уже в ресторане — выбирает свой стол и блюда;
+  // придёт ко времени — день → гости → время → свободный стол → блюда по желанию.
   // Занятость столов в макете придуманная, но для одного дня и времени всегда одинаковая.
 
   var SVG = 'http://www.w3.org/2000/svg';
@@ -345,16 +346,24 @@
     return hash(place.id + dayKey(day) + slot + table.id) % 100 < (peak ? 55 : 25);
   }
 
+  function nowMinutes() {
+    var now = new Date();
+    return now.getHours() * 60 + now.getMinutes();
+  }
+
+  // Сегодня первым идёт ближайшее время, к которому ресторан успеет подготовиться,
+  // даже если оно не попадает в сетку слотов; прошедшего времени нет.
   function slotsFor(place, dayIndex) {
     var b = place.booking;
+    var from = minutes(b.from), to = minutes(b.to);
     var list = [];
     var earliest = -1;
     if (dayIndex === 0) {
-      var now = new Date();
-      earliest = now.getHours() * 60 + now.getMinutes() + b.leadMinutes;
+      earliest = Math.ceil((state.book.now + b.leadMinutes) / 5) * 5;
+      if (earliest > from && earliest <= to) list.push(earliest);
     }
-    for (var m = minutes(b.from); m <= minutes(b.to); m += b.step) {
-      if (m < earliest) continue;
+    for (var m = from; m <= to; m += b.step) {
+      if (m < earliest + (list.length ? 10 : 0)) continue;
       list.push(m);
     }
     return list;
@@ -362,7 +371,7 @@
 
   function tableFree(place, table) {
     var bk = state.book;
-    if (bk.slot == null) return true;
+    if (bk.mode === 'here' || bk.slot == null) return true;
     return !isBusy(place, state.bookDays[bk.day], bk.slot, table);
   }
 
@@ -372,17 +381,57 @@
     });
   }
 
-  function renderBooking(place) {
+  // want.mode — открыть этот случай; want.fallback — только если экран открывается впервые.
+  // Выбор переживает поход в меню за блюдами.
+  function renderBooking(place, want) {
+    want = want || {};
     $('.order__place').textContent = place.name;
-    state.bookDays = bookDays(place);
-    state.book = { day: 0, guests: Math.min(2, place.booking.maxGuests), slot: null, table: null };
-    // Если сегодня уже нечего бронировать — сразу завтра.
-    if (!slotsFor(place, 0).some(function (m) { return slotOpen(place, 0, m); })) state.book.day = 1;
+    var bk = state.book;
+    if (bk && bk.place === place.id) {
+      if (want.mode) bk.mode = want.mode;
+      var now = nowMinutes();
+      if (bk.slot == null) bk.now = now;
+      else if (bk.day === 0 && bk.slot < now + place.booking.leadMinutes) {
+        bk.now = now;
+        bk.slot = null;
+        if (bk.mode === 'later') bk.table = null;
+      }
+    } else {
+      state.bookDays = bookDays(place);
+      state.book = { place: place.id, mode: want.mode || want.fallback || 'later', now: nowMinutes(),
+        day: 0, guests: Math.min(2, place.booking.maxGuests), slot: null, table: null };
+      // Если сегодня уже нечего бронировать — сразу завтра.
+      if (!slotsFor(place, 0).some(function (m) { return slotOpen(place, 0, m); })) state.book.day = 1;
+    }
     renderDays(place);
     renderGuests(place);
     renderSlots(place);
+    renderMode(place);
+  }
+
+  function renderMode(place) {
+    var t = state.texts;
+    var here = state.book.mode === 'here';
+    document.querySelectorAll('.mode__btn').forEach(function (b) {
+      b.setAttribute('aria-checked', String(b.dataset.mode === state.book.mode));
+    });
+    document.querySelectorAll('.order__later').forEach(function (el) { el.hidden = here; });
+    $('.order__title').textContent = here ? t.here_title : t.book_title;
+    $('.order__empty').textContent = here ? t.here_dishes_none : t.book_dishes_none;
     renderPlan(place);
     renderOrderLines(place);
+  }
+
+  function setMode(mode) {
+    var place = currentPlace();
+    var bk = state.book;
+    if (bk.mode === mode) return;
+    bk.mode = mode;
+    // Стол, выбранный «я в ресторане», для брони может быть занят или мал.
+    if (mode === 'later' && bk.table && (bk.slot == null || !tableFree(place, bk.table) || bk.table.seats < bk.guests)) {
+      bk.table = null;
+    }
+    renderMode(place);
   }
 
   function renderDays(place) {
@@ -438,7 +487,7 @@
     var box = $('.slots');
     box.innerHTML = '';
     var any = false;
-    slotsFor(place, state.book.day).forEach(function (m) {
+    slotsFor(place, state.book.day).forEach(function (m, i) {
       var open = slotOpen(place, state.book.day, m);
       any = any || open;
       var chip = document.createElement('button');
@@ -446,7 +495,9 @@
       chip.className = 'chip chip--slot';
       chip.setAttribute('role', 'radio');
       chip.setAttribute('aria-checked', String(m === state.book.slot));
-      chip.textContent = hhmm(m);
+      var soon = state.book.day === 0 && i === 0 && m - state.book.now <= 60;
+      chip.textContent = soon ? fmt(state.texts.slot_soon, { min: m - state.book.now, time: hhmm(m) }) : hhmm(m);
+      if (soon) chip.classList.add('chip--soon');
       chip.disabled = !open;
       chip.addEventListener('click', function () {
         state.book.slot = m;
@@ -592,12 +643,14 @@
       el.textContent = lb.text;
     });
 
-    // Столы: стулья, столешница, номер. Занятые и маленькие для компании не нажимаются.
+    // Столы: стулья, столешница, номер. При брони занятые и маленькие для компании
+    // не нажимаются; гость в ресторане выбирает любой — за ним он и сидит.
+    var here = state.book.mode === 'here';
     plan.tables.forEach(function (tb) {
       var free = tableFree(place, tb);
-      var fits = tb.seats >= state.book.guests;
+      var fits = here || tb.seats >= state.book.guests;
       var mine = state.book.table && state.book.table.id === tb.id;
-      var enabled = state.book.slot != null && free && fits;
+      var enabled = (here || state.book.slot != null) && free && fits;
       var g = svg('g', { class: 'plan__table' + (mine ? ' is-mine' : '') + (!free ? ' is-busy' : '') + (!fits ? ' is-small' : '') }, root);
       drawChairs(g, tb);
       if (tb.shape === 'round') svg('circle', { cx: tb.x, cy: tb.y, r: tb.r, class: 'plan__top' }, g);
@@ -630,9 +683,9 @@
       }
     });
 
-    $('.plan__status').textContent = state.book.slot == null ? t.book_table_need_time
-      : state.book.table ? tableText('order_table_chosen', state.book.table) : t.book_table_hint;
-    box.classList.toggle('plan--waiting', state.book.slot == null);
+    $('.plan__status').textContent = state.book.table ? tableText('order_table_chosen', state.book.table)
+      : here ? t.here_table_hint : state.book.slot == null ? t.book_table_need_time : t.book_table_hint;
+    box.classList.toggle('plan--waiting', !here && state.book.slot == null);
     updateSend(place);
   }
 
@@ -679,13 +732,29 @@
   function updateSend(place) {
     if (!state.book) return;
     var t = state.texts;
+    var bk = state.book;
     var btn = $('.send');
     var totals = cartTotals(place);
-    var need = state.book.slot == null ? t.send_need_time : !state.book.table ? t.send_need_table : null;
+    var need, text;
+    if (bk.mode === 'here') {
+      need = !bk.table ? t.send_need_table_here : !totals.count ? t.send_need_dishes : null;
+      text = need || fmt(t.here_send, { id: bk.table && bk.table.id, sum: price(totals.sum) });
+    } else {
+      need = bk.slot == null ? t.send_need_time : !bk.table ? t.send_need_table : null;
+      text = need || (totals.count
+        ? fmt(t.book_send_order, { sum: price(totals.sum) })
+        : fmt(t.book_send, { when: whenText() }));
+    }
     btn.disabled = !!need;
-    btn.textContent = need || (totals.count
-      ? fmt(t.book_send_order, { sum: price(totals.sum) })
-      : fmt(t.book_send, { when: whenText() }));
+    btn.textContent = text;
+
+    // Блюда к далёкому времени готовят, только когда гость подтвердит, что идёт.
+    var note = $('.order__note');
+    note.hidden = bk.mode === 'here' || bk.slot == null || !totals.count;
+    if (!note.hidden) {
+      var far = bk.day > 0 || bk.slot - nowMinutes() > place.booking.confirmMinutes;
+      note.textContent = far ? t.book_note_confirm : t.book_note_soon;
+    }
   }
 
   function sendOrder() {
@@ -840,7 +909,8 @@
       refreshCart(place);
       var wantOrder = parts[1] === 'book';
       if (wantOrder && order.hidden) {
-        renderBooking(place);
+        renderBooking(place, state.bookWant);
+        state.bookWant = null;
         $('.order__scroll').scrollTop = 0;
       }
       order.hidden = !wantOrder;
@@ -855,7 +925,8 @@
     }
   }
 
-  function openOrder() {
+  function openOrder(want) {
+    state.bookWant = want;
     state.orderPushed = true;
     location.hash = encodeURIComponent(state.place) + '/book';
   }
@@ -1028,14 +1099,17 @@
     $('.sheet__book').addEventListener('click', function () {
       if (!state.selected) return;
       openPlace(state.selected);
-      setTimeout(openOrder, 0);
+      setTimeout(function () { openOrder({ mode: 'later' }); }, 0);
     });
-    $('.place__book').addEventListener('click', openOrder);
+    $('.place__book').addEventListener('click', function () { openOrder({ mode: 'later' }); });
+    document.querySelectorAll('.mode__btn').forEach(function (b) {
+      b.addEventListener('click', function () { setMode(b.dataset.mode); });
+    });
     $('.order__pick').addEventListener('click', closeOrder);
     $('.guests__less').addEventListener('click', function () { changeGuests(-1); });
     $('.guests__more').addEventListener('click', function () { changeGuests(1); });
     $('.place__back').addEventListener('click', closePlace);
-    $('.cartbar__button').addEventListener('click', openOrder);
+    $('.cartbar__button').addEventListener('click', function () { openOrder({ fallback: 'here' }); });
     $('.order__back').addEventListener('click', closeOrder);
     $('.send').addEventListener('click', sendOrder);
     $('.tg__close').addEventListener('click', function () { $('.tg').hidden = true; $('.send').focus(); });
