@@ -7,7 +7,7 @@
   var maplibregl = window.maplibregl;
   var root = document.documentElement;
   var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false,
-    cart: {}, book: null, bookDays: [], orderPushed: false };
+    cart: {}, book: null, bookDays: [], orderPushed: false, loyalty: null, cardPushed: false, cardFresh: false, cardDrawn: false };
 
   // Цвета карты — из orders/gid/design.md. Карта — тихий фон: почти без контуров,
   // парки чуть темнее земли, яркое на ней только наши рестораны.
@@ -700,16 +700,136 @@
     (bot ? link : $('.tg__close')).focus();
   }
 
+  // Моя карта — карта лояльности. В макете всё нарисовано: баллы, уровень и история
+  // берутся из data/loyalty.json, ничего не начисляется и не списывается.
+
+  var HOW_ICONS = {
+    city: '<path d="M12 21s-6-5.4-6-10.2A6 6 0 0 1 18 10.8C18 15.6 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.2"/>',
+    percent: '<path d="M18 6L6 18"/><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>',
+    coins: '<ellipse cx="9" cy="7" rx="6" ry="2.6"/><path d="M3 7v4.5c0 1.4 2.7 2.6 6 2.6M3 11.5V16c0 1.4 2.7 2.6 6 2.6"/><ellipse cx="15" cy="13" rx="6" ry="2.6"/><path d="M9 13v4.5c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6V13"/>',
+    receipt: '<path d="M6 3h12v18l-2-1.4-2 1.4-2-1.4-2 1.4-2-1.4L6 21z"/><path d="M9 8h6M9 12h6M9 16h3"/>'
+  };
+
+  function points(n) {
+    return new Intl.NumberFormat('ru-RU').format(n);
+  }
+
+  function renderCard() {
+    var t = state.texts;
+    var card = state.loyalty;
+    var balance = card.history.reduce(function (sum, h) { return sum + h.points; }, 0);
+    var earned = card.history.reduce(function (sum, h) { return sum + Math.max(0, h.points); }, 0);
+    var levels = card.levels;
+    var now = 0;
+    levels.forEach(function (lv, i) { if (earned >= lv.from) now = i; });
+    var next = levels[now + 1];
+
+    $('.bank__sum').textContent = points(balance);
+    $('.bank__word').textContent = plural(balance, t.points);
+    $('.bank__name').textContent = card.guest;
+    $('.bank__level').textContent = levels[now].name;
+
+    var steps = $('.level__steps');
+    steps.innerHTML = '';
+    levels.forEach(function (lv, i) {
+      var li = document.createElement('li');
+      li.className = 'level__step' + (i < now ? ' level__step--done' : i === now ? ' level__step--now' : '');
+      li.textContent = lv.name;
+      steps.appendChild(li);
+    });
+    // Полоска — вся лестница уровней: каждый уровень — равная доля, внутри доли — прогресс до следующего.
+    var share = next ? (earned - levels[now].from) / (next.from - levels[now].from) : 1;
+    var fill = levels.length > 1 ? Math.min(1, (now + share) / (levels.length - 1)) : 1;
+    $('.level__fill').style.width = (fill * 100).toFixed(1) + '%';
+    $('.level__next').textContent = next
+      ? fmt(t.card_level_next, { level: next.name, points: points(next.from - earned), pointsWord: plural(next.from - earned, t.points) })
+      : t.card_level_top;
+    $('.level__earned').textContent = fmt(t.card_earned, { points: points(earned), pointsWord: plural(earned, t.points) });
+
+    $('.qr__code').src = card.qr;
+    $('.qr__number').textContent = fmt(t.card_number, { number: card.number });
+
+    var how = $('.how');
+    how.innerHTML = '';
+    t.card_how.forEach(function (item) {
+      var li = document.createElement('li');
+      li.className = 'how__item';
+      li.innerHTML = '<span class="how__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        (HOW_ICONS[item.icon] || '') + '</svg></span><span class="how__text"><span class="how__title"></span><span class="how__desc"></span></span>';
+      var vars = { earn: card.earnPercent, pay: card.payPercent };
+      li.querySelector('.how__title').textContent = fmt(item.title, vars);
+      li.querySelector('.how__desc').textContent = fmt(item.text, vars);
+      how.appendChild(li);
+    });
+
+    var history = $('.history');
+    history.innerHTML = '';
+    card.history.forEach(function (h) {
+      var place = state.places.find(function (p) { return p.id === h.place; });
+      if (!place) return;
+      var date = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long' }).format(new Date(h.date + 'T12:00:00'));
+      var key = h.points < 0 ? 'card_history_spend' : h.scanned ? 'card_history_scan' : 'card_history_earn';
+      var li = document.createElement('li');
+      li.className = 'history__item';
+      li.innerHTML = '<span class="history__text"><span class="history__place"></span><span class="history__detail"></span></span><span class="history__points"></span>';
+      li.querySelector('.history__place').textContent = place.name;
+      li.querySelector('.history__detail').textContent = fmt(t[key], { date: date, sum: h.check ? price(h.check) : '' });
+      var pts = li.querySelector('.history__points');
+      pts.textContent = (h.points < 0 ? '−' : '+') + points(Math.abs(h.points));
+      pts.classList.toggle('history__points--plus', h.points > 0);
+      history.appendChild(li);
+    });
+
+    var spend = $('.spend');
+    spend.innerHTML = '';
+    state.places.forEach(function (place) {
+      var li = document.createElement('li');
+      var row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'spend__item';
+      row.innerHTML = '<span class="spend__mono" aria-hidden="true"></span><span class="spend__text"><span class="spend__name"></span><span class="spend__cuisine"></span></span>' +
+        '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+      row.querySelector('.spend__mono').textContent = place.name.charAt(0);
+      row.querySelector('.spend__name').textContent = place.name;
+      row.querySelector('.spend__cuisine').textContent = place.cuisine + ' · ' + place.area;
+      row.addEventListener('click', function () { openPlace(place.id); });
+      li.appendChild(row);
+      spend.appendChild(li);
+    });
+  }
+
+  function openCard() {
+    state.cardPushed = true;
+    state.cardFresh = true;
+    location.hash = 'card';
+  }
+
+  function closeCard() {
+    if (state.cardPushed) {
+      state.cardPushed = false;
+      history.back();
+    } else {
+      history.replaceState(null, '', location.pathname + location.search);
+      showRoute();
+    }
+  }
+
   function currentPlace() {
     return state.places.find(function (p) { return p.id === state.place; });
   }
 
-  // Адреса: #<ресторан> — меню, #<ресторан>/order — заказ.
+  // Адреса: #<ресторан> — меню, #<ресторан>/book — бронь, #card — моя карта.
   function showRoute() {
     var parts = decodeURIComponent(location.hash.slice(1)).split('/');
     var place = state.places.find(function (p) { return p.id === parts[0]; });
     var page = $('.place');
     var order = $('.order');
+    var loyalty = $('.loyalty');
+    var wantCard = parts[0] === 'card' && !!state.loyalty;
+    if (wantCard && !state.cardDrawn) { renderCard(); state.cardDrawn = true; }
+    loyalty.hidden = !wantCard;
+    // С карты города — карта сверху; назад из ресторана — там же, где были.
+    if (wantCard && state.cardFresh) { $('.loyalty__scroll').scrollTop = 0; state.cardFresh = false; }
     if (place) {
       if (state.place !== place.id) {
         state.place = place.id;
@@ -730,7 +850,8 @@
       state.place = null;
       page.hidden = true;
       order.hidden = true;
-      document.title = state.texts.page_title;
+      document.title = wantCard ? state.texts.card_title + ' — ' + state.texts.brand : state.texts.page_title;
+      if (wantCard) $('.loyalty__back').focus({ preventScroll: true });
     }
   }
 
@@ -898,6 +1019,10 @@
       applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
     });
     $('.city__button').addEventListener('click', function (e) { e.stopPropagation(); toggleCityMenu(); });
+    $('.card-toggle').addEventListener('click', openCard);
+    $('.loyalty__back').addEventListener('click', closeCard);
+    $('.loyalty__scan').addEventListener('click', function () { $('.scan').hidden = false; $('.scan__close').focus(); });
+    $('.scan__close').addEventListener('click', function () { $('.scan').hidden = true; $('.loyalty__scan').focus(); });
     $('.sheet__close').addEventListener('click', closeSheet);
     $('.sheet__open').addEventListener('click', function () { if (state.selected) openPlace(state.selected); });
     $('.sheet__book').addEventListener('click', function () {
@@ -925,8 +1050,10 @@
       if (e.key !== 'Escape') return;
       toggleCityMenu(false);
       if (!$('.tg').hidden) { $('.tg').hidden = true; return; }
+      if (!$('.scan').hidden) { $('.scan').hidden = true; return; }
       if (!$('.order').hidden) closeOrder();
       else if (state.place) closePlace();
+      else if (!$('.loyalty').hidden) closeCard();
       else closeSheet();
     });
   }
@@ -937,15 +1064,17 @@
     $('meta[name="description"]').setAttribute('content', t.page_description);
     document.querySelectorAll('[data-text]').forEach(function (el) { el.textContent = t[el.dataset.text]; });
     $('.sheet__close').setAttribute('aria-label', t.close);
+    $('.card-toggle').setAttribute('aria-label', t.card_open);
     $('.compass').setAttribute('aria-label', t.compass);
     $('.guests__less').setAttribute('aria-label', t.book_less);
     $('.guests__more').setAttribute('aria-label', t.book_more);
     $('.env-badge').hidden = window.GID_ENV !== 'preview';
   }
 
-  Promise.all([loadJSON('data/config.json'), loadJSON('data/texts.json'), loadJSON('data/places.json')])
+  Promise.all([loadJSON('data/config.json'), loadJSON('data/texts.json'), loadJSON('data/places.json'), loadJSON('data/loyalty.json')])
     .then(function (data) {
       state.config = data[0];
+      state.loyalty = data[3];
       state.cart = loadCart();
       state.texts = data[1];
       state.city = state.config.cities.find(function (c) { return c.id === state.config.defaultCity; });

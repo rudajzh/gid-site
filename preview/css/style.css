@@ -453,12 +453,134 @@ h2, p { margin: 0; }
   font-size: 15px; font-weight: 600; color: var(--text);
 }
 
+/* Моя карта — карта лояльности. Карта в цвете деталей: шалфей в тёмной теме, золото в светлой. */
+[data-theme="dark"] {
+  --bank-bg: linear-gradient(135deg, #46553F 0%, #313C2D 52%, #252D22 100%);
+  --bank-text: #F0E8E0;
+  --bank-soft: rgba(240, 232, 224, 0.68);
+  --bank-chip: #CDAE72;
+}
+[data-theme="light"] {
+  --bank-bg: linear-gradient(135deg, #A6834B 0%, #866636 52%, #6A4F28 100%);
+  --bank-text: #FBF4E8;
+  --bank-soft: rgba(251, 244, 232, 0.74);
+  --bank-chip: #E9D3A6;
+}
+.loyalty {
+  position: absolute; z-index: 20; inset: 0;
+  display: flex; flex-direction: column; background: var(--bg);
+  animation: place-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.loyalty__scroll {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding-bottom: calc(32px + env(safe-area-inset-bottom));
+}
+.bank {
+  position: relative; overflow: hidden; margin: 0 16px; aspect-ratio: 1.586; max-height: 260px;
+  padding: 20px 22px; border-radius: 22px; color: var(--bank-text); background: var(--bank-bg);
+  display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 16px 36px rgba(0, 0, 0, 0.28);
+}
+/* Блик и большая буква «Р» на фоне — чтобы карта читалась как карта, а не как плашка. */
+.bank::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.16), transparent 55%);
+}
+.bank::after {
+  content: 'Р'; position: absolute; right: -6px; bottom: -64px; pointer-events: none;
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 260px; font-weight: 700; line-height: 1;
+  color: var(--bank-text); opacity: 0.07;
+}
+.bank > * { position: relative; z-index: 1; }
+.bank__top, .bank__bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bank__brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 700; line-height: 1; }
+.bank__sample {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 999px; border: 1px solid var(--bank-soft); color: var(--bank-soft);
+}
+.bank__chip { fill: var(--bank-chip); stroke: rgba(0, 0, 0, 0.22); stroke-width: 1; opacity: 0.9; }
+.bank__points { display: flex; align-items: baseline; gap: 8px; }
+.bank__sum { font-size: 40px; font-weight: 700; line-height: 1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.bank__word { font-size: 15px; font-weight: 600; color: var(--bank-soft); }
+.bank__name { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bank-soft); }
+.bank__level {
+  font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16); white-space: nowrap;
+}
+
+.loyalty-card {
+  margin: 12px 16px 0; padding: 16px; list-style: none;
+  background: var(--surface); border: 1px solid var(--card-border); border-radius: 20px;
+  box-shadow: var(--card-shadow);
+}
+.level__steps { display: flex; justify-content: space-between; margin: 0 0 10px; padding: 0; list-style: none; font-size: 13px; font-weight: 600; color: var(--dim); }
+.level__step--done { color: var(--muted); }
+.level__step--now { color: var(--detail); font-weight: 700; }
+.level__bar { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.level__fill { display: block; height: 100%; border-radius: inherit; background: var(--detail); }
+.level__next { margin-top: 12px; font-size: 14.5px; font-weight: 600; }
+.level__earned { margin-top: 4px; font-size: 13px; color: var(--muted); }
+
+.qr { display: flex; align-items: center; gap: 16px; }
+.qr__code { flex: none; width: 116px; height: 116px; border-radius: 12px; background: #fff; }
+.qr__text { display: flex; flex-direction: column; gap: 6px; }
+.qr__title { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; line-height: 1.05; }
+.qr__hint { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.qr__number { font-size: 13px; font-weight: 600; color: var(--dim); font-variant-numeric: tabular-nums; }
+
+.how, .history, .spend { margin-top: 0; padding-top: 0; padding-bottom: 0; }
+.how__item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--divider); }
+.how__item:last-child, .history__item:last-child, .spend li:last-child .spend__item { border-bottom: 0; }
+.how__icon {
+  flex: none; width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-2); color: var(--detail);
+}
+.how__text, .history__text, .spend__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.how__title, .history__place, .spend__name { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.how__desc, .history__detail, .spend__cuisine { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.loyalty__scan {
+  margin: 12px 16px 0; width: calc(100% - 32px);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.history__item { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--divider); }
+.history__points { flex: none; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.history__points--plus { color: var(--detail); }
+.spend__item {
+  width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 0; min-height: 64px;
+  border: 0; border-bottom: 1px solid var(--divider); background: none; text-align: left;
+}
+.spend__mono {
+  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent); color: var(--on-accent);
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 700; line-height: 1; padding-bottom: 2px;
+}
+.spend__item > svg { flex: none; color: var(--dim); }
+.loyalty__note { margin: 20px 20px 0; font-size: 12.5px; line-height: 1.5; color: var(--dim); }
+.card-toggle svg { transition: transform 0.2s ease; }
+.card-toggle:active svg { transform: scale(0.92); }
+
+/* Шапка на узких телефонах: название, город и две круглые кнопки помещаются в строку. */
+@media (max-width: 400px) {
+  .topbar__left { gap: 8px; }
+  .topbar__right { gap: 6px; }
+  .city__button { padding: 0 10px; }
+}
 @media (max-width: 360px) {
   .wordmark { font-size: 28px; }
+  .qr__code { width: 96px; height: 96px; }
+}
+@media (max-width: 340px) {
+  .topbar { padding-left: 12px; padding-right: 12px; }
+  .compass { right: 12px; }
+  .wordmark { font-size: 24px; }
+  .city__button { padding: 0 8px; font-size: 13px; }
+  .topbar__right { gap: 4px; }
 }
 @media (min-width: 720px) {
   .topbar { padding: 20px 24px 0; }
   .sheet { left: 24px; right: auto; bottom: 44px; width: 400px; }
-  .place, .order { right: auto; width: 480px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.25); border-right: 1px solid var(--hairline); }
+  .place, .order, .loyalty { right: auto; width: 480px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.25); border-right: 1px solid var(--hairline); }
   .tg { align-items: center; }
 }
