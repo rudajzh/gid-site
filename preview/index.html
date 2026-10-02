@@ -7,20 +7,23 @@
 <title>РестоГид</title>
 <meta name="description" content="">
 <meta name="theme-color" content="#1E1815">
+<script src="vendor/telegram-web-app.js"></script>
 <script>
-  // Тема до отрисовки, чтобы экран не мигал светлым.
+  // Тема до отрисовки, чтобы экран не мигал светлым. В Телеграме — как в Телеграме.
   (function () {
     var saved = null;
     try { saved = localStorage.getItem('theme'); } catch (e) {}
-    var dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    var tg = window.Telegram && window.Telegram.WebApp;
+    var system = tg && tg.platform !== 'unknown' ? tg.colorScheme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    var dark = saved ? saved === 'dark' : system;
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   })();
 </script>
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/cormorant-garamond-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
-<link rel="stylesheet" href="css/style.css?v=20261001104123">
-<script src="env.js?v=20261001104123"></script>
+<link rel="stylesheet" href="css/style.css?v=20261002142034">
+<script src="env.js?v=20261002142034"></script>
 </head>
 <body>
 <div class="app">
@@ -256,6 +259,6 @@
 <script src="vendor/maplibre-gl.js"></script>
 <script src="vendor/pmtiles.js"></script>
 <script src="vendor/basemaps.js"></script>
-<script src="js/app.js?v=20261001104123"></script>
+<script src="js/app.js?v=20261002142034"></script>
 </body>
 </html>

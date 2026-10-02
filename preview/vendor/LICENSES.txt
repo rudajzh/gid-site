@@ -6,6 +6,8 @@ pmtiles.js — PMTiles 4.5.0, BSD-3-Clause
   https://github.com/protomaps/PMTiles
 basemaps.js — Protomaps Basemaps 5.7.2, BSD-3-Clause
   https://github.com/protomaps/basemaps
+telegram-web-app.js — официальный скрипт мини-приложений Telegram, копия от 02.10.2026
+  https://telegram.org/js/telegram-web-app.js, описание — https://core.telegram.org/bots/webapps
 
 ../map/*.pmtiles — данные © участники OpenStreetMap, ODbL (https://www.openstreetmap.org/copyright),
   сборка Protomaps (https://protomaps.com). Подпись «© OpenStreetMap» на карте обязательна.

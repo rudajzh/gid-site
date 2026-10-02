@@ -6,6 +6,11 @@
 
   var maplibregl = window.maplibregl;
   var root = document.documentElement;
+  // Мини-приложение в Телеграме. Открытое кнопкой бота, оно отправляет бронь
+  // через sendData; у такого запуска нет initData. На обычном сайте tg — null.
+  var tg = window.Telegram && window.Telegram.WebApp;
+  if (!tg || tg.platform === 'unknown') tg = null;
+  var tgCanSend = !!tg && !tg.initData;
   var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false,
     cart: {}, book: null, bookWant: null, bookDays: [], orderPushed: false, loyalty: null, cardPushed: false, cardFresh: false, cardDrawn: false };
 
@@ -48,7 +53,12 @@
   function applyTheme(theme, remember) {
     root.dataset.theme = theme;
     if (remember) { try { localStorage.setItem('theme', theme); } catch (e) {} }
-    $('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1E1815' : '#F1EBE1');
+    var bg = theme === 'dark' ? '#1E1815' : '#F1EBE1';
+    $('meta[name="theme-color"]').setAttribute('content', bg);
+    // Цвет шапки своим цветом Телеграм понимает с 6.9, раньше — бросает ошибку.
+    if (tg && tg.isVersionAtLeast('6.1')) tg.setBackgroundColor(bg);
+    if (tg && tg.isVersionAtLeast('6.9')) tg.setHeaderColor(bg);
+    if (tg && tg.isVersionAtLeast('7.10')) tg.setBottomBarColor(bg);
     $('.theme-toggle').setAttribute('aria-label', state.texts[theme === 'dark' ? 'theme_to_light' : 'theme_to_dark']);
     if (state.map) switchMapTheme(theme);
   }
@@ -757,10 +767,41 @@
     }
   }
 
+  function localDate(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  // Боту уходит только выбор гостя: цены и названия бот сверяет с data/places.json.
+  function orderData(place) {
+    var bk = state.book;
+    var data = { v: 1, place: place.id, mode: bk.mode, table: bk.table.id,
+      items: cartLines(place).map(function (line) { return [line.item.name, line.qty]; }) };
+    if (bk.mode === 'later') {
+      data.date = localDate(state.bookDays[bk.day]);
+      data.time = hhmm(bk.slot);
+      data.guests = bk.guests;
+    }
+    return JSON.stringify(data);
+  }
+
   function sendOrder() {
-    // Из Телеграма бронь уйдёт боту — это следующий шаг. На обычном сайте
-    // объясняем, что брони идут через Телеграм, и даём ссылку на бота.
-    var bot = state.config.bot;
+    var place = currentPlace();
+    if (tgCanSend && place) {
+      var data = orderData(place);
+      try {
+        // Телеграм закроет мини-приложение, а бот ответит в чате. Заказ отправлен —
+        // корзину и бронь этого ресторана очищаем, чтобы они не вернулись при следующем открытии.
+        tg.sendData(data);
+        delete state.cart[place.id];
+        saveCart();
+        state.book = null;
+        return;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    // На обычном сайте объясняем, что брони идут через Телеграм, и даём ссылку на бота.
+    var bot = (state.config.bot || {})[window.GID_ENV];
     var link = $('.tg__open');
     link.hidden = !bot;
     if (bot) link.href = 'https://t.me/' + bot;
@@ -1147,6 +1188,12 @@
 
   Promise.all([loadJSON('data/config.json'), loadJSON('data/texts.json'), loadJSON('data/places.json'), loadJSON('data/loyalty.json')])
     .then(function (data) {
+      if (tg) {
+        tg.ready();
+        tg.expand();
+        // Иначе жест по карте вниз сворачивает мини-приложение.
+        if (tg.isVersionAtLeast('7.7')) tg.disableVerticalSwipes();
+      }
       state.config = data[0];
       state.loyalty = data[3];
       state.cart = loadCart();
