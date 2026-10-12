@@ -7,6 +7,9 @@
 <title>РестоГид</title>
 <meta name="description" content="">
 <meta name="theme-color" content="#1E1815">
+<link rel="icon" href="img/favicon.png" sizes="64x64">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <script src="vendor/telegram-web-app.js"></script>
 <script>
   // Тема до отрисовки, чтобы экран не мигал светлым. В Телеграме — как в Телеграме.
@@ -22,13 +25,14 @@
 <link rel="preload" href="fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/cormorant-garamond-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
-<link rel="stylesheet" href="css/style.css?v=20261012203410">
-<script src="env.js?v=20261012203410"></script>
+<link rel="stylesheet" href="css/style.css?v=20261012221500">
+<script src="env.js?v=20261012221500"></script>
 </head>
 <body>
 <div class="app">
   <header class="topbar">
     <div class="topbar__left">
+      <svg class="topbar__mark" viewBox="0 0 120 120" aria-hidden="true"><use href="img/brand.svg#mark"/></svg>
       <span class="wordmark" data-text="brand"></span>
       <div class="city">
         <button class="pill city__button" type="button" aria-haspopup="listbox" aria-expanded="false">
@@ -64,7 +68,7 @@
     </div>
     <p class="sheet__cuisine"></p>
     <p class="sheet__checked">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+      <svg width="18" height="18" viewBox="0 0 120 120" aria-hidden="true"><use href="img/brand.svg#mark-small"/></svg>
       <span></span>
     </p>
     <p class="sheet__hours"></p>
@@ -90,7 +94,7 @@
       </header>
       <ul class="place__facts">
         <li class="place__fact place__checked">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <svg width="20" height="20" viewBox="0 0 120 120" aria-hidden="true"><use href="img/brand.svg#mark-small"/></svg>
           <span></span>
         </li>
         <li class="place__fact">
@@ -185,7 +189,7 @@
 
       <div class="bank">
         <div class="bank__top">
-          <span class="bank__brand" data-text="brand"></span>
+          <span class="bank__logo"><svg width="26" height="26" viewBox="0 0 120 120" aria-hidden="true"><use href="img/brand.svg#mark"/></svg><span class="bank__brand" data-text="brand"></span></span>
           <span class="bank__sample" data-text="card_sample"></span>
         </div>
         <svg class="bank__chip" width="38" height="28" viewBox="0 0 38 28" aria-hidden="true"><rect x="0.5" y="0.5" width="37" height="27" rx="6"/><path d="M0.5 9.5h11M0.5 18.5h11M26.5 9.5h11M26.5 18.5h11M11.5 0.5v27M26.5 0.5v27"/></svg>
@@ -311,6 +315,6 @@
 <script src="vendor/maplibre-gl.js"></script>
 <script src="vendor/pmtiles.js"></script>
 <script src="vendor/basemaps.js"></script>
-<script src="js/app.js?v=20261012203410"></script>
+<script src="js/app.js?v=20261012221500"></script>
 </body>
 </html>
