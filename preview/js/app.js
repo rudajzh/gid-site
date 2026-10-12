@@ -987,7 +987,11 @@
     state.team = 'loading';
     fetch('team.html', { cache: 'no-cache' })
       .then(function (r) {
-        if (!r.ok) throw new Error('страницы команды нет');
+        if (!r.ok) {
+          var err = new Error('страница команды не загрузилась');
+          err.gone = r.status === 404;
+          throw err;
+        }
         return r.text();
       })
       .then(function (html) {
@@ -1011,10 +1015,10 @@
         state.team = 'ready';
         showRoute();
       })
-      .catch(function () {
-        // Страницы нет — для гостя её просто не существует.
-        try { localStorage.removeItem('team'); } catch (e) {}
-        state.team = 'missing';
+      .catch(function (err) {
+        // Страницы нет — для гостя её просто не существует. Сбой связи — попробуем при следующем входе.
+        state.team = err.gone ? 'missing' : null;
+        if (err.gone) { try { localStorage.removeItem('team'); } catch (e) {} }
         state.teamPushed = false;
         goTab('account');
       });
