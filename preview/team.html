@@ -90,24 +90,48 @@
 .doc .sources li { font-size: 14px; overflow-wrap: anywhere; }
 
 /* Логотип. Знаки нарисованы один раз в .marks и повторяются через <use>.
-   Плитки показывают знак на его собственном фоне, поэтому цвета в них постоянные, а не из темы. */
+   Макеты показывают знак на его собственном фоне, поэтому цвета в них постоянные, а не из темы. */
 .doc .marks { position: absolute; width: 0; height: 0; }
-.doc .lg { gap: 14px; }
-.doc .lg__head { display: flex; align-items: baseline; gap: 10px; }
-.doc .lg__letter { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 700; line-height: 0.9; color: var(--accent); font-variant-numeric: lining-nums; }
-.doc .lg__head h3 { font-size: 17px; }
-.doc .lg__tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.doc .lg__tiles figure { margin: 0; display: flex; flex-direction: column; gap: 6px; }
-.doc .lg__tiles figcaption { font-size: 11px; line-height: 1.3; text-align: center; color: var(--dim); }
-.doc .lg__tile { aspect-ratio: 1; display: grid; place-items: center; border-radius: 22%; }
-.doc .lg__tile svg { width: 68%; height: 68%; }
-.doc .lg__tile--dark { background: #1E1815; color: #CDAE72; box-shadow: 0 0 0 1px rgba(240, 232, 224, 0.1) inset; }
-.doc .lg__tile--gold { background: #CDAE72; color: #1E1815; border-radius: 50%; }
-.doc .lg__tile--light { background: #F1EBE1; color: #4F6B55; box-shadow: 0 0 0 1px rgba(42, 34, 29, 0.08) inset; }
-.doc .lg__line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 16px; background: var(--surface-2); }
-.doc .lg__lockup { display: flex; align-items: center; gap: 8px; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1; }
-.doc .lg__lockup svg { flex: none; width: 34px; height: 34px; color: var(--accent); }
-.doc .lg__small { flex: none; display: flex; align-items: center; gap: 10px; color: var(--accent); }
+.doc .lg { display: flex; flex-direction: column; gap: 14px; }
+.doc .lg figure { margin: 0; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+.doc .lg figcaption { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); }
+.doc .lg svg { color: var(--m, var(--accent)); }
+.doc .lg--dark { --m: #CDAE72; background: #1E1815; color: #F0E8E0; box-shadow: 0 0 0 1px rgba(240, 232, 224, 0.1) inset; }
+.doc .lg--light { --m: #4F6B55; background: #F1EBE1; color: #2A221D; box-shadow: 0 0 0 1px rgba(42, 34, 29, 0.08) inset; }
+.doc .lg--gold { --m: #1E1815; background: #CDAE72; color: #1E1815; }
+.doc .lg--sage { --m: #F7F3EC; background: #4F6B55; color: #F7F3EC; }
+.doc .lg__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.doc .lg__logo { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-radius: 22px;
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; font-weight: 700; line-height: 1; }
+.doc .lg__logo svg { width: 46%; }
+.doc .lg__two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.doc .lg__two span { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 12px; border-radius: 20px; background: var(--surface-2); text-align: center; }
+.doc .lg__two svg { width: 64px; }
+.doc .lg__two small, .doc .lg__card small { font-family: 'Manrope', system-ui, sans-serif; font-size: 12px; font-weight: 500; line-height: 1.35; color: var(--muted); }
+.doc .lg__phone { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px 6px; padding: 20px 10px 16px; border-radius: 22px; background: linear-gradient(160deg, #6B7B8C, #4A4664 55%, #2E2838); }
+.doc .lg__app { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; line-height: 1.2; color: #fff; text-align: center; }
+.doc .lg__icon { flex: none; width: 58px; height: 58px; display: grid; place-items: center; border-radius: 14px; overflow: hidden; }
+.doc .lg__icon > svg { width: 70%; height: 70%; }
+.doc .lg__letters { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 700; line-height: 1; color: #CDAE72; }
+.doc .lg__letters--name { font-size: 17px; line-height: 0.95; color: #1E1815; }
+.doc .lg__bar, .doc .lg__social { display: flex; align-items: center; gap: 9px; padding: 12px 14px; border-radius: 20px; background: var(--surface); border: 1px solid var(--card-border); }
+.doc .lg__bar { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1; }
+.doc .lg__bar svg { flex: none; width: 30px; height: 30px; }
+.doc .lg__pill { margin-left: auto; padding: 8px 13px; border-radius: 999px; background: var(--surface-2); font-family: 'Manrope', system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+.doc .lg__social { gap: 12px; font-size: 14px; line-height: 1.4; }
+.doc .lg__ava { flex: none; width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; }
+.doc .lg__ava svg { width: 66%; height: 66%; }
+.doc .lg__card, .doc .lg__door { aspect-ratio: 1.586; border-radius: 16px; }
+.doc .lg__card { --m: #CDAE72; display: flex; flex-direction: column; justify-content: space-between; padding: 12px; background: linear-gradient(135deg, #46553F, #313C2D 55%, #252D22); color: #F0E8E0;
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 19px; font-weight: 700; line-height: 1; }
+.doc .lg__card span { display: flex; align-items: center; gap: 6px; }
+.doc .lg__card svg { flex: none; width: 24px; height: 24px; }
+.doc .lg__card small { color: rgba(240, 232, 224, 0.7); }
+.doc .lg__door { display: grid; place-items: center; background: var(--surface-2); }
+.doc .lg__door svg { height: 88%; aspect-ratio: 1; }
+.doc .lg__ways { display: flex; align-items: center; gap: 8px; }
+.doc .lg__ways .lg__icon { width: 48px; height: 48px; border-radius: 12px; }
+.doc .lg__tiny { margin-left: auto; display: flex; align-items: center; gap: 10px; }
 </style>
 <section class="doc" data-tab="now" data-title="Сейчас">
 <p class="lead">Идём на грант молодым предпринимателям Воронежской области: до 500 тыс. ₽ на доработку и запуск РестоГида. Здесь всё, что мы об этом знаем, и кто что делает.</p>
@@ -218,170 +242,105 @@
 </section>
 <section class="doc" data-tab="logo" data-title="Логотип">
 <svg class="marks" aria-hidden="true">
-  <symbol id="lg-pin3" viewBox="0 0 120 120"><mask id="m-pin3"><rect width="120" height="120" fill="#fff"/><circle cx="72.7" cy="13.9" r="11.5"/><circle cx="80.8" cy="28.3" r="11.5"/><circle cx="94.3" cy="37.8" r="11.5"/><circle cx="60" cy="47" r="9"/></mask><path d="M56.2 106.1Q60 112 63.8 106.1L89.5 65.8A35 35 0 1 0 30.5 65.8Z" fill="currentColor" mask="url(#m-pin3)"/></symbol>
-  <symbol id="lg-pin1" viewBox="0 0 120 120"><mask id="m-pin1"><rect width="120" height="120" fill="#fff"/><circle cx="86.8" cy="22.9" r="15"/><circle cx="60" cy="47" r="9"/></mask><path d="M56.2 106.1Q60 112 63.8 106.1L89.5 65.8A35 35 0 1 0 30.5 65.8Z" fill="currentColor" mask="url(#m-pin1)"/></symbol>
-  <symbol id="lg-pinline" viewBox="0 0 120 120"><mask id="m-pinline"><rect width="120" height="120" fill="#fff"/><circle cx="85.3" cy="24.2" r="11"/></mask><clipPath id="c-pinline"><path d="M56.3 104Q60 110 63.7 104L88.1 64.3A33 33 0 1 0 31.9 64.3Z"/></clipPath><g mask="url(#m-pinline)"><path d="M56.3 104Q60 110 63.7 104L88.1 64.3A33 33 0 1 0 31.9 64.3Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><g clip-path="url(#c-pinline)" fill="currentColor"><circle cx="85.3" cy="24.2" r="19"/></g></g><circle cx="60" cy="47" r="7" fill="currentColor"/></symbol>
-  <symbol id="lg-pincrumbs" viewBox="0 0 120 120"><mask id="m-pincrumbs"><rect width="120" height="120" fill="#fff"/><circle cx="64.4" cy="17.8" r="11.5"/><circle cx="72.1" cy="31.9" r="11.5"/><circle cx="85.3" cy="41.1" r="11.5"/><circle cx="52" cy="50" r="9"/></mask><path d="M48.2 107.1Q52 113 55.8 107.1L80.6 68.3A34 34 0 1 0 23.4 68.3Z" fill="currentColor" mask="url(#m-pincrumbs)"/><g fill="currentColor"><circle cx="96" cy="17" r="4.5"/><circle cx="107" cy="31" r="3"/><circle cx="108" cy="12" r="2.5"/></g></symbol>
-  <symbol id="lg-seal" viewBox="0 0 120 120"><mask id="m-seal"><rect width="120" height="120" fill="#fff"/><text x="60" y="77" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="52" font-weight="700" letter-spacing="-1">РГ</text></mask><path d="M48.6 17.4A11.5 11.5 0 0 1 71.4 17.4A11.5 11.5 0 0 1 91.2 28.8A11.5 11.5 0 0 1 102.6 48.6A11.5 11.5 0 0 1 102.6 71.4A11.5 11.5 0 0 1 91.2 91.2A11.5 11.5 0 0 1 71.4 102.6A11.5 11.5 0 0 1 48.6 102.6A11.5 11.5 0 0 1 28.8 91.2A11.5 11.5 0 0 1 17.4 71.4A11.5 11.5 0 0 1 17.4 48.6A11.5 11.5 0 0 1 28.8 28.8A11.5 11.5 0 0 1 48.6 17.4Z" fill="currentColor" mask="url(#m-seal)"/></symbol>
-  <symbol id="lg-sealfine" viewBox="0 0 120 120"><mask id="m-sealfine"><rect width="120" height="120" fill="#fff"/><circle cx="60" cy="60" r="41" fill="none" stroke="#000" stroke-width="2.5"/><text x="60" y="75" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="44" font-weight="700" letter-spacing="-1">РГ</text></mask><path d="M51.1 9.8A10.1 10.1 0 0 1 68.9 9.8A10.1 10.1 0 0 1 85.5 15.8A10.1 10.1 0 0 1 99.1 27.2A10.1 10.1 0 0 1 107.9 42.6A10.1 10.1 0 0 1 111 60A10.1 10.1 0 0 1 107.9 77.4A10.1 10.1 0 0 1 99.1 92.8A10.1 10.1 0 0 1 85.5 104.2A10.1 10.1 0 0 1 68.9 110.2A10.1 10.1 0 0 1 51.1 110.2A10.1 10.1 0 0 1 34.5 104.2A10.1 10.1 0 0 1 20.9 92.8A10.1 10.1 0 0 1 12.1 77.4A10.1 10.1 0 0 1 9 60A10.1 10.1 0 0 1 12.1 42.6A10.1 10.1 0 0 1 20.9 27.2A10.1 10.1 0 0 1 34.5 15.8A10.1 10.1 0 0 1 51.1 9.8Z" fill="currentColor" mask="url(#m-sealfine)"/></symbol>
-  <symbol id="lg-sealfork" viewBox="0 0 120 120"><mask id="m-sealfork"><rect width="120" height="120" fill="#fff"/><g transform="translate(60 60) scale(1.15)" fill="none" stroke="#000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M-7.5-30v13q0 9 7.5 9t7.5-9v-13M0-30v60"/></g></mask><path d="M48.6 17.4A11.5 11.5 0 0 1 71.4 17.4A11.5 11.5 0 0 1 91.2 28.8A11.5 11.5 0 0 1 102.6 48.6A11.5 11.5 0 0 1 102.6 71.4A11.5 11.5 0 0 1 91.2 91.2A11.5 11.5 0 0 1 71.4 102.6A11.5 11.5 0 0 1 48.6 102.6A11.5 11.5 0 0 1 28.8 91.2A11.5 11.5 0 0 1 17.4 71.4A11.5 11.5 0 0 1 17.4 48.6A11.5 11.5 0 0 1 28.8 28.8A11.5 11.5 0 0 1 48.6 17.4Z" fill="currentColor" mask="url(#m-sealfork)"/></symbol>
-  <symbol id="lg-sealbite" viewBox="0 0 120 120"><mask id="m-sealbite"><rect width="120" height="120" fill="#fff"/><circle cx="81.2" cy="7.6" r="14.5"/><circle cx="93.6" cy="26.4" r="14.5"/><circle cx="112.4" cy="38.8" r="14.5"/><text x="54" y="80" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="42" font-weight="700" letter-spacing="-1">РГ</text></mask><path d="M48.6 17.4A11.5 11.5 0 0 1 71.4 17.4A11.5 11.5 0 0 1 91.2 28.8A11.5 11.5 0 0 1 102.6 48.6A11.5 11.5 0 0 1 102.6 71.4A11.5 11.5 0 0 1 91.2 91.2A11.5 11.5 0 0 1 71.4 102.6A11.5 11.5 0 0 1 48.6 102.6A11.5 11.5 0 0 1 28.8 91.2A11.5 11.5 0 0 1 17.4 71.4A11.5 11.5 0 0 1 17.4 48.6A11.5 11.5 0 0 1 28.8 28.8A11.5 11.5 0 0 1 48.6 17.4Z" fill="currentColor" mask="url(#m-sealbite)"/></symbol>
-  <symbol id="lg-sealpin" viewBox="0 0 120 120"><mask id="m-sealpin"><rect width="120" height="120" fill="#fff"/><g transform="translate(60 61) scale(0.72) translate(-60 -61)"><path d="M56.2 106.1Q60 112 63.8 106.1L89.5 65.8A35 35 0 1 0 30.5 65.8Z"/><g fill="#fff"><circle cx="72.7" cy="13.9" r="11.5"/><circle cx="80.8" cy="28.3" r="11.5"/><circle cx="94.3" cy="37.8" r="11.5"/><circle cx="60" cy="47" r="9"/></g></g></mask><path d="M48.6 17.4A11.5 11.5 0 0 1 71.4 17.4A11.5 11.5 0 0 1 91.2 28.8A11.5 11.5 0 0 1 102.6 48.6A11.5 11.5 0 0 1 102.6 71.4A11.5 11.5 0 0 1 91.2 91.2A11.5 11.5 0 0 1 71.4 102.6A11.5 11.5 0 0 1 48.6 102.6A11.5 11.5 0 0 1 28.8 91.2A11.5 11.5 0 0 1 17.4 71.4A11.5 11.5 0 0 1 17.4 48.6A11.5 11.5 0 0 1 28.8 28.8A11.5 11.5 0 0 1 48.6 17.4Z" fill="currentColor" mask="url(#m-sealpin)"/></symbol>
-  <symbol id="lg-compset" viewBox="0 0 120 120"><circle cx="60" cy="60" r="30" fill="none" stroke="currentColor" stroke-width="6"/><g transform="rotate(38 60 60)" fill="currentColor"><path d="M60 39l7 21H53z"/><path d="M60 81L53 60h14z" opacity="0.42"/></g><g fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"><path transform="translate(12 60)" d="M-6.5-30v13q0 8 6.5 8t6.5-8v-13M0-30v60"/><path d="M106 60v30"/></g><path d="M103.75 62V30q9 5 9 22v10z" fill="currentColor"/></symbol>
-  <symbol id="lg-compfork" viewBox="0 0 120 120"><circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="7"/><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><g stroke-width="4"><path d="M60 26l6-11H54z" fill="currentColor" stroke="none"/></g><path transform="translate(60 60) rotate(40)" stroke-width="5.5" d="M-7.5-30v13q0 9 7.5 9t7.5-9v-13M0-30v60"/></g></symbol>
-  <symbol id="lg-star" viewBox="0 0 120 120"><mask id="m-star"><rect width="120" height="120" fill="#fff"/><circle cx="99" cy="50.3" r="9"/><circle cx="111.4" cy="46.3" r="10"/><circle cx="99.1" cy="37.7" r="9"/><circle cx="106.5" cy="60.5" r="9"/></mask><path d="M60 17L74.1 43.6L103.7 48.8L82.8 70.4L87 100.2L60 87L33 100.2L37.2 70.4L16.3 48.8L45.9 43.6Z" fill="currentColor" stroke="currentColor" stroke-width="9" stroke-linejoin="round" mask="url(#m-star)"/></symbol>
+  <symbol id="lg-pin" viewBox="0 0 120 120"><mask id="m-pin"><rect width="120" height="120" fill="#fff"/><circle cx="86.75" cy="22.91" r="15"/><circle cx="60" cy="47" r="9.5"/></mask><path d="M56.23 106.1Q60 112 63.77 106.1L89.49 65.85A35 35 0 1 0 30.51 65.85Z" fill="currentColor" mask="url(#m-pin)"/></symbol>
+  <symbol id="lg-pinline" viewBox="0 0 120 120"><mask id="m-pinline"><rect width="120" height="120" fill="#fff"/><circle cx="85.27" cy="24.25" r="11"/></mask><clipPath id="c-pinline"><path d="M56.33 104.04Q60 110 63.67 104.04L88.11 64.29A33 33 0 1 0 31.89 64.29Z"/></clipPath><g mask="url(#m-pinline)"><path d="M56.33 104.04Q60 110 63.67 104.04L88.11 64.29A33 33 0 1 0 31.89 64.29Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="round"/><g clip-path="url(#c-pinline)" fill="currentColor"><circle cx="85.27" cy="24.25" r="19"/></g></g><circle cx="60" cy="47" r="7" fill="currentColor"/></symbol>
+  <symbol id="lg-seal" viewBox="0 0 120 120"><mask id="m-seal"><rect width="120" height="120" fill="#fff"/><circle cx="60" cy="60" r="41" fill="none" stroke="#000" stroke-width="2.5"/><text x="60" y="75" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="44" font-weight="700" letter-spacing="-1">РГ</text></mask><path d="M51.14 9.77A10.07 10.07 0 0 1 68.86 9.77A10.07 10.07 0 0 1 85.5 15.83A10.07 10.07 0 0 1 99.07 27.22A10.07 10.07 0 0 1 107.92 42.56A10.07 10.07 0 0 1 111 60A10.07 10.07 0 0 1 107.92 77.44A10.07 10.07 0 0 1 99.07 92.78A10.07 10.07 0 0 1 85.5 104.17A10.07 10.07 0 0 1 68.86 110.23A10.07 10.07 0 0 1 51.14 110.23A10.07 10.07 0 0 1 34.5 104.17A10.07 10.07 0 0 1 20.93 92.78A10.07 10.07 0 0 1 12.08 77.44A10.07 10.07 0 0 1 9 60A10.07 10.07 0 0 1 12.08 42.56A10.07 10.07 0 0 1 20.93 27.22A10.07 10.07 0 0 1 34.5 15.83A10.07 10.07 0 0 1 51.14 9.77Z" fill="currentColor" mask="url(#m-seal)"/></symbol>
+  <symbol id="lg-comp" viewBox="0 0 120 120"><circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="7"/><path d="M60 27.5l6.5-11.5h-13z" fill="currentColor"/><g transform="translate(60 61) rotate(42)" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M0 6v25" opacity="0.45"/><path d="M-8-31v12q0 10 8 10t8-10v-12M0-31v31"/></g><circle cx="60" cy="61" r="6" fill="currentColor"/></symbol>
+  <path id="lg-arc-top" d="M14.5 60A45.5 45.5 0 0 1 105.5 60"/><path id="lg-arc-bottom" d="M8.5 60A51.5 51.5 0 0 0 111.5 60"/>
 </svg>
-<p class="lead">Второй круг: 12 набросков. Оставили то, что понравилось, — метку с укусом и печать, — добавили компас с вилкой и одну новую идею.</p>
+<p class="lead">Третий круг: три знака в чистовом виде — на телефоне, в приложении, в соцсетях и на двери заведения.</p>
 <span class="status"><i></i>Обновлено 12 октября 2026</span>
-<div class="note"><b>Как выбрать.</b> Напишите в чат номера тех, что нравятся, и что в них поправить. Вилка-галочка и буква-метка из первого круга убраны. Цвета везде наши — золото и шалфей.</div>
+<div class="note"><b>Что осталось.</b> Метка с ровным укусом (были номера 2 и 3 — это один знак в двух толщинах), строгая печать (6) и вилка-компас (11). Накрытый стол (10) нравился Матвею, но не Жене; вилка-компас — та же мысль без лишних деталей. Остальное убрано.</div>
 
-<h2>Метка с укусом</h2>
-<p class="muted">Метка с карты, от которой уже откусили: мы попробовали раньше вас. Кружок теперь строго по центру, укус ровный и симметричный.</p>
-<div class="grid">
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">1</span><h3>Укус в три зубца</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-pin3"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-pin3"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-pin3"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-pin3"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-pin3"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-pin3"/></svg></span></div>
-    <p class="small">Самый узнаваемый «укус», как на печенье.</p>
-  </article>
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">2</span><h3>Один ровный укус</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-pin1"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-pin1"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-pin1"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-pin1"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-pin1"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-pin1"/></svg></span></div>
-    <p class="small">Спокойнее и строже. Чуть напоминает яблоко Apple.</p>
-  </article>
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">3</span><h3>Тонкая линия</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-pinline"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-pinline"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-pinline"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-pinline"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-pinline"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-pinline"/></svg></span></div>
-    <p class="small">В одном стиле с иконками приложения, выглядит легче и дороже. В мелком размере слабее.</p>
-  </article>
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">4</span><h3>С крошками</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-pincrumbs"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-pincrumbs"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-pincrumbs"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-pincrumbs"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-pincrumbs"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-pincrumbs"/></svg></span></div>
-    <p class="small">Тот же укус и крошки рядом: самый весёлый, для соцсетей.</p>
-  </article>
+<h2>1. Метка с укусом</h2>
+<p>Метка с карты, от которой уже откусили: мы попробовали раньше вас — можно идти.</p>
+<div class="lg">
+  <div class="lg__pair">
+    <div class="lg__logo lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg>РестоГид</div>
+    <div class="lg__logo lg--light"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg>РестоГид</div>
+  </div>
+  <figure><figcaption>Две версии одного знака</figcaption>
+    <div class="lg__two"><span><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg><small>Плотная — иконка, аватар, наклейка</small></span><span><svg viewBox="0 0 120 120"><use href="#lg-pinline"/></svg><small>Тонкая — внутри приложения, точки на карте</small></span></div></figure>
+  <figure><figcaption>На экране телефона</figcaption>
+    <div class="lg__phone"><span class="lg__app"><span class="lg__icon" style="background:#3D8BE5"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><circle cx="24" cy="24" r="9" fill="#fff"/></svg></span>Погода</span><span class="lg__app"><span class="lg__icon lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span>РестоГид</span><span class="lg__app"><span class="lg__icon" style="background:#2FB37A"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M12 21l12-8 12 8zM15 24h4v9h-4zM22 24h4v9h-4zM29 24h4v9h-4z" fill="#fff"/></svg></span>Банк</span><span class="lg__app"><span class="lg__icon" style="background:#E5533D"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M19 14l14 10-14 10z" fill="#fff"/></svg></span>Музыка</span><span class="lg__app"><span class="lg__icon" style="background:#F2B33D"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M14 17h20M14 24h20M14 31h12" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg></span>Заметки</span><span class="lg__app"><span class="lg__icon" style="background:#7A5BE0"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M12 16h24v16H12zM12 17l12 9 12-9" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg></span>Почта</span><span class="lg__app"><span class="lg__icon lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span>РестоГид</span><span class="lg__app"><span class="lg__icon" style="background:#22262B"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M14 14h8v8h-8zM22 22h8v8h-8zM30 14h4v8h-4zM14 30h8v4h-8z" fill="#F2D03D"/></svg></span>Такси</span></div>
+    <p class="small">Сверху тёмная иконка, снизу золотая — какая заметнее среди других приложений.</p></figure>
+  <figure><figcaption>В шапке приложения</figcaption>
+    <div class="lg__bar"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg>РестоГид<span class="lg__pill">Воронеж</span></div></figure>
+  <figure><figcaption>В соцсетях</figcaption>
+    <div class="lg__social"><span class="lg__ava lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span><span><b>РестоГид</b><br><span class="muted">Воронеж · куда сходить поесть</span></span></div></figure>
+  <div class="lg__pair">
+    <figure><figcaption>Карта гостя</figcaption><div class="lg__card"><span><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg>РестоГид</span><small>Карта гостя</small></div></figure>
+    <figure><figcaption>Наклейка на дверь</figcaption><div class="lg__door"><svg viewBox="0 0 120 120" style="color:#CDAE72"><circle cx="60" cy="60" r="59" fill="#1E1815"/><circle cx="60" cy="60" r="56" fill="none" stroke="#CDAE72" stroke-width="1"/><g fill="#CDAE72" font-family="Manrope, sans-serif" font-weight="700" font-size="8.5" letter-spacing="1.6" text-anchor="middle"><text><textPath href="#lg-arc-top" startOffset="50%">ПРОВЕРЕНО РЕСТОГИДОМ</textPath></text><text><textPath href="#lg-arc-bottom" startOffset="50%">ВОРОНЕЖ · 2026</textPath></text></g><use href="#lg-pin" x="34" y="34" width="52" height="52"/></svg></div></figure>
+  </div>
+  <figure><figcaption>Цвета и мелкий размер</figcaption>
+    <div class="lg__ways"><span class="lg__icon lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span><span class="lg__icon lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span><span class="lg__icon lg--sage"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span><span class="lg__icon lg--light"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span><span class="lg__tiny"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-pin"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span></div></figure>
 </div>
-<h2>Печать</h2>
-<p class="muted">Знак качества с волнистым краем — его же клеим на дверь заведения.</p>
-<div class="grid">
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">5</span><h3>Как было</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-seal"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span></div>
-    <p class="small">Вариант Г из первого круга, для сравнения.</p>
-  </article>
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">6</span><h3>Строгая</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-sealfine"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-sealfine"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-sealfine"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-sealfine"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-sealfine"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-sealfine"/></svg></span></div>
-    <p class="small">Мелкий зубец и тонкое кольцо, как на настоящей печати. Солиднее, но буквы меньше.</p>
-  </article>
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">7</span><h3>С вилкой</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-sealfork"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-sealfork"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-sealfork"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-sealfork"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-sealfork"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-sealfork"/></svg></span></div>
-    <p class="small">Вместо букв — прямая вилка: сразу видно, что про еду. Работает и без названия рядом.</p>
-  </article>
+
+<h2>2. Печать «РГ»</h2>
+<p>Знак качества с мелким зубцом и буквами названия. Солидно, в духе старых гидов.</p>
+<div class="lg">
+  <div class="lg__pair">
+    <div class="lg__logo lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg>РестоГид</div>
+    <div class="lg__logo lg--light"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg>РестоГид</div>
+  </div>
+  <figure><figcaption>На экране телефона</figcaption>
+    <div class="lg__phone"><span class="lg__app"><span class="lg__icon" style="background:#3D8BE5"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><circle cx="24" cy="24" r="9" fill="#fff"/></svg></span>Погода</span><span class="lg__app"><span class="lg__icon lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span>РестоГид</span><span class="lg__app"><span class="lg__icon" style="background:#2FB37A"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M12 21l12-8 12 8zM15 24h4v9h-4zM22 24h4v9h-4zM29 24h4v9h-4z" fill="#fff"/></svg></span>Банк</span><span class="lg__app"><span class="lg__icon" style="background:#E5533D"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M19 14l14 10-14 10z" fill="#fff"/></svg></span>Музыка</span><span class="lg__app"><span class="lg__icon" style="background:#F2B33D"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M14 17h20M14 24h20M14 31h12" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg></span>Заметки</span><span class="lg__app"><span class="lg__icon" style="background:#7A5BE0"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M12 16h24v16H12zM12 17l12 9 12-9" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg></span>Почта</span><span class="lg__app"><span class="lg__icon lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span>РестоГид</span><span class="lg__app"><span class="lg__icon" style="background:#22262B"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M14 14h8v8h-8zM22 22h8v8h-8zM30 14h4v8h-4zM14 30h8v4h-8z" fill="#F2D03D"/></svg></span>Такси</span></div>
+    <p class="small">Сверху тёмная иконка, снизу золотая — какая заметнее среди других приложений.</p></figure>
+  <figure><figcaption>В шапке приложения</figcaption>
+    <div class="lg__bar"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg>РестоГид<span class="lg__pill">Воронеж</span></div></figure>
+  <figure><figcaption>В соцсетях</figcaption>
+    <div class="lg__social"><span class="lg__ava lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span><span><b>РестоГид</b><br><span class="muted">Воронеж · куда сходить поесть</span></span></div></figure>
+  <div class="lg__pair">
+    <figure><figcaption>Карта гостя</figcaption><div class="lg__card"><span><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg>РестоГид</span><small>Карта гостя</small></div></figure>
+    <figure><figcaption>Наклейка на дверь</figcaption><div class="lg__door"><svg viewBox="0 0 120 120" style="color:#CDAE72"><circle cx="60" cy="60" r="59" fill="#1E1815"/><circle cx="60" cy="60" r="56" fill="none" stroke="#CDAE72" stroke-width="1"/><g fill="#CDAE72" font-family="Manrope, sans-serif" font-weight="700" font-size="8.5" letter-spacing="1.6" text-anchor="middle"><text><textPath href="#lg-arc-top" startOffset="50%">ПРОВЕРЕНО РЕСТОГИДОМ</textPath></text><text><textPath href="#lg-arc-bottom" startOffset="50%">ВОРОНЕЖ · 2026</textPath></text></g><use href="#lg-seal" x="34" y="34" width="52" height="52"/></svg></div></figure>
+  </div>
+  <figure><figcaption>Цвета и мелкий размер</figcaption>
+    <div class="lg__ways"><span class="lg__icon lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span><span class="lg__icon lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span><span class="lg__icon lg--sage"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span><span class="lg__icon lg--light"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span><span class="lg__tiny"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-seal"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span></div></figure>
 </div>
-<h2>Печать и укус вместе</h2>
-<p class="muted">Обе идеи, которые понравились, в одном знаке.</p>
-<div class="grid">
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">8</span><h3>Надкушенная печать</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-sealbite"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-sealbite"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-sealbite"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-sealbite"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-sealbite"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-sealbite"/></svg></span></div>
-    <p class="small">Печать похожа на печенье — от неё и откусили. Знак качества, который мы попробовали сами.</p>
-  </article>
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">9</span><h3>Метка в печати</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-sealpin"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-sealpin"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-sealpin"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-sealpin"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-sealpin"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-sealpin"/></svg></span></div>
-    <p class="small">Метка с укусом внутри печати: и карта, и проверка. В мелком размере укус почти не виден.</p>
-  </article>
+
+<h2>3. Вилка-компас</h2>
+<p>Тарелка с отметкой севера, вилка на ней — стрелка компаса. Гид ведёт туда, где вкусно.</p>
+<div class="lg">
+  <div class="lg__pair">
+    <div class="lg__logo lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg>РестоГид</div>
+    <div class="lg__logo lg--light"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg>РестоГид</div>
+  </div>
+  <figure><figcaption>На экране телефона</figcaption>
+    <div class="lg__phone"><span class="lg__app"><span class="lg__icon" style="background:#3D8BE5"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><circle cx="24" cy="24" r="9" fill="#fff"/></svg></span>Погода</span><span class="lg__app"><span class="lg__icon lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg></span>РестоГид</span><span class="lg__app"><span class="lg__icon" style="background:#2FB37A"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M12 21l12-8 12 8zM15 24h4v9h-4zM22 24h4v9h-4zM29 24h4v9h-4z" fill="#fff"/></svg></span>Банк</span><span class="lg__app"><span class="lg__icon" style="background:#E5533D"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M19 14l14 10-14 10z" fill="#fff"/></svg></span>Музыка</span><span class="lg__app"><span class="lg__icon" style="background:#F2B33D"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M14 17h20M14 24h20M14 31h12" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg></span>Заметки</span><span class="lg__app"><span class="lg__icon" style="background:#7A5BE0"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M12 16h24v16H12zM12 17l12 9 12-9" fill="none" stroke="#fff" stroke-width="3" stroke-linejoin="round"/></svg></span>Почта</span><span class="lg__app"><span class="lg__icon lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg></span>РестоГид</span><span class="lg__app"><span class="lg__icon" style="background:#22262B"><svg viewBox="0 0 48 48" style="width:100%;height:100%"><path d="M14 14h8v8h-8zM22 22h8v8h-8zM30 14h4v8h-4zM14 30h8v4h-8z" fill="#F2D03D"/></svg></span>Такси</span></div>
+    <p class="small">Сверху тёмная иконка, снизу золотая — какая заметнее среди других приложений.</p></figure>
+  <figure><figcaption>В шапке приложения</figcaption>
+    <div class="lg__bar"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg>РестоГид<span class="lg__pill">Воронеж</span></div></figure>
+  <figure><figcaption>В соцсетях</figcaption>
+    <div class="lg__social"><span class="lg__ava lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg></span><span><b>РестоГид</b><br><span class="muted">Воронеж · куда сходить поесть</span></span></div></figure>
+  <div class="lg__pair">
+    <figure><figcaption>Карта гостя</figcaption><div class="lg__card"><span><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg>РестоГид</span><small>Карта гостя</small></div></figure>
+    <figure><figcaption>Наклейка на дверь</figcaption><div class="lg__door"><svg viewBox="0 0 120 120" style="color:#CDAE72"><circle cx="60" cy="60" r="59" fill="#1E1815"/><circle cx="60" cy="60" r="56" fill="none" stroke="#CDAE72" stroke-width="1"/><g fill="#CDAE72" font-family="Manrope, sans-serif" font-weight="700" font-size="8.5" letter-spacing="1.6" text-anchor="middle"><text><textPath href="#lg-arc-top" startOffset="50%">ПРОВЕРЕНО РЕСТОГИДОМ</textPath></text><text><textPath href="#lg-arc-bottom" startOffset="50%">ВОРОНЕЖ · 2026</textPath></text></g><use href="#lg-comp" x="34" y="34" width="52" height="52"/></svg></div></figure>
+  </div>
+  <figure><figcaption>Цвета и мелкий размер</figcaption>
+    <div class="lg__ways"><span class="lg__icon lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg></span><span class="lg__icon lg--gold"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg></span><span class="lg__icon lg--sage"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg></span><span class="lg__icon lg--light"><svg viewBox="0 0 120 120"><use href="#lg-comp"/></svg></span><span class="lg__tiny"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-comp"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-comp"/></svg></span></div></figure>
 </div>
-<h2>Компас на тарелке</h2>
-<p class="muted">Идея Жени: добавить вилку, чтобы было видно, что это тарелка.</p>
-<div class="grid">
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">10</span><h3>Накрытый стол</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-compset"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-compset"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-compset"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-compset"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-compset"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-compset"/></svg></span></div>
-    <p class="small">Вилка слева, нож справа, на тарелке стрелка компаса. Понятно сразу, но деталей много.</p>
-  </article>
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">11</span><h3>Вилка вместо стрелки</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-compfork"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-compfork"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-compfork"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-compfork"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-compfork"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-compfork"/></svg></span></div>
-    <p class="small">Вилка лежит на тарелке и показывает направление, сверху — отметка севера.</p>
-  </article>
+
+<h2>Буквы на иконке — идея Артёма</h2>
+<p>Мысль: если на иконке написано название, как у Wildberries и Ozon, приложение проще найти на телефоне. Вот как это выглядит рядом — слева направо: знак, буквы в печати, просто буквы, название целиком.</p>
+<div class="lg">
+  <div class="lg__phone"><span class="lg__app"><span class="lg__icon lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-pin"/></svg></span>Знак</span><span class="lg__app"><span class="lg__icon lg--dark"><svg viewBox="0 0 120 120"><use href="#lg-seal"/></svg></span>Печать «РГ»</span><span class="lg__app"><span class="lg__icon lg--dark lg__letters">РГ</span>Буквы</span><span class="lg__app"><span class="lg__icon lg--gold lg__letters lg__letters--name">Ресто<br>Гид</span>Название</span></div>
+  <ul class="plain">
+    <li><b>За буквы.</b> Не надо запоминать знак: человек видит «РГ» и вспоминает название.</li>
+    <li><b>Против названия целиком.</b> У WB две буквы, у Ozon четыре, у нас восемь — в иконке они мелкие. И подпись «РестоГид» под иконкой есть в любом случае.</li>
+    <li><b>Как ищут на самом деле.</b> Глаз находит иконку по цвету и форме, а не читает. Золото на тёмном среди цветных иконок заметно само по себе.</li>
+  </ul>
+  <div class="note"><b>Моё мнение.</b> Название целиком на иконку не ставить. Если хочется букв — печать «РГ» это и есть идея Артёма: и буквы, и знак.</div>
 </div>
-<h2>Новая идея</h2>
-<p class="muted">У Мишлен главная награда — звезда. У нас звезда, которую уже попробовали.</p>
-<div class="grid">
-  <article class="card lg">
-    <div class="lg__head"><span class="lg__letter">12</span><h3>Звезда с укусом</h3></div>
-    <div class="lg__tiles">
-      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-star"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-star"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
-      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-star"/></svg></div><figcaption>На светлом</figcaption></figure>
-    </div>
-    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-star"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-star"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-star"/></svg></span></div>
-    <p class="small">Отсылка к звёздам гидов и тот же укус. Проще всех по форме.</p>
-  </article>
-</div>
+
+<h2>Что советую</h2>
+<p><b>Не выбирать между меткой и печатью, а взять обе.</b> Метка с укусом — логотип: иконка приложения, соцсети, шапка. Печать — знак проверки, который получает заведение: наклейка на дверь и отметка «Проверено РестоГидом» в карточке места. Так у Мишлен: есть сам гид и есть звезда, которую он даёт.</p>
+<p>Вилка-компас смотрится аккуратно, но в мелком размере это просто вилка на тарелке — такая иконка есть у многих приложений про еду.</p>
 
 <h2>Что будет после выбора</h2>
 <ul class="plain">
-  <li>Чистовая версия знака и написание названия рядом с ним.</li>
-  <li>Иконка приложения и значок во вкладке браузера, знак в шапке и на карте лояльности.</li>
-  <li>Аватары и обложки для соцсетей.</li>
-  <li>Наклейка на дверь «Проверено РестоГидом».</li>
+  <li>Знак в приложении: шапка, иконка, значок во вкладке браузера, карта гостя.</li>
+  <li>Файлы для соцсетей: аватары и обложки.</li>
+  <li>Наклейка на дверь в размере для печати.</li>
   <li>Матвею: проверить, нет ли похожего зарегистрированного знака, — вместе с проверкой названия.</li>
 </ul>
 </section>
