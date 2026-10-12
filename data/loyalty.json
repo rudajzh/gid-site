@@ -1,0 +1,21 @@
+{
+  "guest": "Анна Ковалёва",
+  "number": "2481 0937",
+  "qr": "img/card-qr.svg",
+  "earnPercent": 5,
+  "payPercent": 30,
+  "levels": [
+    { "name": "Гость", "from": 0 },
+    { "name": "Ценитель", "from": 1000 },
+    { "name": "Знаток", "from": 3000 }
+  ],
+  "history": [
+    { "place": "chernozem", "date": "2026-09-27", "points": 105, "check": 2100 },
+    { "place": "ladya", "date": "2026-09-19", "points": -300 },
+    { "place": "bely-klyon", "date": "2026-09-14", "points": 45, "check": 900 },
+    { "place": "ladya", "date": "2026-09-06", "points": 140, "check": 2800, "scanned": true },
+    { "place": "chernozem", "date": "2026-08-23", "points": 310, "check": 6200 },
+    { "place": "ladya", "date": "2026-08-09", "points": 425, "check": 8500 },
+    { "place": "chernozem", "date": "2026-07-26", "points": 215, "check": 4300 }
+  ]
+}

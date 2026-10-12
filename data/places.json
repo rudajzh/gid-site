@@ -1,0 +1,723 @@
+[
+  {
+    "id": "chernozem",
+    "city": "voronezh",
+    "fictional": true,
+    "name": "Чернозём",
+    "cuisine": "Современная кухня Черноземья",
+    "about": "Продукты с ферм Воронежской области, хлеб из своей пекарни и сезонное меню, которое меняется четыре раза в год.",
+    "area": "Театральная улица",
+    "open": "12:00",
+    "close": "00:00",
+    "avgCheck": 2000,
+    "checkedAt": "2026-09-18",
+    "coords": [
+      39.2071,
+      51.6641
+    ],
+    "menu": [
+      {
+        "title": "Закуски",
+        "items": [
+          {
+            "name": "Тартар из говядины",
+            "desc": "Копчёный желток, ржаные чипсы, солёный огурец",
+            "weight": "180 г",
+            "price": 790,
+            "photo": "img/dishes/tartar.webp",
+            "photoBy": "Alexandra Tran"
+          },
+          {
+            "name": "Паштет из куриной печени",
+            "desc": "Брусничный джем, тёплая бриошь",
+            "weight": "150 г",
+            "price": 520,
+            "photo": "img/dishes/pashtet.webp",
+            "photoBy": "Farhad Ibrahimzade"
+          },
+          {
+            "name": "Сельдь пряного посола",
+            "desc": "Печёная свёкла, сметана с хреном",
+            "weight": "170 г",
+            "price": 480,
+            "photo": "img/dishes/seld.webp",
+            "photoBy": "Sveta Golovina"
+          }
+        ]
+      },
+      {
+        "title": "Супы",
+        "items": [
+          {
+            "name": "Окрошка на кефире",
+            "desc": "Огурец, редис, яйцо, телячий язык, укроп",
+            "weight": "300 г",
+            "price": 520,
+            "photo": "img/dishes/okroshka.webp",
+            "photoBy": "Julia Kicova"
+          },
+          {
+            "name": "Борщ с томлёной говядиной",
+            "desc": "Сметана, чесночная пампушка",
+            "weight": "350 г",
+            "price": 560,
+            "photo": "img/dishes/borsch.webp",
+            "photoBy": "Roman Shalkevic"
+          }
+        ]
+      },
+      {
+        "title": "Горячее",
+        "items": [
+          {
+            "name": "Щучьи котлеты",
+            "desc": "Пюре из печёной репы, раковый соус",
+            "weight": "260 г",
+            "price": 890,
+            "photo": "img/dishes/kotlety.webp",
+            "photoBy": "Rohit Mishra"
+          },
+          {
+            "name": "Утка с антоновкой",
+            "desc": "Брусничный соус, печёная тыква",
+            "weight": "320 г",
+            "price": 1350,
+            "photo": "img/dishes/utka.webp",
+            "photoBy": "Sebastian Coman"
+          },
+          {
+            "name": "Перепел на углях",
+            "desc": "Гречка с грибами, ягодный соус",
+            "weight": "280 г",
+            "price": 1180,
+            "photo": "img/dishes/perepel.webp",
+            "photoBy": "Robby McCullough"
+          }
+        ]
+      },
+      {
+        "title": "Десерты",
+        "items": [
+          {
+            "name": "Ржаной медовик",
+            "desc": "Сметанный крем, гречишный мёд",
+            "weight": "140 г",
+            "price": 420,
+            "photo": "img/dishes/medovik.webp",
+            "photoBy": "Diliara Garifullina"
+          },
+          {
+            "name": "Пастила из антоновки",
+            "desc": "Взбитые сливки, клюква",
+            "weight": "120 г",
+            "price": 380,
+            "photo": "img/dishes/pastila.webp",
+            "photoBy": "Howard Bouchevereau"
+          }
+        ]
+      }
+    ],
+    "booking": {
+      "from": "12:00",
+      "to": "22:30",
+      "step": 30,
+      "leadMinutes": 15,
+      "confirmMinutes": 60,
+      "days": 7,
+      "maxGuests": 8
+    },
+    "plan": {
+      "w": 1000,
+      "h": 720,
+      "windows": [
+        {
+          "side": "top",
+          "from": 90,
+          "to": 290
+        },
+        {
+          "side": "top",
+          "from": 370,
+          "to": 570
+        },
+        {
+          "side": "top",
+          "from": 650,
+          "to": 850
+        }
+      ],
+      "doors": [
+        {
+          "side": "bottom",
+          "at": 70,
+          "width": 100,
+          "label": "Вход"
+        }
+      ],
+      "rooms": [
+        {
+          "x": 790,
+          "y": 590,
+          "w": 210,
+          "h": 130,
+          "label": "Кухня",
+          "kind": "kitchen"
+        }
+      ],
+      "bars": [
+        {
+          "x": 870,
+          "y": 110,
+          "w": 70,
+          "h": 400,
+          "stools": 5,
+          "stoolSide": "left",
+          "label": "Бар"
+        }
+      ],
+      "sofas": [],
+      "labels": [
+        {
+          "x": 470,
+          "y": 52,
+          "text": "окна на Театральную"
+        }
+      ],
+      "tables": [
+        {
+          "id": "1",
+          "x": 190,
+          "y": 160,
+          "shape": "round",
+          "r": 45,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "2",
+          "x": 470,
+          "y": 160,
+          "shape": "round",
+          "r": 45,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "3",
+          "x": 750,
+          "y": 160,
+          "shape": "round",
+          "r": 45,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "4",
+          "x": 190,
+          "y": 350,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "5",
+          "x": 450,
+          "y": 350,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "6",
+          "x": 290,
+          "y": 540,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "7",
+          "x": 510,
+          "y": 560,
+          "shape": "rect",
+          "w": 230,
+          "h": 100,
+          "seats": 6,
+          "zone": "большой стол"
+        },
+        {
+          "id": "8",
+          "x": 720,
+          "y": 330,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у бара"
+        },
+        {
+          "id": "9",
+          "x": 720,
+          "y": 470,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у бара"
+        }
+      ]
+    }
+  },
+  {
+    "id": "bely-klyon",
+    "city": "voronezh",
+    "fictional": true,
+    "name": "Белый клён",
+    "cuisine": "Завтраки весь день и авторский кофе",
+    "about": "Светлый зал с большими окнами на Никитинскую. Завтраки подают до закрытия, кофе обжаривают в Воронеже.",
+    "area": "Никитинская улица",
+    "open": "08:00",
+    "close": "22:00",
+    "avgCheck": 900,
+    "checkedAt": "2026-09-22",
+    "coords": [
+      39.199,
+      51.6668
+    ],
+    "menu": [
+      {
+        "title": "Завтраки",
+        "items": [
+          {
+            "name": "Сырники из фермерского творога",
+            "desc": "Сметана, джем из облепихи",
+            "weight": "220 г",
+            "price": 420
+          },
+          {
+            "name": "Яйцо пашот на бриоши",
+            "desc": "Голландский соус, шпинат, лосось слабой соли",
+            "weight": "240 г",
+            "price": 590
+          },
+          {
+            "name": "Каша из трёх круп",
+            "desc": "Топлёное молоко, печёное яблоко, орехи",
+            "weight": "280 г",
+            "price": 360
+          }
+        ]
+      },
+      {
+        "title": "Выпечка",
+        "items": [
+          {
+            "name": "Круассан с миндальным кремом",
+            "desc": "Своя выпечка каждое утро",
+            "weight": "110 г",
+            "price": 290
+          },
+          {
+            "name": "Булочка с кардамоном",
+            "desc": "Сливочное масло, сахарная глазурь",
+            "weight": "90 г",
+            "price": 220
+          }
+        ]
+      },
+      {
+        "title": "Кофе",
+        "items": [
+          {
+            "name": "Флэт уайт",
+            "desc": "Двойной эспрессо, молоко",
+            "weight": "200 мл",
+            "price": 260
+          },
+          {
+            "name": "Раф с липовым мёдом",
+            "desc": "Сливки, эспрессо, мёд",
+            "weight": "300 мл",
+            "price": 320
+          },
+          {
+            "name": "Фильтр-кофе дня",
+            "desc": "Спросите бариста о зерне",
+            "weight": "250 мл",
+            "price": 240
+          }
+        ]
+      }
+    ],
+    "booking": {
+      "from": "08:00",
+      "to": "20:30",
+      "step": 30,
+      "leadMinutes": 15,
+      "confirmMinutes": 60,
+      "days": 7,
+      "maxGuests": 8
+    },
+    "plan": {
+      "w": 1000,
+      "h": 640,
+      "windows": [
+        {
+          "side": "top",
+          "from": 60,
+          "to": 330
+        },
+        {
+          "side": "top",
+          "from": 365,
+          "to": 635
+        },
+        {
+          "side": "top",
+          "from": 670,
+          "to": 940
+        }
+      ],
+      "doors": [
+        {
+          "side": "left",
+          "at": 450,
+          "width": 100,
+          "label": "Вход"
+        }
+      ],
+      "rooms": [],
+      "bars": [
+        {
+          "x": 640,
+          "y": 500,
+          "w": 330,
+          "h": 70,
+          "stools": 0,
+          "label": "Стойка"
+        }
+      ],
+      "sofas": [],
+      "labels": [
+        {
+          "x": 500,
+          "y": 52,
+          "text": "окна на Никитинскую"
+        }
+      ],
+      "tables": [
+        {
+          "id": "1",
+          "x": 160,
+          "y": 150,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "2",
+          "x": 380,
+          "y": 150,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "3",
+          "x": 600,
+          "y": 150,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "4",
+          "x": 820,
+          "y": 150,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "5",
+          "x": 370,
+          "y": 350,
+          "shape": "rect",
+          "w": 420,
+          "h": 90,
+          "seats": 8,
+          "zone": "общий стол"
+        },
+        {
+          "id": "6",
+          "x": 800,
+          "y": 350,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        }
+      ]
+    }
+  },
+  {
+    "id": "ladya",
+    "city": "voronezh",
+    "fictional": true,
+    "name": "Ладья",
+    "cuisine": "Речная кухня: судак, раки, уха",
+    "about": "Рыба из донских хозяйств, раки в сезон и терраса с видом на воду. Уху варят на трёх видах рыбы.",
+    "area": "Улица Декабристов",
+    "open": "13:00",
+    "close": "23:00",
+    "avgCheck": 2500,
+    "checkedAt": "2026-09-12",
+    "coords": [
+      39.2125,
+      51.658
+    ],
+    "menu": [
+      {
+        "title": "Закуски",
+        "items": [
+          {
+            "name": "Строганина из судака",
+            "desc": "Соль с травами, мочёная брусника",
+            "weight": "150 г",
+            "price": 690,
+            "photo": "img/dishes/stroganina.webp",
+            "photoBy": "Anastase Maragos"
+          },
+          {
+            "name": "Икра щучья",
+            "desc": "Гренки из бородинского хлеба, сливочное масло",
+            "weight": "50 г",
+            "price": 950,
+            "photo": "img/dishes/ikra.webp",
+            "photoBy": "alexanderafan"
+          }
+        ]
+      },
+      {
+        "title": "Уха и супы",
+        "items": [
+          {
+            "name": "Тройная уха",
+            "desc": "Судак, сом, окунь, стопка водки по желанию",
+            "weight": "400 г",
+            "price": 780,
+            "photo": "img/dishes/uha.webp",
+            "photoBy": "Jon Handley"
+          },
+          {
+            "name": "Раковый суп",
+            "desc": "Сливки, укропное масло",
+            "weight": "300 г",
+            "price": 720,
+            "photo": "img/dishes/rakovy-sup.webp",
+            "photoBy": "Meg von Haartman"
+          }
+        ]
+      },
+      {
+        "title": "С огня",
+        "items": [
+          {
+            "name": "Судак целиком",
+            "desc": "Запечён на углях, лимон, зелёное масло",
+            "weight": "450 г",
+            "price": 1650,
+            "photo": "img/dishes/sudak.webp",
+            "photoBy": "Alina Bosakova"
+          },
+          {
+            "name": "Сом на гриле",
+            "desc": "Печёный перец, соус из сладкой паприки",
+            "weight": "300 г",
+            "price": 1290,
+            "photo": "img/dishes/som.webp",
+            "photoBy": "Faisal"
+          },
+          {
+            "name": "Раки в пиве",
+            "desc": "Укроп, чеснок, лавровый лист — 1 кг",
+            "weight": "1 кг",
+            "price": 2400,
+            "photo": "img/dishes/raki.webp",
+            "photoBy": "Hanxiao Xu"
+          }
+        ]
+      }
+    ],
+    "booking": {
+      "from": "13:00",
+      "to": "21:30",
+      "step": 30,
+      "leadMinutes": 15,
+      "confirmMinutes": 60,
+      "days": 7,
+      "maxGuests": 8
+    },
+    "plan": {
+      "w": 1000,
+      "h": 940,
+      "hall": {
+        "h": 560
+      },
+      "windows": [
+        {
+          "side": "hallBottom",
+          "from": 60,
+          "to": 400
+        },
+        {
+          "side": "hallBottom",
+          "from": 600,
+          "to": 940
+        }
+      ],
+      "doors": [
+        {
+          "side": "top",
+          "at": 820,
+          "width": 100,
+          "label": "Вход"
+        },
+        {
+          "side": "hallBottom",
+          "at": 450,
+          "width": 100,
+          "label": ""
+        }
+      ],
+      "rooms": [
+        {
+          "x": 0,
+          "y": 0,
+          "w": 230,
+          "h": 190,
+          "label": "Кухня",
+          "kind": "kitchen"
+        }
+      ],
+      "bars": [],
+      "sofas": [
+        {
+          "x": 940,
+          "y": 230,
+          "w": 50,
+          "h": 300
+        }
+      ],
+      "terrace": {
+        "y": 560,
+        "h": 330,
+        "label": "Терраса"
+      },
+      "water": {
+        "y": 890,
+        "h": 50,
+        "label": "вода"
+      },
+      "labels": [],
+      "tables": [
+        {
+          "id": "1",
+          "x": 380,
+          "y": 150,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "2",
+          "x": 640,
+          "y": 150,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "3",
+          "x": 170,
+          "y": 380,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "4",
+          "x": 480,
+          "y": 390,
+          "shape": "rect",
+          "w": 230,
+          "h": 100,
+          "seats": 6,
+          "zone": "в зале"
+        },
+        {
+          "id": "5",
+          "x": 860,
+          "y": 380,
+          "shape": "rect",
+          "w": 90,
+          "h": 120,
+          "seats": 3,
+          "zone": "у дивана",
+          "sofa": "right"
+        },
+        {
+          "id": "6",
+          "x": 150,
+          "y": 730,
+          "shape": "round",
+          "r": 42,
+          "seats": 2,
+          "zone": "на террасе"
+        },
+        {
+          "id": "7",
+          "x": 370,
+          "y": 730,
+          "shape": "round",
+          "r": 42,
+          "seats": 2,
+          "zone": "на террасе"
+        },
+        {
+          "id": "8",
+          "x": 610,
+          "y": 730,
+          "shape": "round",
+          "r": 55,
+          "seats": 4,
+          "zone": "на террасе"
+        },
+        {
+          "id": "9",
+          "x": 850,
+          "y": 730,
+          "shape": "round",
+          "r": 55,
+          "seats": 4,
+          "zone": "на террасе"
+        }
+      ]
+    }
+  }
+]

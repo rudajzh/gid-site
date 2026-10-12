@@ -1,0 +1,681 @@
+/* Оформление — orders/gid/design.md. Цвета только через переменные темы. */
+
+@font-face {
+  font-family: 'Manrope';
+  src: url('../fonts/manrope-cyrillic-wght-normal.woff2') format('woff2');
+  font-weight: 200 800; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Manrope';
+  src: url('../fonts/manrope-latin-wght-normal.woff2') format('woff2');
+  font-weight: 200 800; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+20BD, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-garamond-cyrillic-wght-normal.woff2') format('woff2');
+  font-weight: 300 700; font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('../fonts/cormorant-garamond-latin-wght-normal.woff2') format('woff2');
+  font-weight: 300 700; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+20BD, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root, [data-theme="dark"] {
+  --bg: #1E1815;
+  --surface: #2A221E;
+  --surface-2: #362C26;
+  --divider: rgba(240, 232, 224, 0.07);
+  --card-border: rgba(240, 232, 224, 0.06);
+  --outline: #56504A;
+  --text: #F0E8E0;
+  --muted: #B5A89B;
+  --dim: #8E8074;
+  --accent: #CDAE72;
+  --on-accent: #1E1815;
+  --detail: #A9C2A0;
+  --glass: rgba(30, 24, 21, 0.74);
+  --hairline: rgba(240, 232, 224, 0.09);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --card-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 10px 30px rgba(0, 0, 0, 0.25);
+  --sheet-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+  --halo: rgba(205, 174, 114, 0.18);
+  color-scheme: dark;
+}
+[data-theme="light"] {
+  --bg: #F1EBE1;
+  --surface: #FBF8F3;
+  --surface-2: #E8DFD2;
+  --divider: #ECE4D8;
+  --card-border: rgba(42, 34, 29, 0.05);
+  --outline: #CFC3B2;
+  --text: #2A221D;
+  --muted: #6B5F54;
+  --dim: #7A6D61;
+  --accent: #4F6B55;
+  --on-accent: #F7F3EC;
+  --detail: #7D5F32;
+  --glass: rgba(251, 248, 243, 0.78);
+  --hairline: rgba(42, 34, 29, 0.08);
+  --shadow: 0 8px 24px rgba(42, 34, 29, 0.10);
+  --card-shadow: 0 1px 2px rgba(42, 34, 29, 0.04), 0 8px 24px rgba(42, 34, 29, 0.06);
+  --sheet-shadow: 0 18px 48px rgba(42, 34, 29, 0.16);
+  --halo: rgba(79, 107, 85, 0.16);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Manrope', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+/* Смена темы — плавно, одновременно с картой. */
+body, .pill, .icon-button, .sheet, .sheet__close, .city__menu, .pin__dot, .pin__label, .env-badge, .app::before {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+h2, p { margin: 0; }
+
+.app { position: fixed; inset: 0; overflow: hidden; }
+/* Мягкая подложка под шапкой: кнопки не лежат прямо на улицах. */
+.app::before {
+  content: ''; position: absolute; z-index: 5; left: 0; right: 0; top: 0; height: 132px;
+  background: linear-gradient(to bottom, var(--bg) 18%, transparent);
+  pointer-events: none;
+}
+
+/* Шапка */
+.topbar {
+  position: absolute; z-index: 10; left: 0; right: 0; top: 0;
+  padding: max(18px, env(safe-area-inset-top)) 16px 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  pointer-events: none;
+}
+.topbar > * { pointer-events: auto; }
+.topbar__left, .topbar__right { display: flex; align-items: center; gap: 10px; }
+.topbar__mark { flex: none; width: 32px; height: 32px; color: var(--accent); }
+.wordmark {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 32px; font-weight: 700; letter-spacing: 0.01em; line-height: 1;
+  color: var(--text);
+}
+.pill, .icon-button {
+  border: 1px solid var(--hairline); background: var(--glass);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+}
+.pill {
+  font-size: 14px; font-weight: 600; padding: 0 12px; height: 36px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.icon-button {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.env-badge {
+  position: absolute; left: 16px; top: calc(100% + 10px);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 6px 10px; border-radius: 999px; background: var(--detail); color: var(--bg);
+}
+[data-theme="dark"] .icon-moon, [data-theme="light"] .icon-sun { display: none; }
+
+/* Компас — под кнопкой темы, только когда карту повернули или наклонили */
+.compass {
+  position: absolute; z-index: 10; right: 16px;
+  top: calc(max(18px, env(safe-area-inset-top)) + 54px);
+}
+.compass svg { transition: transform 0.1s linear; }
+@media (min-width: 720px) { .compass { right: 24px; top: 74px; } }
+
+/* Выбор города */
+.city { position: relative; }
+.city__menu {
+  position: absolute; top: 44px; left: 0; min-width: 220px; margin: 0; padding: 6px;
+  list-style: none; background: var(--surface); border: 1px solid var(--card-border);
+  border-radius: 16px; box-shadow: 0 12px 34px rgba(0, 0, 0, 0.18);
+}
+.city__option {
+  width: 100%; min-height: 44px; border: 0; background: transparent; border-radius: 10px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 12px;
+  font-size: 15px; font-weight: 600; text-align: left;
+}
+.city__option[aria-selected="true"] { color: var(--accent); }
+.city__option:disabled { color: var(--dim); cursor: default; }
+.city__option:not(:disabled):hover { background: var(--surface-2); }
+.city__soon { font-size: 12px; font-weight: 500; }
+
+/* Карта */
+/* Своя стопка слоёв: слои карты не перекрывают шапку и шторку. */
+.map {
+  position: absolute; inset: 0; z-index: 0; isolation: isolate; background: var(--bg);
+  transition: opacity 0.18s ease, background-color 0.35s ease;
+}
+.map--switching { opacity: 0; }
+/* Подпись «© OpenStreetMap» — маленькая кнопка «i» в углу, в цветах темы. */
+.map .maplibregl-ctrl-attrib {
+  background: var(--glass); color: var(--muted); font: 500 11px/1.4 'Manrope', sans-serif;
+  border-radius: 999px; box-shadow: var(--shadow);
+}
+.map .maplibregl-ctrl-attrib a { color: var(--muted); }
+.map .maplibregl-ctrl-attrib-button { filter: var(--attrib-icon, none); }
+/* Подпись стоит над вкладками. */
+.map .maplibregl-ctrl-bottom-right { bottom: calc(78px + env(safe-area-inset-bottom)); }
+[data-theme="dark"] { --attrib-icon: invert(0.85); }
+.map-error {
+  position: absolute; z-index: 5; left: 16px; right: 16px; top: 45%;
+  text-align: center; color: var(--muted); font-size: 15px;
+}
+.pin {
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+  border: 0; background: none; padding: 0;
+}
+.pin__dot {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--accent); color: var(--on-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; font-weight: 700; line-height: 1;
+  padding-bottom: 2px;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--accent), 0 8px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+.pin:hover .pin__dot, .pin[aria-pressed="true"] .pin__dot { transform: scale(1.1); }
+.pin__label {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+  padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+  background: var(--glass); color: var(--text); border: 1px solid var(--hairline);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+
+/* Шторка ресторана */
+.sheet {
+  position: absolute; z-index: 10; left: 12px; right: 12px;
+  /* Над вкладками и подписью «© OpenStreetMap»: её закрывать нельзя. */
+  bottom: calc(118px + env(safe-area-inset-bottom));
+  background: var(--surface); border: 1px solid var(--hairline); border-radius: 24px;
+  box-shadow: var(--sheet-shadow);
+  padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 12px;
+  animation: sheet-in 0.2s ease-out;
+}
+@keyframes sheet-in { from { transform: translateY(16px); opacity: 0; } }
+.sheet__close { position: absolute; top: 12px; right: 12px; background: var(--surface-2); box-shadow: none; }
+.sheet__head { display: flex; align-items: baseline; gap: 12px; padding-right: 52px; }
+.sheet__name {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 34px; font-weight: 600; line-height: 1;
+}
+.sheet__check-sum { font-size: 13px; font-weight: 600; color: var(--muted); white-space: nowrap; }
+.sheet__cuisine, .sheet__hours { font-size: 14px; color: var(--muted); }
+.sheet__checked { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--detail); }
+.sheet__fictional { font-size: 12px; color: var(--dim); }
+
+/* Главная кнопка */
+.button {
+  height: 52px; width: 100%; border: 0; border-radius: 16px;
+  background: var(--accent); color: var(--on-accent);
+  font-size: 16px; font-weight: 700; letter-spacing: 0.01em;
+}
+.button:active { transform: scale(0.99); }
+.button--ghost { background: var(--surface-2); color: var(--text); border: 1px solid var(--hairline); }
+.sheet__actions { display: flex; gap: 8px; margin-top: 4px; }
+.sheet__actions .sheet__book { flex: 1.4; }
+.sheet__actions .sheet__open { flex: 1; }
+.place__book { margin: 16px 16px 0; width: calc(100% - 32px); }
+
+/* Страница ресторана */
+.place {
+  position: absolute; z-index: 20; inset: 0;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+  animation: place-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes place-in { from { transform: translateX(28px); opacity: 0; } }
+.place__bar {
+  flex: none; display: flex; align-items: center;
+  padding: max(14px, env(safe-area-inset-top)) 16px 10px;
+}
+.place__back { height: 40px; padding: 0 14px 0 10px; font-size: 15px; box-shadow: none; }
+.place__scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+.place__hero { padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+.place__mono {
+  width: 56px; height: 56px; border-radius: 50%; margin-bottom: 6px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent); color: var(--on-accent);
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 700; line-height: 1; padding-bottom: 3px;
+  box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--accent);
+}
+.place__name {
+  margin: 0; font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 46px; font-weight: 600; line-height: 0.95; letter-spacing: -0.005em;
+}
+.place__cuisine { font-size: 16px; color: var(--muted); }
+
+/* Карточки: сведения о ресторане и разделы меню — на своей поверхности, не на фоне. */
+.place__facts, .menu-card {
+  margin: 0 16px; padding: 0 16px; list-style: none;
+  background: var(--surface); border: 1px solid var(--card-border); border-radius: 20px;
+  box-shadow: var(--card-shadow);
+}
+.place__fact {
+  display: flex; align-items: center; gap: 12px; min-height: 50px;
+  font-size: 14.5px; border-bottom: 1px solid var(--divider);
+}
+.place__fact:last-child { border-bottom: 0; }
+.place__fact svg { flex: none; color: var(--dim); }
+.place__checked, .place__checked svg { color: var(--detail); font-weight: 700; }
+.place__about { margin: 20px 20px 0; font-size: 15px; line-height: 1.6; color: var(--muted); }
+.place__fictional { margin: 10px 20px 0; font-size: 12px; color: var(--dim); }
+
+.place__tabs {
+  position: sticky; top: 0; z-index: 2; margin-top: 24px;
+  display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  padding: 10px 16px; background: var(--bg);
+}
+.place__tabs::-webkit-scrollbar { display: none; }
+.place__tab {
+  flex: none; height: 38px; padding: 0 16px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--card-border); color: var(--text);
+  font-size: 14px; font-weight: 600;
+}
+.place__tab:active { background: var(--surface-2); }
+
+.place__menu { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
+.menu-section { padding-top: 18px; }
+.menu-section__title {
+  margin: 0 20px 12px; font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 30px; font-weight: 600; line-height: 1.1;
+}
+.dish { display: flex; gap: 14px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--divider); }
+.dish:last-child { border-bottom: 0; }
+.dish__text { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.dish__name { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.3; }
+.dish__desc { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.dish__price { display: flex; align-items: center; gap: 8px; margin-top: 6px; min-height: 36px; }
+.dish__sum { font-size: 15px; font-weight: 700; }
+.dish__weight { font-size: 12.5px; color: var(--dim); }
+.dish__photo {
+  flex: none; width: 96px; height: 96px; border-radius: 14px; object-fit: cover;
+  background: var(--surface-2);
+}
+
+/* «+» у блюда и «− 2 +», когда блюдо в заказе */
+.qty { margin-left: auto; display: flex; align-items: center; gap: 4px; flex: none; }
+.qty__btn {
+  width: 36px; height: 36px; border-radius: 50%; padding: 0;
+  border: 1px solid var(--hairline); background: var(--surface-2); color: var(--text);
+  font-size: 20px; font-weight: 500; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.qty__btn--plus { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.qty__count { min-width: 22px; text-align: center; font-size: 15px; font-weight: 700; }
+
+/* Строка заказа внизу меню */
+.cartbar {
+  position: absolute; z-index: 3; left: 12px; right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  animation: sheet-in 0.2s ease-out;
+}
+.cartbar__button {
+  display: flex; align-items: center; justify-content: space-between; padding: 0 20px;
+  height: 56px; box-shadow: var(--sheet-shadow);
+}
+.cartbar__sum { font-weight: 600; opacity: 0.9; }
+.place--with-cart .place__menu { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
+
+/* Экран заказа */
+.order {
+  position: absolute; z-index: 30; inset: 0;
+  display: flex; flex-direction: column; background: var(--bg);
+  animation: place-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.order__scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding-bottom: 24px; }
+.order__head { padding: 4px 20px 18px; display: flex; flex-direction: column; gap: 6px; }
+.order__title { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 40px; font-weight: 600; line-height: 1; }
+.order__place { font-size: 15px; color: var(--muted); }
+.order-lines {
+  margin: 0 16px; background: var(--surface); border: 1px solid var(--card-border);
+  border-radius: 20px; box-shadow: var(--card-shadow);
+}
+.order-lines { padding: 0 16px; }
+.order-line { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--divider); }
+.order-line:last-child { border-bottom: 0; }
+.order-line__text { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.order-line__name { font-size: 15px; font-weight: 600; }
+.order-line__sum { font-size: 13px; color: var(--muted); }
+.order__empty { margin: 0 20px; color: var(--muted); font-size: 15px; }
+.order__total { display: flex; justify-content: space-between; margin: 14px 20px 0; font-size: 16px; font-weight: 700; }
+.order__label {
+  margin: 28px 20px 12px; font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px; font-weight: 600; line-height: 1.1;
+}
+
+.order__note { margin: 12px 20px 0; font-size: 14px; color: var(--muted); }
+
+/* Я в ресторане / приду ко времени */
+.mode {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 0 16px; padding: 4px;
+  background: var(--surface); border: 1px solid var(--card-border); border-radius: 999px;
+}
+.mode__btn {
+  height: 40px; border: 0; border-radius: 999px; background: transparent; color: var(--muted);
+  font-size: 14.5px; font-weight: 700; transition: background-color 0.2s ease, color 0.2s ease;
+}
+.mode__btn[aria-checked="true"] { background: var(--accent); color: var(--on-accent); }
+
+/* Бронь: дни, гости, время */
+.chip {
+  height: 42px; padding: 0 16px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--card-border); color: var(--text);
+  font-size: 14.5px; font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.chip[aria-checked="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.days { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding: 0 16px 4px; }
+.days::-webkit-scrollbar { display: none; }
+.chip--day { flex: none; height: auto; min-width: 74px; padding: 9px 14px; border-radius: 16px; display: flex; flex-direction: column; gap: 2px; align-items: center; }
+.chip__top { font-size: 13px; font-weight: 700; text-transform: capitalize; }
+.chip__bottom { font-size: 12.5px; font-weight: 500; opacity: 0.75; }
+.guests { display: flex; align-items: center; justify-content: space-between; margin: 26px 20px 0; }
+.order__label--inline { margin: 0; }
+.stepper { display: flex; align-items: center; gap: 10px; }
+.stepper .qty__btn { width: 40px; height: 40px; }
+.stepper .qty__btn:disabled { opacity: 0.35; }
+.guests__count { min-width: 84px; text-align: center; font-size: 15px; font-weight: 700; }
+.slots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 0 16px; }
+.chip--slot { padding: 0; font-variant-numeric: tabular-nums; }
+.chip--soon { grid-column: span 2; }
+.chip:disabled { opacity: 0.35; text-decoration: line-through; cursor: default; }
+.slots__empty { margin: 10px 20px 0; font-size: 14px; color: var(--muted); }
+
+/* План зала */
+.plan {
+  margin: 0 16px; padding: 6px; background: var(--surface); border: 1px solid var(--card-border);
+  border-radius: 20px; box-shadow: var(--card-shadow);
+}
+.plan__svg { display: block; width: 100%; height: auto; font-family: 'Manrope', sans-serif; }
+.plan__floor { fill: var(--bg); }
+.plan__wall { fill: none; stroke: var(--muted); stroke-width: 10; stroke-linejoin: round; }
+.plan__window-gap { stroke: var(--bg); stroke-width: 14; }
+.plan__window { stroke: var(--detail); stroke-width: 6; stroke-dasharray: 2 0; opacity: 0.9; }
+.plan__door { fill: none; stroke: var(--dim); stroke-width: 3; stroke-dasharray: 8 6; }
+.plan__room { stroke: none; }
+.plan__room-wall { fill: none; stroke: var(--muted); stroke-width: 6; }
+.plan__hatch { stroke: var(--divider); stroke-width: 5; }
+.plan__terrace { fill: var(--surface-2); opacity: 0.55; }
+.plan__water { fill: var(--detail); opacity: 0.18; }
+.plan__sofa { fill: var(--surface-2); stroke: var(--outline); stroke-width: 2; }
+.plan__bar { fill: var(--surface-2); stroke: var(--outline); stroke-width: 2; }
+.plan__stool { fill: var(--bg); stroke: var(--outline); stroke-width: 2; }
+.plan__label { fill: var(--dim); font-size: 32px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.plan__label--center { text-anchor: middle; }
+.plan__label--soft { font-size: 30px; font-weight: 600; text-transform: none; letter-spacing: 0.02em; }
+.plan__label--room { fill: var(--muted); }
+.plan__label--water { fill: var(--detail); }
+.plan__chair { fill: var(--surface-2); stroke: var(--outline); stroke-width: 2; transition: fill 0.2s ease; }
+.plan__top { fill: var(--surface); stroke: var(--muted); stroke-width: 3; transition: fill 0.2s ease, stroke 0.2s ease; }
+.plan__num { fill: var(--text); font-size: 40px; font-weight: 700; text-anchor: middle; pointer-events: none; }
+.plan__busy { stroke: none; }
+.plan__table { cursor: pointer; outline: none; }
+.plan__table[aria-disabled="true"] { cursor: default; }
+.plan__table.is-busy .plan__top { stroke: var(--outline); }
+.plan__table.is-busy .plan__num, .plan__table.is-small .plan__num { fill: var(--dim); }
+.plan__table.is-small { opacity: 0.4; }
+.plan--waiting .plan__table { opacity: 0.55; }
+.plan__table:not([aria-disabled="true"]):hover .plan__top { stroke: var(--accent); }
+.plan__table:focus-visible .plan__top { stroke: var(--accent); stroke-width: 6; }
+.plan__table.is-mine .plan__top { fill: var(--accent); stroke: var(--accent); }
+.plan__table.is-mine .plan__chair { fill: var(--accent); stroke: var(--accent); opacity: 0.55; }
+.plan__table.is-mine .plan__num { fill: var(--on-accent); }
+.plan__status { margin: 12px 20px 0; font-size: 14.5px; font-weight: 600; }
+.plan__legend { display: flex; gap: 16px; margin: 8px 20px 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--muted); }
+.plan__legend li { display: flex; align-items: center; gap: 6px; }
+.dot { width: 12px; height: 12px; border-radius: 4px; border: 1.5px solid var(--muted); background: var(--surface); }
+.dot--busy { border-color: var(--outline); background: repeating-linear-gradient(45deg, transparent 0 3px, var(--divider) 3px 5px); }
+.dot--mine { background: var(--accent); border-color: var(--accent); }
+
+.order__pick { margin: 12px 0 0 20px; width: auto; padding: 0 20px; height: 44px; font-size: 15px; }
+
+.order__send {
+  flex: none; padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--divider); background: var(--bg);
+}
+.send:disabled { background: var(--surface-2); color: var(--dim); cursor: default; }
+
+/* Окно «заказ уходит через Телеграм» */
+.tg {
+  position: absolute; z-index: 50; inset: 0; padding: 16px;
+  display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+.tg__card {
+  width: 100%; max-width: 420px; padding: 26px 22px 18px; border-radius: 24px;
+  background: var(--surface); border: 1px solid var(--card-border); box-shadow: var(--sheet-shadow);
+  display: flex; flex-direction: column; gap: 12px;
+  margin-bottom: env(safe-area-inset-bottom);
+  animation: sheet-in 0.2s ease-out;
+}
+.tg__title { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; font-weight: 600; line-height: 1.05; }
+.tg__text { font-size: 15px; line-height: 1.55; color: var(--muted); }
+.tg__soon { font-size: 13.5px; line-height: 1.5; color: var(--detail); }
+.tg__open { display: flex; align-items: center; justify-content: center; text-decoration: none; margin-top: 4px; }
+.tg__close {
+  height: 48px; border-radius: 14px; border: 1px solid var(--hairline); background: none;
+  font-size: 15px; font-weight: 600; color: var(--text);
+}
+
+/* Моя карта — карта лояльности. Карта в цвете деталей: шалфей в тёмной теме, золото в светлой. */
+[data-theme="dark"] {
+  --bank-bg: linear-gradient(135deg, #46553F 0%, #313C2D 52%, #252D22 100%);
+  --bank-text: #F0E8E0;
+  --bank-soft: rgba(240, 232, 224, 0.68);
+  --bank-chip: #CDAE72;
+}
+[data-theme="light"] {
+  --bank-bg: linear-gradient(135deg, #A6834B 0%, #866636 52%, #6A4F28 100%);
+  --bank-text: #FBF4E8;
+  --bank-soft: rgba(251, 244, 232, 0.74);
+  --bank-chip: #E9D3A6;
+}
+.bank {
+  position: relative; overflow: hidden; margin: 0 16px; aspect-ratio: 1.586; max-height: 260px;
+  padding: 20px 22px; border-radius: 22px; color: var(--bank-text); background: var(--bank-bg);
+  display: flex; flex-direction: column; justify-content: space-between;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset, 0 16px 36px rgba(0, 0, 0, 0.28);
+}
+/* Блик и большая буква «Р» на фоне — чтобы карта читалась как карта, а не как плашка. */
+.bank::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(120% 90% at 100% 0%, rgba(255, 255, 255, 0.16), transparent 55%);
+}
+.bank::after {
+  content: 'Р'; position: absolute; right: -6px; bottom: -64px; pointer-events: none;
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 260px; font-weight: 700; line-height: 1;
+  color: var(--bank-text); opacity: 0.07;
+}
+.bank > * { position: relative; z-index: 1; }
+.bank__top, .bank__bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.bank__logo { display: flex; align-items: center; gap: 8px; }
+.bank__logo svg { flex: none; color: var(--bank-chip); }
+.bank__brand { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 700; line-height: 1; }
+.bank__sample {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 5px 10px; border-radius: 999px; border: 1px solid var(--bank-soft); color: var(--bank-soft);
+}
+.bank__chip { fill: var(--bank-chip); stroke: rgba(0, 0, 0, 0.22); stroke-width: 1; opacity: 0.9; }
+.bank__points { display: flex; align-items: baseline; gap: 8px; }
+.bank__sum { font-size: 40px; font-weight: 700; line-height: 1; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.bank__word { font-size: 15px; font-weight: 600; color: var(--bank-soft); }
+.bank__name { font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bank-soft); }
+.bank__level {
+  font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16); white-space: nowrap;
+}
+
+.loyalty-card {
+  margin: 12px 16px 0; padding: 16px; list-style: none;
+  background: var(--surface); border: 1px solid var(--card-border); border-radius: 20px;
+  box-shadow: var(--card-shadow);
+}
+.level__steps { display: flex; justify-content: space-between; margin: 0 0 10px; padding: 0; list-style: none; font-size: 13px; font-weight: 600; color: var(--dim); }
+.level__step--done { color: var(--muted); }
+.level__step--now { color: var(--detail); font-weight: 700; }
+.level__bar { height: 8px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.level__fill { display: block; height: 100%; border-radius: inherit; background: var(--detail); }
+.level__next { margin-top: 12px; font-size: 14.5px; font-weight: 600; }
+.level__earned { margin-top: 4px; font-size: 13px; color: var(--muted); }
+
+.qr { display: flex; align-items: center; gap: 16px; }
+.qr__code { flex: none; width: 116px; height: 116px; border-radius: 12px; background: #fff; }
+.qr__text { display: flex; flex-direction: column; gap: 6px; }
+.qr__title { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 600; line-height: 1.05; }
+.qr__hint { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.qr__number { font-size: 13px; font-weight: 600; color: var(--dim); font-variant-numeric: tabular-nums; }
+
+.how, .history, .spend { margin-top: 0; padding-top: 0; padding-bottom: 0; }
+.how__item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--divider); }
+.how__item:last-child, .history__item:last-child, .spend li:last-child .spend__item { border-bottom: 0; }
+.how__icon {
+  flex: none; width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface-2); color: var(--detail);
+}
+.how__text, .history__text, .spend__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.how__title, .history__place, .spend__name { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.how__desc, .history__detail, .spend__cuisine { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.loyalty__scan {
+  margin: 12px 16px 0; width: calc(100% - 32px);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.history__item { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--divider); }
+.history__points { flex: none; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.history__points--plus { color: var(--detail); }
+.spend__item {
+  width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 0; min-height: 64px;
+  border: 0; border-bottom: 1px solid var(--divider); background: none; text-align: left;
+}
+.spend__mono {
+  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent); color: var(--on-accent);
+  font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 700; line-height: 1; padding-bottom: 2px;
+}
+.spend__item > svg { flex: none; color: var(--dim); }
+.loyalty__note { margin: 20px 20px 0; font-size: 12.5px; line-height: 1.5; color: var(--dim); }
+
+/* Вкладки внизу: карта, лента, моя карта, аккаунт. Матовое стекло, как у кнопок над картой. */
+.tabbar {
+  position: absolute; z-index: 15; left: 12px; right: 12px;
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  height: 64px; padding: 0 6px; border-radius: 24px;
+  display: flex; align-items: stretch;
+  background: var(--glass); border: 1px solid var(--hairline); box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.tabbar__item {
+  flex: 1; min-width: 0; border: 0; background: none; padding: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.01em; color: var(--dim);
+  transition: color 0.2s ease;
+}
+.tabbar__item svg { transition: transform 0.2s ease; }
+.tabbar__item:active svg { transform: scale(0.92); }
+.tabbar__item[aria-current="page"] { color: var(--accent); font-weight: 700; }
+
+/* Экраны вкладок: лента, моя карта, аккаунт. Лежат над картой и шапкой, под вкладками. */
+.tabpage {
+  position: absolute; z-index: 12; inset: 0;
+  display: flex; flex-direction: column; background: var(--bg);
+  animation: tab-in 0.2s ease-out;
+}
+@keyframes tab-in { from { opacity: 0; } }
+.tabpage__scroll {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding-top: max(22px, env(safe-area-inset-top));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+/* «Скоро» — то, что нарисовано, но ещё не работает. */
+.soon { margin-top: 4px; padding: 18px 18px 6px; }
+.soon__badge {
+  display: inline-block; vertical-align: middle; padding: 4px 10px; border-radius: 999px;
+  border: 1px solid var(--detail); color: var(--detail);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3;
+}
+.soon__list { margin: 8px 0 0; padding: 0; list-style: none; }
+.soon__list li { padding: 13px 0; border-bottom: 1px solid var(--divider); font-size: 15px; line-height: 1.45; }
+.soon__list li:last-child { border-bottom: 0; }
+.feed__map { margin: 16px 16px 0; width: calc(100% - 32px); }
+
+/* Аккаунт */
+.guest { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+.guest__mono { width: 52px; height: 52px; font-size: 30px; }
+.guest__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.guest__name { font-size: 17px; font-weight: 700; line-height: 1.3; }
+.guest__name .soon__badge { margin-left: 4px; }
+.guest__note { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.rows { padding-top: 0; padding-bottom: 0; }
+.rows li:last-child .spend__item { border-bottom: 0; }
+.rows .spend__item { text-decoration: none; color: inherit; }
+.rows__icon {
+  flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--surface-2); color: var(--detail);
+  display: flex; align-items: center; justify-content: center;
+}
+.rows__value { flex: none; font-size: 14px; font-weight: 600; color: var(--muted); }
+
+/* Страница команды: оболочка. Содержимое и его стили — в team.html, грузятся только тем, кто её открыл. */
+.team {
+  position: absolute; z-index: 18; inset: 0;
+  display: flex; flex-direction: column; background: var(--bg);
+  animation: place-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.team__bar { gap: 12px; }
+.team__title { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; line-height: 1; }
+.team__tabs {
+  flex: none; display: flex; gap: 8px; overflow-x: auto; padding: 4px 16px 12px;
+  scrollbar-width: none; border-bottom: 1px solid var(--divider);
+}
+.team__tabs::-webkit-scrollbar { display: none; }
+.team__tab {
+  flex: none; height: 38px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--hairline); background: var(--surface); font-size: 14px; font-weight: 600; color: var(--muted);
+}
+.team__tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.team__scroll {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: 20px 20px calc(40px + env(safe-area-inset-bottom));
+}
+
+/* Шапка на узких телефонах: название, город и две круглые кнопки помещаются в строку. */
+@media (max-width: 400px) {
+  .topbar__left { gap: 8px; }
+  .topbar__right { gap: 6px; }
+  .city__button { padding: 0 10px; }
+}
+@media (max-width: 360px) {
+  .wordmark { font-size: 28px; }
+  .qr__code { width: 96px; height: 96px; }
+}
+@media (max-width: 340px) {
+  .topbar { padding-left: 12px; padding-right: 12px; }
+  .compass { right: 12px; }
+  .wordmark { font-size: 24px; }
+  .city__button { padding: 0 8px; font-size: 13px; }
+  .topbar__right { gap: 4px; }
+}
+@media (min-width: 720px) {
+  .topbar { padding: 20px 24px 0; }
+  .sheet { left: 24px; right: auto; bottom: 104px; width: 400px; }
+  .tabbar { left: 24px; right: auto; bottom: 24px; width: 400px; }
+  .map .maplibregl-ctrl-bottom-right { bottom: 0; }
+  .place, .order, .tabpage, .team { right: auto; width: 480px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.25); border-right: 1px solid var(--hairline); }
+  .team { width: 720px; }
+  .tg { align-items: center; }
+}
