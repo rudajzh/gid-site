@@ -165,6 +165,8 @@ h2, p { margin: 0; }
 }
 .map .maplibregl-ctrl-attrib a { color: var(--muted); }
 .map .maplibregl-ctrl-attrib-button { filter: var(--attrib-icon, none); }
+/* Подпись стоит над вкладками. */
+.map .maplibregl-ctrl-bottom-right { bottom: calc(78px + env(safe-area-inset-bottom)); }
 [data-theme="dark"] { --attrib-icon: invert(0.85); }
 .map-error {
   position: absolute; z-index: 5; left: 16px; right: 16px; top: 45%;
@@ -194,8 +196,8 @@ h2, p { margin: 0; }
 /* Шторка ресторана */
 .sheet {
   position: absolute; z-index: 10; left: 12px; right: 12px;
-  /* Над подписью «© OpenStreetMap»: её закрывать нельзя. */
-  bottom: calc(44px + env(safe-area-inset-bottom));
+  /* Над вкладками и подписью «© OpenStreetMap»: её закрывать нельзя. */
+  bottom: calc(118px + env(safe-area-inset-bottom));
   background: var(--surface); border: 1px solid var(--hairline); border-radius: 24px;
   box-shadow: var(--sheet-shadow);
   padding: 22px 22px 20px; display: flex; flex-direction: column; gap: 12px;
@@ -480,15 +482,6 @@ h2, p { margin: 0; }
   --bank-soft: rgba(251, 244, 232, 0.74);
   --bank-chip: #E9D3A6;
 }
-.loyalty {
-  position: absolute; z-index: 20; inset: 0;
-  display: flex; flex-direction: column; background: var(--bg);
-  animation: place-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.loyalty__scroll {
-  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
-  padding-bottom: calc(32px + env(safe-area-inset-bottom));
-}
 .bank {
   position: relative; overflow: hidden; margin: 0 16px; aspect-ratio: 1.586; max-height: 260px;
   padding: 20px 22px; border-radius: 22px; color: var(--bank-text); background: var(--bank-bg);
@@ -572,8 +565,90 @@ h2, p { margin: 0; }
 }
 .spend__item > svg { flex: none; color: var(--dim); }
 .loyalty__note { margin: 20px 20px 0; font-size: 12.5px; line-height: 1.5; color: var(--dim); }
-.card-toggle svg { transition: transform 0.2s ease; }
-.card-toggle:active svg { transform: scale(0.92); }
+
+/* Вкладки внизу: карта, лента, моя карта, аккаунт. Матовое стекло, как у кнопок над картой. */
+.tabbar {
+  position: absolute; z-index: 15; left: 12px; right: 12px;
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  height: 64px; padding: 0 6px; border-radius: 24px;
+  display: flex; align-items: stretch;
+  background: var(--glass); border: 1px solid var(--hairline); box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+  transition: background-color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.tabbar__item {
+  flex: 1; min-width: 0; border: 0; background: none; padding: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.01em; color: var(--dim);
+  transition: color 0.2s ease;
+}
+.tabbar__item svg { transition: transform 0.2s ease; }
+.tabbar__item:active svg { transform: scale(0.92); }
+.tabbar__item[aria-current="page"] { color: var(--accent); font-weight: 700; }
+
+/* Экраны вкладок: лента, моя карта, аккаунт. Лежат над картой и шапкой, под вкладками. */
+.tabpage {
+  position: absolute; z-index: 12; inset: 0;
+  display: flex; flex-direction: column; background: var(--bg);
+  animation: tab-in 0.2s ease-out;
+}
+@keyframes tab-in { from { opacity: 0; } }
+.tabpage__scroll {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding-top: max(22px, env(safe-area-inset-top));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+/* «Скоро» — то, что нарисовано, но ещё не работает. */
+.soon { margin-top: 4px; padding: 18px 18px 6px; }
+.soon__badge {
+  display: inline-block; vertical-align: middle; padding: 4px 10px; border-radius: 999px;
+  border: 1px solid var(--detail); color: var(--detail);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.3;
+}
+.soon__list { margin: 8px 0 0; padding: 0; list-style: none; }
+.soon__list li { padding: 13px 0; border-bottom: 1px solid var(--divider); font-size: 15px; line-height: 1.45; }
+.soon__list li:last-child { border-bottom: 0; }
+.feed__map { margin: 16px 16px 0; width: calc(100% - 32px); }
+
+/* Аккаунт */
+.guest { display: flex; align-items: center; gap: 14px; margin-top: 4px; }
+.guest__mono { width: 52px; height: 52px; font-size: 30px; }
+.guest__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.guest__name { font-size: 17px; font-weight: 700; line-height: 1.3; }
+.guest__name .soon__badge { margin-left: 4px; }
+.guest__note { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.rows { padding-top: 0; padding-bottom: 0; }
+.rows li:last-child .spend__item { border-bottom: 0; }
+.rows .spend__item { text-decoration: none; color: inherit; }
+.rows__icon {
+  flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--surface-2); color: var(--detail);
+  display: flex; align-items: center; justify-content: center;
+}
+.rows__value { flex: none; font-size: 14px; font-weight: 600; color: var(--muted); }
+
+/* Страница команды: оболочка. Содержимое и его стили — в team.html, грузятся только тем, кто её открыл. */
+.team {
+  position: absolute; z-index: 18; inset: 0;
+  display: flex; flex-direction: column; background: var(--bg);
+  animation: place-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.team__bar { gap: 12px; }
+.team__title { margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 600; line-height: 1; }
+.team__tabs {
+  flex: none; display: flex; gap: 8px; overflow-x: auto; padding: 4px 16px 12px;
+  scrollbar-width: none; border-bottom: 1px solid var(--divider);
+}
+.team__tabs::-webkit-scrollbar { display: none; }
+.team__tab {
+  flex: none; height: 38px; padding: 0 14px; border-radius: 999px;
+  border: 1px solid var(--hairline); background: var(--surface); font-size: 14px; font-weight: 600; color: var(--muted);
+}
+.team__tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.team__scroll {
+  flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: 20px 20px calc(40px + env(safe-area-inset-bottom));
+}
 
 /* Шапка на узких телефонах: название, город и две круглые кнопки помещаются в строку. */
 @media (max-width: 400px) {
@@ -594,7 +669,10 @@ h2, p { margin: 0; }
 }
 @media (min-width: 720px) {
   .topbar { padding: 20px 24px 0; }
-  .sheet { left: 24px; right: auto; bottom: 44px; width: 400px; }
-  .place, .order, .loyalty { right: auto; width: 480px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.25); border-right: 1px solid var(--hairline); }
+  .sheet { left: 24px; right: auto; bottom: 104px; width: 400px; }
+  .tabbar { left: 24px; right: auto; bottom: 24px; width: 400px; }
+  .map .maplibregl-ctrl-bottom-right { bottom: 0; }
+  .place, .order, .tabpage, .team { right: auto; width: 480px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.25); border-right: 1px solid var(--hairline); }
+  .team { width: 720px; }
   .tg { align-items: center; }
 }

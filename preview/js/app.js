@@ -12,7 +12,7 @@
   if (!tg || tg.platform === 'unknown') tg = null;
   var tgCanSend = !!tg && !tg.initData;
   var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false,
-    cart: {}, book: null, bookWant: null, bookDays: [], orderPushed: false, loyalty: null, cardPushed: false, cardFresh: false, cardDrawn: false };
+    cart: {}, book: null, bookWant: null, bookDays: [], orderPushed: false, loyalty: null, cardDrawn: false, tabFresh: false, team: null, teamPushed: false };
 
   // Цвета карты — из orders/gid/design.md. Карта — тихий фон: почти без контуров,
   // парки чуть темнее земли, яркое на ней только наши рестораны.
@@ -908,38 +908,187 @@
     });
   }
 
-  function openCard() {
-    state.cardPushed = true;
-    state.cardFresh = true;
-    location.hash = 'card';
+  // Вкладки внизу
+
+  var TABS = ['feed', 'card', 'account'];
+  var TAB_PAGES = { feed: '.feed', card: '.loyalty', account: '.account' };
+
+  // Переход по вкладкам не копит историю: «назад» с вкладки не водит по прошлым вкладкам.
+  function goTab(tab) {
+    history.replaceState(null, '', tab === 'map' ? location.pathname + location.search : '#' + tab);
+    state.tabFresh = true;
+    showRoute();
   }
 
-  function closeCard() {
-    if (state.cardPushed) {
-      state.cardPushed = false;
+  var ROW_ICONS = {
+    card: '<rect x="2.5" y="5.5" width="19" height="13" rx="3"/><path d="M2.5 10h19M6 14.5h4"/>',
+    theme: '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',
+    telegram: '<path d="M21 4L3 11l6 2.2M21 4l-3 15-9-5.8M21 4L9 13.2v5l3.2-3"/>',
+    team: '<circle cx="9" cy="8.5" r="3.2"/><path d="M2.8 19c.9-3 3.2-4.6 6.2-4.6s5.3 1.6 6.2 4.6"/><path d="M16 5.6a3.2 3.2 0 0 1 0 5.8M18.4 14.8c1.5.7 2.5 2.1 3 4.2"/>'
+  };
+
+  function renderAccount() {
+    var t = state.texts;
+    var guest = state.loyalty.guest;
+    $('.guest__who').textContent = guest;
+    $('.guest__mono').textContent = guest.charAt(0);
+    var rows = [
+      { icon: 'card', title: t.account_card, hint: t.account_card_hint, go: function () { goTab('card'); } },
+      { icon: 'theme', title: t.account_theme, value: t[currentTheme() === 'dark' ? 'account_theme_dark' : 'account_theme_light'],
+        go: function () { applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true); renderAccount(); } }
+    ];
+    var bot = (state.config.bot || {})[window.GID_ENV];
+    if (bot && !tg) rows.push({ icon: 'telegram', title: t.account_tg, hint: t.account_tg_hint, href: 'https://t.me/' + bot });
+    if (isTeam()) rows.push({ icon: 'team', title: t.account_team, hint: t.account_team_hint, go: openTeam });
+
+    var list = $('.rows');
+    list.innerHTML = '';
+    rows.forEach(function (row) {
+      var li = document.createElement('li');
+      var el = document.createElement(row.href ? 'a' : 'button');
+      if (row.href) { el.href = row.href; el.target = '_blank'; el.rel = 'noopener'; } else { el.type = 'button'; }
+      el.className = 'spend__item';
+      el.innerHTML = '<span class="rows__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+        ROW_ICONS[row.icon] + '</svg></span><span class="spend__text"><span class="spend__name"></span><span class="spend__cuisine"></span></span>' +
+        (row.value ? '<span class="rows__value"></span>'
+          : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>');
+      el.querySelector('.spend__name').textContent = row.title;
+      var hint = el.querySelector('.spend__cuisine');
+      if (row.hint) hint.textContent = row.hint; else hint.remove();
+      if (row.value) el.querySelector('.rows__value').textContent = row.value;
+      if (row.go) el.addEventListener('click', row.go);
+      li.appendChild(el);
+      list.appendChild(li);
+    });
+  }
+
+  // Страница команды — для троих партнёров. Её содержимое лежит отдельным файлом team.html
+  // и загружается, только когда страницу открыли. Кто хоть раз открыл её по ссылке #team,
+  // видит строку «Команда» в аккаунте. Когда появятся аккаунты, isTeam() станет проверкой аккаунта.
+  function isTeam() {
+    try { return localStorage.getItem('team') === '1'; } catch (e) { return false; }
+  }
+
+  function openTeam() {
+    state.teamPushed = true;
+    location.hash = 'team';
+  }
+
+  function closeTeam() {
+    if (state.teamPushed) {
+      state.teamPushed = false;
       history.back();
     } else {
-      history.replaceState(null, '', location.pathname + location.search);
-      showRoute();
+      goTab('account');
     }
+  }
+
+  function loadTeam() {
+    state.team = 'loading';
+    fetch('team.html', { cache: 'no-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('страницы команды нет');
+        return r.text();
+      })
+      .then(function (html) {
+        $('.team__body').innerHTML = html;
+        var tabs = $('.team__tabs');
+        document.querySelectorAll('.team__body > section[data-tab]').forEach(function (section) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'team__tab';
+          b.dataset.tab = section.dataset.tab;
+          b.setAttribute('role', 'tab');
+          b.textContent = section.dataset.title;
+          b.addEventListener('click', function () {
+            history.replaceState(null, '', '#team/' + section.dataset.tab);
+            state.tabFresh = true;
+            showRoute();
+          });
+          tabs.appendChild(b);
+        });
+        try { localStorage.setItem('team', '1'); } catch (e) {}
+        state.team = 'ready';
+        showRoute();
+      })
+      .catch(function () {
+        // Страницы нет — для гостя её просто не существует.
+        try { localStorage.removeItem('team'); } catch (e) {}
+        state.team = 'missing';
+        state.teamPushed = false;
+        goTab('account');
+      });
+  }
+
+  function showTeam(want, wanted) {
+    var page = $('.team');
+    if (!want || state.team !== 'ready') {
+      page.hidden = true;
+      if (want && !state.team) loadTeam();
+      return;
+    }
+    var sections = document.querySelectorAll('.team__body > section[data-tab]');
+    var chosen = sections[0];
+    sections.forEach(function (section) { if (section.dataset.tab === wanted) chosen = section; });
+    sections.forEach(function (section) { section.hidden = section !== chosen; });
+    document.querySelectorAll('.team__tab').forEach(function (b) {
+      var on = b.dataset.tab === chosen.dataset.tab;
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+      if (on && state.tabFresh) b.scrollIntoView({ block: 'nearest', inline: 'center' });
+    });
+    if (page.hidden || state.tabFresh) $('.team__scroll').scrollTop = 0;
+    page.hidden = false;
+  }
+
+  function copyList(button) {
+    var list = document.getElementById(button.dataset.copy);
+    if (!list) return;
+    var text = Array.prototype.map.call(list.children, function (li, i) {
+      return (i + 1) + '. ' + li.textContent.replace(/\s+/g, ' ').trim();
+    }).join('\n');
+    var label = button.textContent;
+    function done() {
+      button.textContent = state.texts.copied;
+      setTimeout(function () { button.textContent = label; }, 2000);
+    }
+    function select() {
+      var range = document.createRange();
+      range.selectNodeContents(list);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+    try { navigator.clipboard.writeText(text).then(done, select); } catch (e) { select(); }
   }
 
   function currentPlace() {
     return state.places.find(function (p) { return p.id === state.place; });
   }
 
-  // Адреса: #<ресторан> — меню, #<ресторан>/book — бронь, #card — моя карта.
+  // Адреса: #<ресторан> — меню, #<ресторан>/book — бронь; вкладки — #feed, #card, #account;
+  // #team и #team/<раздел> — страница команды.
   function showRoute() {
     var parts = decodeURIComponent(location.hash.slice(1)).split('/');
     var place = state.places.find(function (p) { return p.id === parts[0]; });
     var page = $('.place');
     var order = $('.order');
-    var loyalty = $('.loyalty');
-    var wantCard = parts[0] === 'card' && !!state.loyalty;
-    if (wantCard && !state.cardDrawn) { renderCard(); state.cardDrawn = true; }
-    loyalty.hidden = !wantCard;
-    // С карты города — карта сверху; назад из ресторана — там же, где были.
-    if (wantCard && state.cardFresh) { $('.loyalty__scroll').scrollTop = 0; state.cardFresh = false; }
+    var wantTeam = parts[0] === 'team';
+    if (wantTeam && state.team === 'missing') { goTab('account'); return; }
+    // Под страницей команды лежит аккаунт: из него в неё входят и в него возвращаются.
+    var tab = wantTeam ? 'account' : TABS.indexOf(parts[0]) >= 0 ? parts[0] : null;
+    if (tab === 'card' && !state.cardDrawn) { renderCard(); state.cardDrawn = true; }
+    if (tab === 'account') renderAccount();
+    TABS.forEach(function (name) { $(TAB_PAGES[name]).hidden = name !== tab; });
+    document.querySelectorAll('.tabbar__item').forEach(function (b) {
+      if (b.dataset.tab === (tab || 'map')) b.setAttribute('aria-current', 'page');
+      else b.removeAttribute('aria-current');
+    });
+    showTeam(wantTeam, parts[1]);
+    // Нажали вкладку — экран сверху; вернулись из ресторана — там же, где были.
+    if (state.tabFresh) {
+      if (tab && !wantTeam) $(TAB_PAGES[tab] + ' .tabpage__scroll').scrollTop = 0;
+      state.tabFresh = false;
+    }
     if (place) {
       if (state.place !== place.id) {
         state.place = place.id;
@@ -961,8 +1110,9 @@
       state.place = null;
       page.hidden = true;
       order.hidden = true;
-      document.title = wantCard ? state.texts.card_title + ' — ' + state.texts.brand : state.texts.page_title;
-      if (wantCard) $('.loyalty__back').focus({ preventScroll: true });
+      var titles = { feed: 'feed_title', card: 'card_title', account: 'account_title' };
+      document.title = wantTeam ? state.texts.team_page_title
+        : tab ? state.texts[titles[tab]] + ' — ' + state.texts.brand : state.texts.page_title;
     }
   }
 
@@ -1131,8 +1281,15 @@
       applyTheme(currentTheme() === 'dark' ? 'light' : 'dark', true);
     });
     $('.city__button').addEventListener('click', function (e) { e.stopPropagation(); toggleCityMenu(); });
-    $('.card-toggle').addEventListener('click', openCard);
-    $('.loyalty__back').addEventListener('click', closeCard);
+    document.querySelectorAll('.tabbar__item').forEach(function (b) {
+      b.addEventListener('click', function () { goTab(b.dataset.tab); });
+    });
+    $('.feed__map').addEventListener('click', function () { goTab('map'); });
+    $('.team__back').addEventListener('click', closeTeam);
+    $('.team__body').addEventListener('click', function (e) {
+      var button = e.target.closest('[data-copy]');
+      if (button) copyList(button);
+    });
     $('.loyalty__scan').addEventListener('click', function () { $('.scan').hidden = false; $('.scan__close').focus(); });
     $('.scan__close').addEventListener('click', function () { $('.scan').hidden = true; $('.loyalty__scan').focus(); });
     $('.sheet__close').addEventListener('click', closeSheet);
@@ -1168,7 +1325,8 @@
       if (!$('.scan').hidden) { $('.scan').hidden = true; return; }
       if (!$('.order').hidden) closeOrder();
       else if (state.place) closePlace();
-      else if (!$('.loyalty').hidden) closeCard();
+      else if (!$('.team').hidden) closeTeam();
+      else if (location.hash.length > 1) goTab('map');
       else closeSheet();
     });
   }
@@ -1179,7 +1337,13 @@
     $('meta[name="description"]').setAttribute('content', t.page_description);
     document.querySelectorAll('[data-text]').forEach(function (el) { el.textContent = t[el.dataset.text]; });
     $('.sheet__close').setAttribute('aria-label', t.close);
-    $('.card-toggle').setAttribute('aria-label', t.card_open);
+    $('.tabbar').setAttribute('aria-label', t.nav_label);
+    var soon = $('.soon__list');
+    t.feed_points.forEach(function (line) {
+      var li = document.createElement('li');
+      li.textContent = line;
+      soon.appendChild(li);
+    });
     $('.compass').setAttribute('aria-label', t.compass);
     $('.guests__less').setAttribute('aria-label', t.book_less);
     $('.guests__more').setAttribute('aria-label', t.book_more);
