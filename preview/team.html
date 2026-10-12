@@ -88,6 +88,26 @@
 .doc .qs span { min-width: 0; }
 .doc .sources { padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
 .doc .sources li { font-size: 14px; overflow-wrap: anywhere; }
+
+/* Логотип. Знаки нарисованы один раз в .marks и повторяются через <use>.
+   Плитки показывают знак на его собственном фоне, поэтому цвета в них постоянные, а не из темы. */
+.doc .marks { position: absolute; width: 0; height: 0; }
+.doc .lg { gap: 14px; }
+.doc .lg__head { display: flex; align-items: baseline; gap: 10px; }
+.doc .lg__letter { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 700; line-height: 0.9; color: var(--accent); }
+.doc .lg__head h3 { font-size: 17px; }
+.doc .lg__tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.doc .lg__tiles figure { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.doc .lg__tiles figcaption { font-size: 11px; line-height: 1.3; text-align: center; color: var(--dim); }
+.doc .lg__tile { aspect-ratio: 1; display: grid; place-items: center; border-radius: 22%; }
+.doc .lg__tile svg { width: 68%; height: 68%; }
+.doc .lg__tile--dark { background: #1E1815; color: #CDAE72; box-shadow: 0 0 0 1px rgba(240, 232, 224, 0.1) inset; }
+.doc .lg__tile--gold { background: #CDAE72; color: #1E1815; border-radius: 50%; }
+.doc .lg__tile--light { background: #F1EBE1; color: #4F6B55; box-shadow: 0 0 0 1px rgba(42, 34, 29, 0.08) inset; }
+.doc .lg__line { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 16px; background: var(--surface-2); }
+.doc .lg__lockup { display: flex; align-items: center; gap: 8px; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1; }
+.doc .lg__lockup svg { flex: none; width: 34px; height: 34px; color: var(--accent); }
+.doc .lg__small { flex: none; display: flex; align-items: center; gap: 10px; color: var(--accent); }
 </style>
 <section class="doc" data-tab="now" data-title="Сейчас">
 <p class="lead">Идём на грант молодым предпринимателям Воронежской области: до 500 тыс. ₽ на доработку и запуск РестоГида. Здесь всё, что мы об этом знаем, и кто что делает.</p>
@@ -143,6 +163,156 @@
     </ul>
   </article>
 </div>
+</section>
+<section class="doc" data-tab="brand" data-title="Кто мы">
+<p class="lead">РестоГид — гид по проверенным местам города и клуб тех, кто любит вкусно поесть. Записано со слов Жени; поправьте, если что-то не так.</p>
+<span class="status"><i></i>Черновик · 12 октября 2026</span>
+
+<h2>Одной фразой</h2>
+<p class="calc">Показываем, куда в городе стоит идти, — и даём забронировать, заказать и копить баллы в одном приложении.</p>
+
+<h2>На чём стоим</h2>
+<ul class="points">
+  <li><b>Отбор.</b> В РестоГиде не все заведения города, а только те, где вкусно, хорошо обслуживают и не заставляют ждать. Рестораны, кафе, кофейни, бары. У одной сети одна точка может попасть в гид, а соседняя — нет.</li>
+  <li><b>Удобство.</b> Нашёл место, забронировал стол, заказал, получил баллы. Одна карта лояльности на все заведения гида.</li>
+  <li><b>Клуб.</b> В соцсетях рассказываем о местах и событиях города, устраиваем свои встречи, делаем совместные проекты с заведениями. У карты несколько уровней; платные дают приглашения на встречи и бонусы.</li>
+</ul>
+
+<h2>Как Мишлен, только про город</h2>
+<p>Мишлен делает шины. В 1900 году он выпустил для водителей справочник: где по дороге стоит поесть. Одна звезда — очень хороший ресторан, две — стоит сделать крюк, три — стоит отдельной поездки.</p>
+<p>У нас та же мысль: человек открывает РестоГид и знает, что плохих мест здесь нет. Разница в том, что Мишлен только советует, а у нас можно сразу забронировать и заказать, и карта одна на все места.</p>
+
+<h2>Для кого</h2>
+<div class="cols">
+  <div><h3>Гостям</h3><ul class="plain yes">
+    <li>Не гадать по отзывам: место уже проверили.</li>
+    <li>Одна карта вместо десяти приложений разных ресторанов.</li>
+    <li>Своя компания: встречи, события, приглашения.</li>
+  </ul></div>
+  <div><h3>Заведениям</h3><ul class="plain yes">
+    <li>Новые гости, которые пришли именно за хорошим местом.</li>
+    <li>Программа лояльности без своих затрат.</li>
+    <li>Знак «Проверено РестоГидом» — на дверь и в соцсети.</li>
+  </ul></div>
+</div>
+
+<h2>Чем отличаемся</h2>
+<dl class="terms">
+  <div><dt>Карты и отзывы</dt><dd>Показывают всё подряд, оценки можно накрутить. Мы показываем только то, что проверили сами.</dd></div>
+  <div><dt>Доставка еды</dt><dd>Про еду домой. Мы про то, чтобы пойти в заведение.</dd></div>
+  <div><dt>Городские медиа</dt><dd>Рассказывают, куда сходить, но забронировать стол и копить баллы там нельзя. У нас и рассказ, и действие.</dd></div>
+</dl>
+
+<h2>Как говорим</h2>
+<p>Просто и по-дружески — как человек, который знает город и советует другу. Без пафоса и рекламных слов. Честно: если место испортилось, оно уходит из гида.</p>
+
+<h2>Что надо решить втроём</h2>
+<ol class="qs">
+  <li><span><b>Попасть в гид за деньги нельзя?</b> Если места платят за попадание, знаку «проверено» перестанут верить. Мишлен за место в гиде денег с ресторанов не берёт. Тогда на чём зарабатываем — отдельным списком.</span></li>
+  <li><span><b>Кто и как проверяет заведения.</b> Нужны короткие правила, которые можно показать и гостю, и ресторану.</span></li>
+  <li><span><b>Платные уровни карты.</b> Сколько стоят и что именно получает человек.</span></li>
+  <li><span><b>Какие соцсети главные.</b> В Инстаграме в России размещать рекламу нельзя, так что основа — другие площадки. Вопрос к Матвею.</span></li>
+  <li><span><b>На «ты» или на «вы».</b> Сейчас в приложении «вы». Для клуба и соцсетей «ты» звучит ближе.</span></li>
+  <li><span><b>Название.</b> «РестоГид» говорит про рестораны, а у нас ещё кофейни и бары. Оставляем? Лучше решить до чистового логотипа.</span></li>
+</ol>
+</section>
+<section class="doc" data-tab="logo" data-title="Логотип">
+<svg class="marks" aria-hidden="true">
+  <symbol id="lg-a" viewBox="0 0 120 120">
+    <g transform="translate(41 100) rotate(38)" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M-34 0H0V-50M-15-88v18q0 20 15 20t15-20v-18M0-50v-38"/>
+    </g>
+  </symbol>
+  <symbol id="lg-b" viewBox="0 0 120 120">
+    <circle cx="62" cy="44" r="25" fill="none" stroke="currentColor" stroke-width="11"/>
+    <path d="M31.5 13.5h11V94L37 109l-5.5-15z" fill="currentColor"/>
+  </symbol>
+  <symbol id="lg-c" viewBox="0 0 120 120">
+    <mask id="lg-c-bite"><rect width="120" height="120" fill="#fff"/><circle cx="78" cy="15" r="11"/><circle cx="92" cy="27" r="13"/><circle cx="98" cy="46" r="11"/><circle cx="56" cy="50" r="10"/></mask>
+    <path d="M60 111C44 93 24 72 24 48a36 36 0 1 1 72 0c0 24-20 45-36 63z" fill="currentColor" mask="url(#lg-c-bite)"/>
+  </symbol>
+  <symbol id="lg-d" viewBox="0 0 120 120">
+    <mask id="lg-d-cut"><rect width="120" height="120" fill="#fff"/><text x="60" y="77" text-anchor="middle" font-family="'Cormorant Garamond', Georgia, serif" font-size="52" font-weight="700" letter-spacing="-1">РГ</text></mask>
+    <path d="M48.6 17.4A11.5 11.5 0 0 1 71.4 17.4A11.5 11.5 0 0 1 91.2 28.8A11.5 11.5 0 0 1 102.6 48.6A11.5 11.5 0 0 1 102.6 71.4A11.5 11.5 0 0 1 91.2 91.2A11.5 11.5 0 0 1 71.4 102.6A11.5 11.5 0 0 1 48.6 102.6A11.5 11.5 0 0 1 28.8 91.2A11.5 11.5 0 0 1 17.4 71.4A11.5 11.5 0 0 1 17.4 48.6A11.5 11.5 0 0 1 28.8 28.8A11.5 11.5 0 0 1 48.6 17.4Z" fill="currentColor" mask="url(#lg-d-cut)"/>
+  </symbol>
+  <symbol id="lg-e" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="45" fill="none" stroke="currentColor" stroke-width="8"/>
+    <g transform="rotate(38 60 60)" fill="currentColor"><path d="M60 26l11 34H49z"/><path d="M60 94L49 60h22z" opacity="0.42"/></g>
+  </symbol>
+</svg>
+<p class="lead">Пять набросков знака. Каждый что-то значит и читается в маленьком размере. Выбираем направление — после этого довожу его до чистовой версии и ставлю в приложение.</p>
+<div class="note"><b>Как выбрать.</b> Напишите в чат букву варианта, который нравится больше всех, и букву того, который точно нет. Цвета везде наши — золото и шалфей, название пока набрано тем же шрифтом, что в приложении.</div>
+
+<div class="grid">
+  <article class="card lg">
+    <div class="lg__head"><span class="lg__letter">А</span><h3>Вилка-галочка</h3></div>
+    <div class="lg__tiles">
+      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-a"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-a"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-a"/></svg></div><figcaption>На светлом</figcaption></figure>
+    </div>
+    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-a"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-a"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-a"/></svg></span></div>
+    <p><b>Что значит.</b> Галочка «проверено», у которой длинная сторона — вилка. Мы сами сходили, попробовали и поставили отметку.</p>
+    <p class="small"><b>Сильное.</b> Сразу про отбор и про еду. Готовый знак на дверь заведения.<br><b>Слабое.</b> В самом мелком размере зубцы сливаются, остаётся просто галочка.</p>
+  </article>
+  <article class="card lg">
+    <div class="lg__head"><span class="lg__letter">Б</span><h3>Буква-метка</h3></div>
+    <div class="lg__tiles">
+      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-b"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-b"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-b"/></svg></div><figcaption>На светлом</figcaption></figure>
+    </div>
+    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-b"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-b"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-b"/></svg></span></div>
+    <p><b>Что значит.</b> Буква «р» из названия, она же булавка, воткнутая в карту, а круг — тарелка. Место, которое мы отметили.</p>
+    <p class="small"><b>Сильное.</b> Самый простой, запоминается с первого раза, хорошо стоит на карте.<br><b>Слабое.</b> Про проверку и клуб не говорит. Букву «р» в круге используют многие.</p>
+  </article>
+  <article class="card lg">
+    <div class="lg__head"><span class="lg__letter">В</span><h3>Метка с укусом</h3></div>
+    <div class="lg__tiles">
+      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-c"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-c"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-c"/></svg></div><figcaption>На светлом</figcaption></figure>
+    </div>
+    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-c"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-c"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-c"/></svg></span></div>
+    <p><b>Что значит.</b> Метка с карты, от которой уже откусили. Мы попробовали раньше вас — можно идти.</p>
+    <p class="small"><b>Сильное.</b> Живой и с юмором, подходит для соцсетей и клуба.<br><b>Слабое.</b> Менее солидно: для разговора с ресторанами и комиссией гранта может показаться несерьёзным.</p>
+  </article>
+  <article class="card lg">
+    <div class="lg__head"><span class="lg__letter">Г</span><h3>Печать</h3></div>
+    <div class="lg__tiles">
+      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-d"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-d"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-d"/></svg></div><figcaption>На светлом</figcaption></figure>
+    </div>
+    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-d"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-d"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-d"/></svg></span></div>
+    <p><b>Что значит.</b> Печать с волнистым краем, как знак качества, внутри — «РГ». Край похож и на формочку для выпечки.</p>
+    <p class="small"><b>Сильное.</b> Солидно, в духе старых гидов. Хорошо смотрится наклейкой и на карте лояльности.<br><b>Слабое.</b> Буквы плохо читаются в мелком размере. Про еду напрямую не говорит.</p>
+  </article>
+  <article class="card lg">
+    <div class="lg__head"><span class="lg__letter">Д</span><h3>Компас на тарелке</h3></div>
+    <div class="lg__tiles">
+      <figure><div class="lg__tile lg__tile--dark"><svg viewBox="0 0 120 120"><use href="#lg-e"/></svg></div><figcaption>Иконка приложения</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--gold"><svg viewBox="0 0 120 120"><use href="#lg-e"/></svg></div><figcaption>Аватар в соцсетях</figcaption></figure>
+      <figure><div class="lg__tile lg__tile--light"><svg viewBox="0 0 120 120"><use href="#lg-e"/></svg></div><figcaption>На светлом</figcaption></figure>
+    </div>
+    <div class="lg__line"><span class="lg__lockup"><svg viewBox="0 0 120 120"><use href="#lg-e"/></svg>РестоГид</span><span class="lg__small"><svg width="28" height="28" viewBox="0 0 120 120"><use href="#lg-e"/></svg><svg width="18" height="18" viewBox="0 0 120 120"><use href="#lg-e"/></svg></span></div>
+    <p><b>Что значит.</b> Тарелка, а на ней стрелка компаса. Гид ведёт туда, где вкусно.</p>
+    <p class="small"><b>Сильное.</b> Объясняет слово «гид» и продолжает карту в приложении.<br><b>Слабое.</b> Компас — частый знак у карт и браузеров, легко спутать.</p>
+  </article>
+</div>
+
+<h2>Что советую</h2>
+<p><b>Вариант А, вилка-галочка.</b> Он единственный говорит главное про нас — «сюда попадают только проверенные места» — и при этом сразу понятно, что речь про еду. Его же можно клеить на дверь заведения как знак «Проверено РестоГидом».</p>
+<p>Запасной — <b>Б, буква-метка</b>: проще всех и хорошо смотрится на карте, но про отбор ничего не говорит.</p>
+
+<h2>Что будет после выбора</h2>
+<ul class="plain">
+  <li>Чистовая версия знака и написание названия рядом с ним.</li>
+  <li>Иконка приложения и значок во вкладке браузера, знак в шапке и на карте лояльности.</li>
+  <li>Аватары и обложки для соцсетей.</li>
+  <li>Наклейка на дверь «Проверено РестоГидом».</li>
+  <li>Матвею: проверить, нет ли похожего зарегистрированного знака, — вместе с проверкой названия.</li>
+</ul>
 </section>
 <section class="doc" data-tab="grant" data-title="Грант">
 <p class="lead">Разбор официальных правил: постановление Правительства Воронежской области № 462 в редакции от 6 августа 2024 года.</p>
