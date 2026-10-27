@@ -821,6 +821,8 @@
             "desc": "Домашняя лапша, сливки, укроп",
             "weight": "280 г",
             "price": 980,
+            "photo": "img/dishes/pasta-raki.webp",
+            "photoBy": "chaewon you",
             "kind": "pasta",
             "has": [
               "crayfish",
@@ -1099,6 +1101,8 @@
             "desc": "Чесночный хлеб, базилик, оливковое масло",
             "weight": "160 г",
             "price": 390,
+            "photo": "img/dishes/bruschetta.webp",
+            "photoBy": "Mike van den Bos",
             "kind": "bruschetta",
             "has": [
               "bread",
@@ -1117,6 +1121,8 @@
             "desc": "Руккола, пармезан, лимонная заправка",
             "weight": "150 г",
             "price": 690,
+            "photo": "img/dishes/karpachcho.webp",
+            "photoBy": "Dmitriy Frantsev",
             "kind": "carpaccio",
             "has": [
               "beef",
@@ -1139,6 +1145,8 @@
             "desc": "Томаты черри, чеснок, белое вино",
             "weight": "280 г",
             "price": 890,
+            "photo": "img/dishes/talyatelle.webp",
+            "photoBy": "Ellie Ellien",
             "kind": "tagliatelle",
             "has": [
               "shrimp",
@@ -1164,6 +1172,8 @@
             "desc": "Сливочное масло, лимонная цедра",
             "weight": "280 г",
             "price": 820,
+            "photo": "img/dishes/lingvini.webp",
+            "photoBy": "chaewon you",
             "kind": "linguine",
             "has": [
               "shrimp",
@@ -1184,6 +1194,8 @@
             "desc": "Песто из базилика, черри",
             "weight": "270 г",
             "price": 860,
+            "photo": "img/dishes/spagetti-pesto.webp",
+            "photoBy": "Bakd&Raw by Karolin Baitinger",
             "kind": "spaghetti",
             "has": [
               "shrimp",
@@ -1204,6 +1216,8 @@
             "desc": "Рикотта, лимонное масло",
             "weight": "250 г",
             "price": 760,
+            "photo": "img/dishes/ravioli.webp",
+            "photoBy": "Yoav Aziz",
             "kind": "ravioli",
             "has": [
               "shrimp",
@@ -1226,6 +1240,8 @@
             "desc": "Гуанчале, желток, пекорино",
             "weight": "260 г",
             "price": 720,
+            "photo": "img/dishes/karbonara.webp",
+            "photoBy": "Chris Weiher",
             "kind": "spaghetti",
             "has": [
               "pork",
@@ -1245,6 +1261,8 @@
             "desc": "Пармезан, сливочное масло",
             "weight": "280 г",
             "price": 790,
+            "photo": "img/dishes/rizotto.webp",
+            "photoBy": "Max Griss",
             "kind": "risotto",
             "has": [
               "mushrooms",
@@ -1272,6 +1290,8 @@
             "desc": "Томатный соус, моцарелла, базилик",
             "weight": "450 г",
             "price": 650,
+            "photo": "img/dishes/margarita.webp",
+            "photoBy": "Louis Hansel",
             "kind": "pizza",
             "has": [
               "tomato",
@@ -1295,6 +1315,8 @@
             "desc": "Маскарпоне, савоярди, эспрессо",
             "weight": "150 г",
             "price": 450,
+            "photo": "img/dishes/tiramisu.webp",
+            "photoBy": "Gina's Auckland",
             "kind": "tiramisu",
             "has": [
               "mascarpone",
@@ -1314,6 +1336,8 @@
             "desc": "Сливки, ваниль, ягодный соус",
             "weight": "140 г",
             "price": 390,
+            "photo": "img/dishes/panna-kotta.webp",
+            "photoBy": "Adél Grőber",
             "kind": "panna-cotta",
             "has": [
               "cream",
@@ -1335,6 +1359,8 @@
             "desc": "Сливки, эспрессо, ваниль",
             "weight": "300 мл",
             "price": 290,
+            "photo": "img/dishes/raf.webp",
+            "photoBy": "Fahmi Fakhrudin",
             "kind": "raf",
             "has": [
               "coffee",
@@ -1351,6 +1377,8 @@
             "desc": "Эспрессо, молоко",
             "weight": "250 мл",
             "price": 230,
+            "photo": "img/dishes/kapuchino.webp",
+            "photoBy": "nameless 3791",
             "kind": "cappuccino",
             "has": [
               "coffee",
@@ -1508,6 +1536,8 @@
             "desc": "Кокосовое молоко, грибы, лайм, кинза",
             "weight": "350 г",
             "price": 690,
+            "photo": "img/dishes/tom-yam.webp",
+            "photoBy": "Jamie Trinh",
             "kind": "tom-yum",
             "has": [
               "shrimp",
@@ -1530,6 +1560,8 @@
             "desc": "Пшеничная лапша, яйцо, соевый бульон, кунжут",
             "weight": "400 г",
             "price": 620,
+            "photo": "img/dishes/ramen.webp",
+            "photoBy": "Christian Dala",
             "kind": "ramen",
             "has": [
               "chicken",
@@ -1556,6 +1588,8 @@
             "desc": "Овощи, соевый соус, кунжут",
             "weight": "300 г",
             "price": 690,
+            "photo": "img/dishes/udon.webp",
+            "photoBy": "Youjeen Cho",
             "kind": "udon",
             "has": [
               "shrimp",
@@ -1577,6 +1611,8 @@
             "desc": "Рисовая лапша, арахис, тамаринд, лайм",
             "weight": "300 г",
             "price": 640,
+            "photo": "img/dishes/pad-tai.webp",
+            "photoBy": "John Aledia",
             "kind": "pad-thai",
             "has": [
               "chicken",
@@ -1601,6 +1637,8 @@
             "desc": "Яйцо, зелёный лук, соевый соус",
             "weight": "280 г",
             "price": 450,
+            "photo": "img/dishes/zharenyi-ris.webp",
+            "photoBy": "herry shani",
             "kind": "fried-rice",
             "has": [
               "rice",
@@ -1625,6 +1663,8 @@
             "desc": "6 штук, соус понзу",
             "weight": "180 г",
             "price": 520,
+            "photo": "img/dishes/gedza-krevetka.webp",
+            "photoBy": "Aidan Tottori",
             "kind": "gyoza",
             "has": [
               "shrimp",
@@ -1643,6 +1683,8 @@
             "desc": "6 штук, соус с чили",
             "weight": "180 г",
             "price": 480,
+            "photo": "img/dishes/gedza-svinina.webp",
+            "photoBy": "Mikey Frost",
             "kind": "gyoza",
             "has": [
               "pork",
@@ -1669,6 +1711,8 @@
             "desc": "Микс салатов, кунжутная заправка",
             "weight": "220 г",
             "price": 640,
+            "photo": "img/dishes/salat-krevetki.webp",
+            "photoBy": "Sarda Bamberg",
             "kind": "salad",
             "has": [
               "shrimp",
@@ -1692,6 +1736,8 @@
             "desc": "Маскарпоне, савоярди, японский чай",
             "weight": "140 г",
             "price": 420,
+            "photo": "img/dishes/tiramisu-matcha.webp",
+            "photoBy": "Sofia Lasheva",
             "kind": "tiramisu",
             "has": [
               "mascarpone",
@@ -1714,6 +1760,8 @@
             "desc": "Рисовое тесто, манговый крем",
             "weight": "2 штуки",
             "price": 360,
+            "photo": "img/dishes/moti.webp",
+            "photoBy": "Andreas Haubold",
             "kind": "mochi",
             "has": [
               "rice",
