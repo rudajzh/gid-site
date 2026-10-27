@@ -12,7 +12,8 @@
   if (!tg || tg.platform === 'unknown') tg = null;
   var tgCanSend = !!tg && !tg.initData;
   var state = { config: null, texts: null, places: [], city: null, map: null, selected: null, place: null, pushed: false,
-    cart: {}, book: null, bookWant: null, bookDays: [], orderPushed: false, loyalty: null, cardDrawn: false, tabFresh: false, team: null, teamPushed: false };
+    cart: {}, book: null, bookWant: null, bookDays: [], orderPushed: false, loyalty: null, cardDrawn: false, tabFresh: false, team: null, teamPushed: false,
+    dictionary: null, focusDish: null, setFor: null, lastTab: 'map' };
 
   // Цвета карты — из orders/gid/design.md. Карта — тихий фон: почти без контуров,
   // парки чуть темнее земли, яркое на ней только наши рестораны.
@@ -178,7 +179,15 @@
     var menu = $('.place__menu');
     tabs.innerHTML = '';
     menu.innerHTML = '';
-    place.menu.forEach(function (section, i) {
+    // Пришли из «Набора блюд» — блюда набора отдельным разделом сверху, они уже в заказе.
+    var sections = place.menu;
+    var set = state.setFor && state.setFor.place === place.id ? state.setFor.names : null;
+    if (set) {
+      var picked = [];
+      place.menu.forEach(function (s) { s.items.forEach(function (item) { if (set.indexOf(item.name) >= 0) picked.push(item); }); });
+      if (picked.length) sections = [{ title: t.set_in_place, items: picked }].concat(place.menu);
+    }
+    sections.forEach(function (section, i) {
       var id = 'menu-' + i;
       var tab = document.createElement('button');
       tab.type = 'button';
@@ -206,6 +215,7 @@
       section.items.forEach(function (item) {
         var row = document.createElement('article');
         row.className = 'dish';
+        row.dataset.name = item.name;
         row.innerHTML = '<div class="dish__text"><h3 class="dish__name"></h3><p class="dish__desc"></p>' +
           '<p class="dish__price"><span class="dish__sum"></span><span class="dish__weight"></span></p></div>';
         if (item.photo) {
@@ -274,6 +284,7 @@
 
   function setQty(place, name, qty) {
     var cart = cartOf(place);
+    if (qty > (cart[name] || 0) && window.GidFeed) window.GidFeed.signal('cart', place.id, name);
     if (qty > 0) cart[name] = qty; else delete cart[name];
     saveCart();
     refreshCart(place);
@@ -792,6 +803,7 @@
         // Телеграм закроет мини-приложение, а бот ответит в чате. Заказ отправлен —
         // корзину и бронь этого ресторана очищаем, чтобы они не вернулись при следующем открытии.
         tg.sendData(data);
+        cartLines(place).forEach(function (line) { window.GidFeed.signal('order', place.id, line.item.name); });
         delete state.cart[place.id];
         saveCart();
         state.book = null;
@@ -1088,9 +1100,12 @@
       else b.removeAttribute('aria-current');
     });
     showTeam(wantTeam, parts[1]);
+    // «Назад» на странице ресторана называет вкладку, с которой пришли.
+    if (!place) state.lastTab = tab || 'map';
+    window.GidFeed.route(tab, tab === 'feed' ? parts.slice(1) : null);
     // Нажали вкладку — экран сверху; вернулись из ресторана — там же, где были.
     if (state.tabFresh) {
-      if (tab && !wantTeam) $(TAB_PAGES[tab] + ' .tabpage__scroll').scrollTop = 0;
+      if (tab && !wantTeam) document.querySelectorAll(TAB_PAGES[tab] + ' .tabpage__scroll, .feed-set .tabpage__scroll').forEach(function (s) { s.scrollTop = 0; });
       state.tabFresh = false;
     }
     if (place) {
@@ -1100,7 +1115,9 @@
         $('.place__scroll').scrollTop = 0;
       }
       page.hidden = false;
+      $('.place__back span').textContent = state.texts['nav_' + state.lastTab] || state.texts.back_to_map;
       refreshCart(place);
+      if (state.focusDish) focusDish(state.focusDish);
       var wantOrder = parts[1] === 'book';
       if (wantOrder && order.hidden) {
         renderBooking(place, state.bookWant);
@@ -1139,6 +1156,37 @@
   function openPlace(id) {
     state.pushed = true;
     location.hash = encodeURIComponent(id);
+  }
+
+  // Блюдо из ленты или поиска: открываем меню ресторана и подсвечиваем это блюдо.
+  function openDish(id, name) {
+    state.focusDish = name;
+    if (state.place === id) showRoute(); else openPlace(id);
+  }
+
+  function focusDish(name) {
+    state.focusDish = null;
+    var rows = Array.prototype.filter.call(document.querySelectorAll('.place__menu .dish'), function (row) { return row.dataset.name === name; });
+    var row = rows[rows.length - 1];
+    if (!row) return;
+    var scroller = $('.place__scroll');
+    var top = scroller.scrollTop + row.getBoundingClientRect().top - scroller.getBoundingClientRect().top - $('.place__tabs').offsetHeight - 12;
+    scroller.scrollTop = Math.max(0, top);
+    row.classList.remove('dish--focus');
+    void row.offsetWidth;
+    row.classList.add('dish--focus');
+  }
+
+  // Набор блюд: блюда кладём в заказ этого ресторана (если их там ещё нет) и открываем меню.
+  function openSet(id, names) {
+    var place = state.places.find(function (p) { return p.id === id; });
+    if (!place) return;
+    var cart = cartOf(place);
+    names.forEach(function (name) { if (!cart[name]) cart[name] = 1; });
+    saveCart();
+    state.setFor = { place: id, names: names };
+    state.place = null;
+    openPlace(id);
   }
 
   function closePlace() {
@@ -1288,7 +1336,6 @@
     document.querySelectorAll('.tabbar__item').forEach(function (b) {
       b.addEventListener('click', function () { goTab(b.dataset.tab); });
     });
-    $('.feed__map').addEventListener('click', function () { goTab('map'); });
     $('.team__back').addEventListener('click', closeTeam);
     $('.team__body').addEventListener('click', function (e) {
       var button = e.target.closest('[data-copy]');
@@ -1327,6 +1374,7 @@
       toggleCityMenu(false);
       if (!$('.tg').hidden) { $('.tg').hidden = true; return; }
       if (!$('.scan').hidden) { $('.scan').hidden = true; return; }
+      if (!state.place && window.GidFeed.escape()) return;
       if (!$('.order').hidden) closeOrder();
       else if (state.place) closePlace();
       else if (!$('.team').hidden) closeTeam();
@@ -1342,19 +1390,13 @@
     document.querySelectorAll('[data-text]').forEach(function (el) { el.textContent = t[el.dataset.text]; });
     $('.sheet__close').setAttribute('aria-label', t.close);
     $('.tabbar').setAttribute('aria-label', t.nav_label);
-    var soon = $('.soon__list');
-    t.feed_points.forEach(function (line) {
-      var li = document.createElement('li');
-      li.textContent = line;
-      soon.appendChild(li);
-    });
     $('.compass').setAttribute('aria-label', t.compass);
     $('.guests__less').setAttribute('aria-label', t.book_less);
     $('.guests__more').setAttribute('aria-label', t.book_more);
     $('.env-badge').hidden = window.GID_ENV !== 'preview';
   }
 
-  Promise.all([loadJSON('data/config.json'), loadJSON('data/texts.json'), loadJSON('data/places.json'), loadJSON('data/loyalty.json')])
+  Promise.all([loadJSON('data/config.json'), loadJSON('data/texts.json'), loadJSON('data/places.json'), loadJSON('data/loyalty.json'), loadJSON('data/dictionary.json')])
     .then(function (data) {
       if (tg) {
         tg.ready();
@@ -1368,9 +1410,15 @@
       state.texts = data[1];
       state.city = state.config.cities.find(function (c) { return c.id === state.config.defaultCity; });
       state.places = data[2].filter(function (p) { return p.city === state.city.id; });
+      state.dictionary = data[4];
       fillTexts();
       applyTheme(currentTheme(), false);
       renderCities();
+      window.GidFeed.init({
+        texts: state.texts, places: state.places, dictionary: state.dictionary,
+        fmt: fmt, price: price, plural: plural, showRoute: showRoute,
+        openPlace: openPlace, openDish: openDish, openSet: openSet
+      });
       bindUI();
       initMap();
       showRoute();

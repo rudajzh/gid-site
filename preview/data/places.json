@@ -25,7 +25,21 @@
             "weight": "180 г",
             "price": 790,
             "photo": "img/dishes/tartar.webp",
-            "photoBy": "Alexandra Tran"
+            "photoBy": "Alexandra Tran",
+            "kind": "tartare",
+            "has": [
+              "beef",
+              "eggs",
+              "bread",
+              "rye",
+              "cucumber"
+            ],
+            "allergens": [
+              "eggs",
+              "gluten",
+              "mustard"
+            ],
+            "confirmed": true
           },
           {
             "name": "Паштет из куриной печени",
@@ -33,7 +47,20 @@
             "weight": "150 г",
             "price": 520,
             "photo": "img/dishes/pashtet.webp",
-            "photoBy": "Farhad Ibrahimzade"
+            "photoBy": "Farhad Ibrahimzade",
+            "kind": "pate",
+            "has": [
+              "liver",
+              "lingonberry",
+              "brioche",
+              "butter"
+            ],
+            "allergens": [
+              "gluten",
+              "eggs",
+              "milk"
+            ],
+            "confirmed": true
           },
           {
             "name": "Сельдь пряного посола",
@@ -41,7 +68,19 @@
             "weight": "170 г",
             "price": 480,
             "photo": "img/dishes/seld.webp",
-            "photoBy": "Sveta Golovina"
+            "photoBy": "Sveta Golovina",
+            "kind": "starter",
+            "has": [
+              "herring",
+              "beet",
+              "sour-cream",
+              "horseradish"
+            ],
+            "allergens": [
+              "fish",
+              "milk"
+            ],
+            "confirmed": true
           }
         ]
       },
@@ -54,7 +93,21 @@
             "weight": "300 г",
             "price": 520,
             "photo": "img/dishes/okroshka.webp",
-            "photoBy": "Julia Kicova"
+            "photoBy": "Julia Kicova",
+            "kind": "okroshka",
+            "has": [
+              "cucumber",
+              "radish",
+              "eggs",
+              "tongue",
+              "dill",
+              "kefir"
+            ],
+            "allergens": [
+              "eggs",
+              "milk"
+            ],
+            "confirmed": true
           },
           {
             "name": "Борщ с томлёной говядиной",
@@ -62,7 +115,21 @@
             "weight": "350 г",
             "price": 560,
             "photo": "img/dishes/borsch.webp",
-            "photoBy": "Roman Shalkevic"
+            "photoBy": "Roman Shalkevic",
+            "kind": "borscht",
+            "has": [
+              "beef",
+              "beet",
+              "sour-cream",
+              "garlic",
+              "bread"
+            ],
+            "allergens": [
+              "milk",
+              "gluten",
+              "celery"
+            ],
+            "confirmed": true
           }
         ]
       },
@@ -75,7 +142,23 @@
             "weight": "260 г",
             "price": 890,
             "photo": "img/dishes/kotlety.webp",
-            "photoBy": "Rohit Mishra"
+            "photoBy": "Rohit Mishra",
+            "kind": "cutlets",
+            "has": [
+              "pike",
+              "turnip",
+              "crayfish-sauce",
+              "bread",
+              "eggs"
+            ],
+            "allergens": [
+              "fish",
+              "crustaceans",
+              "milk",
+              "gluten",
+              "eggs"
+            ],
+            "confirmed": true
           },
           {
             "name": "Утка с антоновкой",
@@ -83,7 +166,19 @@
             "weight": "320 г",
             "price": 1350,
             "photo": "img/dishes/utka.webp",
-            "photoBy": "Sebastian Coman"
+            "photoBy": "Sebastian Coman",
+            "kind": "main",
+            "has": [
+              "duck",
+              "apple",
+              "lingonberry",
+              "pumpkin"
+            ],
+            "allergens": [],
+            "tags": [
+              "autumn"
+            ],
+            "confirmed": true
           },
           {
             "name": "Перепел на углях",
@@ -91,7 +186,19 @@
             "weight": "280 г",
             "price": 1180,
             "photo": "img/dishes/perepel.webp",
-            "photoBy": "Robby McCullough"
+            "photoBy": "Robby McCullough",
+            "kind": "grill",
+            "has": [
+              "quail",
+              "buckwheat",
+              "mushrooms",
+              "berries"
+            ],
+            "allergens": [],
+            "tags": [
+              "autumn"
+            ],
+            "confirmed": true
           }
         ]
       },
@@ -104,7 +211,21 @@
             "weight": "140 г",
             "price": 420,
             "photo": "img/dishes/medovik.webp",
-            "photoBy": "Diliara Garifullina"
+            "photoBy": "Diliara Garifullina",
+            "kind": "medovik",
+            "has": [
+              "rye",
+              "sour-cream",
+              "honey",
+              "eggs",
+              "butter"
+            ],
+            "allergens": [
+              "gluten",
+              "eggs",
+              "milk"
+            ],
+            "confirmed": true
           },
           {
             "name": "Пастила из антоновки",
@@ -112,7 +233,22 @@
             "weight": "120 г",
             "price": 380,
             "photo": "img/dishes/pastila.webp",
-            "photoBy": "Howard Bouchevereau"
+            "photoBy": "Howard Bouchevereau",
+            "kind": "pastila",
+            "has": [
+              "apple",
+              "cream",
+              "cranberry",
+              "eggs"
+            ],
+            "allergens": [
+              "eggs",
+              "milk"
+            ],
+            "tags": [
+              "autumn"
+            ],
+            "confirmed": true
           }
         ]
       }
@@ -270,7 +406,10 @@
           "zone": "у бара"
         }
       ]
-    }
+    },
+    "kitchens": [
+      "russian"
+    ]
   },
   {
     "id": "bely-klyon",
@@ -296,19 +435,63 @@
             "name": "Сырники из фермерского творога",
             "desc": "Сметана, джем из облепихи",
             "weight": "220 г",
-            "price": 420
+            "price": 420,
+            "kind": "syrniki",
+            "has": [
+              "curd",
+              "wheat",
+              "eggs",
+              "sour-cream",
+              "sea-buckthorn"
+            ],
+            "allergens": [
+              "milk",
+              "gluten",
+              "eggs"
+            ],
+            "confirmed": true
           },
           {
             "name": "Яйцо пашот на бриоши",
             "desc": "Голландский соус, шпинат, лосось слабой соли",
             "weight": "240 г",
-            "price": 590
+            "price": 590,
+            "kind": "eggs-dish",
+            "has": [
+              "eggs",
+              "brioche",
+              "hollandaise",
+              "spinach",
+              "salmon"
+            ],
+            "allergens": [
+              "eggs",
+              "gluten",
+              "milk",
+              "fish"
+            ],
+            "confirmed": true
           },
           {
             "name": "Каша из трёх круп",
             "desc": "Топлёное молоко, печёное яблоко, орехи",
             "weight": "280 г",
-            "price": 360
+            "price": 360,
+            "kind": "porridge",
+            "has": [
+              "oats",
+              "buckwheat",
+              "rice",
+              "milk",
+              "apple",
+              "walnuts"
+            ],
+            "allergens": [
+              "gluten",
+              "milk",
+              "nuts"
+            ],
+            "confirmed": false
           }
         ]
       },
@@ -319,13 +502,40 @@
             "name": "Круассан с миндальным кремом",
             "desc": "Своя выпечка каждое утро",
             "weight": "110 г",
-            "price": 290
+            "price": 290,
+            "kind": "croissant",
+            "has": [
+              "wheat",
+              "butter",
+              "almond",
+              "eggs"
+            ],
+            "allergens": [
+              "gluten",
+              "milk",
+              "eggs",
+              "nuts"
+            ],
+            "confirmed": true
           },
           {
             "name": "Булочка с кардамоном",
             "desc": "Сливочное масло, сахарная глазурь",
             "weight": "90 г",
-            "price": 220
+            "price": 220,
+            "kind": "bun",
+            "has": [
+              "wheat",
+              "butter",
+              "cardamom",
+              "eggs"
+            ],
+            "allergens": [
+              "gluten",
+              "milk",
+              "eggs"
+            ],
+            "confirmed": true
           }
         ]
       },
@@ -336,19 +546,47 @@
             "name": "Флэт уайт",
             "desc": "Двойной эспрессо, молоко",
             "weight": "200 мл",
-            "price": 260
+            "price": 260,
+            "kind": "flat-white",
+            "has": [
+              "coffee",
+              "milk"
+            ],
+            "allergens": [
+              "milk"
+            ],
+            "confirmed": true
           },
           {
             "name": "Раф с липовым мёдом",
             "desc": "Сливки, эспрессо, мёд",
             "weight": "300 мл",
-            "price": 320
+            "price": 320,
+            "kind": "raf",
+            "has": [
+              "coffee",
+              "cream",
+              "honey"
+            ],
+            "allergens": [
+              "milk"
+            ],
+            "tags": [
+              "autumn"
+            ],
+            "confirmed": true
           },
           {
             "name": "Фильтр-кофе дня",
             "desc": "Спросите бариста о зерне",
             "weight": "250 мл",
-            "price": 240
+            "price": 240,
+            "kind": "filter",
+            "has": [
+              "coffee"
+            ],
+            "allergens": [],
+            "confirmed": false
           }
         ]
       }
@@ -467,7 +705,10 @@
           "zone": "в зале"
         }
       ]
-    }
+    },
+    "kitchens": [
+      "cafe"
+    ]
   },
   {
     "id": "ladya",
@@ -495,7 +736,16 @@
             "weight": "150 г",
             "price": 690,
             "photo": "img/dishes/stroganina.webp",
-            "photoBy": "Anastase Maragos"
+            "photoBy": "Anastase Maragos",
+            "kind": "stroganina",
+            "has": [
+              "zander",
+              "lingonberry"
+            ],
+            "allergens": [
+              "fish"
+            ],
+            "confirmed": true
           },
           {
             "name": "Икра щучья",
@@ -503,7 +753,19 @@
             "weight": "50 г",
             "price": 950,
             "photo": "img/dishes/ikra.webp",
-            "photoBy": "alexanderafan"
+            "photoBy": "alexanderafan",
+            "kind": "starter",
+            "has": [
+              "roe",
+              "bread",
+              "butter"
+            ],
+            "allergens": [
+              "fish",
+              "gluten",
+              "milk"
+            ],
+            "confirmed": true
           }
         ]
       },
@@ -516,7 +778,19 @@
             "weight": "400 г",
             "price": 780,
             "photo": "img/dishes/uha.webp",
-            "photoBy": "Jon Handley"
+            "photoBy": "Jon Handley",
+            "kind": "ukha",
+            "has": [
+              "zander",
+              "catfish",
+              "perch",
+              "potato",
+              "dill"
+            ],
+            "allergens": [
+              "fish"
+            ],
+            "confirmed": true
           },
           {
             "name": "Раковый суп",
@@ -524,7 +798,47 @@
             "weight": "300 г",
             "price": 720,
             "photo": "img/dishes/rakovy-sup.webp",
-            "photoBy": "Meg von Haartman"
+            "photoBy": "Meg von Haartman",
+            "kind": "crayfish-soup",
+            "has": [
+              "crayfish",
+              "cream",
+              "dill"
+            ],
+            "allergens": [
+              "crustaceans",
+              "milk"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Паста",
+        "items": [
+          {
+            "name": "Паста с раковыми шейками",
+            "desc": "Домашняя лапша, сливки, укроп",
+            "weight": "280 г",
+            "price": 980,
+            "kind": "pasta",
+            "has": [
+              "crayfish",
+              "cream",
+              "dill",
+              "wheat",
+              "eggs"
+            ],
+            "allergens": [
+              "crustaceans",
+              "milk",
+              "gluten",
+              "eggs"
+            ],
+            "tags": [
+              "new"
+            ],
+            "confirmed": true
           }
         ]
       },
@@ -537,7 +851,19 @@
             "weight": "450 г",
             "price": 1650,
             "photo": "img/dishes/sudak.webp",
-            "photoBy": "Alina Bosakova"
+            "photoBy": "Alina Bosakova",
+            "kind": "grill",
+            "has": [
+              "zander",
+              "lemon",
+              "butter",
+              "herbs"
+            ],
+            "allergens": [
+              "fish",
+              "milk"
+            ],
+            "confirmed": true
           },
           {
             "name": "Сом на гриле",
@@ -545,7 +871,16 @@
             "weight": "300 г",
             "price": 1290,
             "photo": "img/dishes/som.webp",
-            "photoBy": "Faisal"
+            "photoBy": "Faisal",
+            "kind": "grill",
+            "has": [
+              "catfish",
+              "pepper"
+            ],
+            "allergens": [
+              "fish"
+            ],
+            "confirmed": true
           },
           {
             "name": "Раки в пиве",
@@ -553,7 +888,19 @@
             "weight": "1 кг",
             "price": 2400,
             "photo": "img/dishes/raki.webp",
-            "photoBy": "Hanxiao Xu"
+            "photoBy": "Hanxiao Xu",
+            "kind": "main",
+            "has": [
+              "crayfish",
+              "beer",
+              "dill",
+              "garlic"
+            ],
+            "allergens": [
+              "crustaceans",
+              "gluten"
+            ],
+            "confirmed": true
           }
         ]
       }
@@ -716,6 +1063,819 @@
           "r": 55,
           "seats": 4,
           "zone": "на террасе"
+        }
+      ]
+    },
+    "kitchens": [
+      "russian",
+      "river"
+    ]
+  },
+  {
+    "id": "campanella",
+    "city": "voronezh",
+    "fictional": true,
+    "name": "Кампанелла",
+    "cuisine": "Итальянская траттория",
+    "about": "Паста ручной работы, которую раскатывают утром, печь для пиццы и кофе как в Неаполе.",
+    "area": "Плехановская улица",
+    "open": "12:00",
+    "close": "23:00",
+    "avgCheck": 1600,
+    "checkedAt": "2026-10-20",
+    "coords": [
+      39.1925,
+      51.664
+    ],
+    "kitchens": [
+      "italian"
+    ],
+    "menu": [
+      {
+        "title": "Закуски",
+        "items": [
+          {
+            "name": "Брускетта с томатами",
+            "desc": "Чесночный хлеб, базилик, оливковое масло",
+            "weight": "160 г",
+            "price": 390,
+            "kind": "bruschetta",
+            "has": [
+              "bread",
+              "wheat",
+              "tomato",
+              "garlic",
+              "basil"
+            ],
+            "allergens": [
+              "gluten"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Карпаччо из говядины",
+            "desc": "Руккола, пармезан, лимонная заправка",
+            "weight": "150 г",
+            "price": 690,
+            "kind": "carpaccio",
+            "has": [
+              "beef",
+              "arugula",
+              "parmesan",
+              "lemon"
+            ],
+            "allergens": [
+              "milk"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Паста",
+        "items": [
+          {
+            "name": "Тальятелле с креветками",
+            "desc": "Томаты черри, чеснок, белое вино",
+            "weight": "280 г",
+            "price": 890,
+            "kind": "tagliatelle",
+            "has": [
+              "shrimp",
+              "tomato",
+              "garlic",
+              "wine",
+              "wheat",
+              "eggs"
+            ],
+            "allergens": [
+              "crustaceans",
+              "gluten",
+              "eggs",
+              "sulphites"
+            ],
+            "tags": [
+              "new"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Лингвини с креветками и цукини",
+            "desc": "Сливочное масло, лимонная цедра",
+            "weight": "280 г",
+            "price": 820,
+            "kind": "linguine",
+            "has": [
+              "shrimp",
+              "zucchini",
+              "butter",
+              "lemon",
+              "wheat"
+            ],
+            "allergens": [
+              "crustaceans",
+              "gluten",
+              "milk"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Спагетти с креветками и песто",
+            "desc": "Песто из базилика, черри",
+            "weight": "270 г",
+            "price": 860,
+            "kind": "spaghetti",
+            "has": [
+              "shrimp",
+              "pesto",
+              "tomato",
+              "wheat"
+            ],
+            "allergens": [
+              "crustaceans",
+              "gluten",
+              "nuts",
+              "milk"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Равиоли с креветкой",
+            "desc": "Рикотта, лимонное масло",
+            "weight": "250 г",
+            "price": 760,
+            "kind": "ravioli",
+            "has": [
+              "shrimp",
+              "ricotta",
+              "lemon",
+              "butter",
+              "wheat",
+              "eggs"
+            ],
+            "allergens": [
+              "crustaceans",
+              "gluten",
+              "eggs",
+              "milk"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Спагетти карбонара",
+            "desc": "Гуанчале, желток, пекорино",
+            "weight": "260 г",
+            "price": 720,
+            "kind": "spaghetti",
+            "has": [
+              "pork",
+              "eggs",
+              "cheese",
+              "wheat"
+            ],
+            "allergens": [
+              "gluten",
+              "eggs",
+              "milk"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Ризотто с белыми грибами",
+            "desc": "Пармезан, сливочное масло",
+            "weight": "280 г",
+            "price": 790,
+            "kind": "risotto",
+            "has": [
+              "mushrooms",
+              "rice",
+              "parmesan",
+              "butter",
+              "wine"
+            ],
+            "allergens": [
+              "milk",
+              "sulphites"
+            ],
+            "tags": [
+              "autumn"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Пицца",
+        "items": [
+          {
+            "name": "Маргарита",
+            "desc": "Томатный соус, моцарелла, базилик",
+            "weight": "450 г",
+            "price": 650,
+            "kind": "pizza",
+            "has": [
+              "tomato",
+              "mozzarella",
+              "basil",
+              "wheat"
+            ],
+            "allergens": [
+              "gluten",
+              "milk"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Десерты",
+        "items": [
+          {
+            "name": "Тирамису",
+            "desc": "Маскарпоне, савоярди, эспрессо",
+            "weight": "150 г",
+            "price": 450,
+            "kind": "tiramisu",
+            "has": [
+              "mascarpone",
+              "savoiardi",
+              "eggs",
+              "coffee"
+            ],
+            "allergens": [
+              "gluten",
+              "eggs",
+              "milk"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Панна-котта с ягодами",
+            "desc": "Сливки, ваниль, ягодный соус",
+            "weight": "140 г",
+            "price": 390,
+            "kind": "panna-cotta",
+            "has": [
+              "cream",
+              "vanilla",
+              "berries"
+            ],
+            "allergens": [
+              "milk"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Кофе",
+        "items": [
+          {
+            "name": "Раф ванильный",
+            "desc": "Сливки, эспрессо, ваниль",
+            "weight": "300 мл",
+            "price": 290,
+            "kind": "raf",
+            "has": [
+              "coffee",
+              "cream",
+              "vanilla"
+            ],
+            "allergens": [
+              "milk"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Капучино",
+            "desc": "Эспрессо, молоко",
+            "weight": "250 мл",
+            "price": 230,
+            "kind": "cappuccino",
+            "has": [
+              "coffee",
+              "milk"
+            ],
+            "allergens": [
+              "milk"
+            ],
+            "confirmed": true
+          }
+        ]
+      }
+    ],
+    "booking": {
+      "from": "12:00",
+      "to": "21:30",
+      "step": 30,
+      "leadMinutes": 15,
+      "confirmMinutes": 60,
+      "days": 7,
+      "maxGuests": 8
+    },
+    "plan": {
+      "w": 1000,
+      "h": 640,
+      "windows": [
+        {
+          "side": "top",
+          "from": 60,
+          "to": 330
+        },
+        {
+          "side": "top",
+          "from": 365,
+          "to": 635
+        },
+        {
+          "side": "top",
+          "from": 670,
+          "to": 940
+        }
+      ],
+      "doors": [
+        {
+          "side": "left",
+          "at": 450,
+          "width": 100,
+          "label": "Вход"
+        }
+      ],
+      "rooms": [],
+      "bars": [
+        {
+          "x": 640,
+          "y": 500,
+          "w": 330,
+          "h": 70,
+          "stools": 0,
+          "label": "Стойка"
+        }
+      ],
+      "sofas": [],
+      "labels": [
+        {
+          "x": 500,
+          "y": 52,
+          "text": "окна на Плехановскую"
+        }
+      ],
+      "tables": [
+        {
+          "id": "1",
+          "x": 160,
+          "y": 150,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "2",
+          "x": 380,
+          "y": 150,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "3",
+          "x": 600,
+          "y": 150,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "4",
+          "x": 820,
+          "y": 150,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "5",
+          "x": 370,
+          "y": 350,
+          "shape": "rect",
+          "w": 420,
+          "h": 90,
+          "seats": 8,
+          "zone": "общий стол"
+        },
+        {
+          "id": "6",
+          "x": 800,
+          "y": 350,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        }
+      ]
+    }
+  },
+  {
+    "id": "tamarind",
+    "city": "voronezh",
+    "fictional": true,
+    "name": "Тамаринд",
+    "cuisine": "Паназиатская кухня: лапша, супы, дим-самы",
+    "about": "Открытая кухня с воком, бульоны варят сутки, дим-самы лепят при гостях.",
+    "area": "Проспект Революции",
+    "open": "12:00",
+    "close": "00:00",
+    "avgCheck": 1400,
+    "checkedAt": "2026-10-24",
+    "coords": [
+      39.204,
+      51.67
+    ],
+    "kitchens": [
+      "asian"
+    ],
+    "menu": [
+      {
+        "title": "Супы",
+        "items": [
+          {
+            "name": "Том ям с креветками",
+            "desc": "Кокосовое молоко, грибы, лайм, кинза",
+            "weight": "350 г",
+            "price": 690,
+            "kind": "tom-yum",
+            "has": [
+              "shrimp",
+              "coconut",
+              "mushrooms",
+              "chili",
+              "lime",
+              "cilantro"
+            ],
+            "allergens": [
+              "crustaceans"
+            ],
+            "tags": [
+              "spicy"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Рамен с курицей",
+            "desc": "Пшеничная лапша, яйцо, соевый бульон, кунжут",
+            "weight": "400 г",
+            "price": 620,
+            "kind": "ramen",
+            "has": [
+              "chicken",
+              "wheat",
+              "eggs",
+              "soy-sauce",
+              "sesame"
+            ],
+            "allergens": [
+              "gluten",
+              "eggs",
+              "soy",
+              "sesame"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Лапша и рис",
+        "items": [
+          {
+            "name": "Удон с креветками",
+            "desc": "Овощи, соевый соус, кунжут",
+            "weight": "300 г",
+            "price": 690,
+            "kind": "udon",
+            "has": [
+              "shrimp",
+              "wheat",
+              "soy-sauce",
+              "vegetables",
+              "sesame"
+            ],
+            "allergens": [
+              "crustaceans",
+              "gluten",
+              "soy",
+              "sesame"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Пад тай с курицей",
+            "desc": "Рисовая лапша, арахис, тамаринд, лайм",
+            "weight": "300 г",
+            "price": 640,
+            "kind": "pad-thai",
+            "has": [
+              "chicken",
+              "rice",
+              "peanuts",
+              "eggs",
+              "lime",
+              "chili"
+            ],
+            "allergens": [
+              "peanuts",
+              "eggs",
+              "soy"
+            ],
+            "tags": [
+              "spicy"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Жареный рис с овощами",
+            "desc": "Яйцо, зелёный лук, соевый соус",
+            "weight": "280 г",
+            "price": 450,
+            "kind": "fried-rice",
+            "has": [
+              "rice",
+              "eggs",
+              "vegetables",
+              "onion",
+              "soy-sauce"
+            ],
+            "allergens": [
+              "eggs",
+              "soy"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Дим-самы",
+        "items": [
+          {
+            "name": "Гёдза с креветкой",
+            "desc": "6 штук, соус понзу",
+            "weight": "180 г",
+            "price": 520,
+            "kind": "gyoza",
+            "has": [
+              "shrimp",
+              "wheat",
+              "soy-sauce"
+            ],
+            "allergens": [
+              "crustaceans",
+              "gluten",
+              "soy"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Гёдза со свининой",
+            "desc": "6 штук, соус с чили",
+            "weight": "180 г",
+            "price": 480,
+            "kind": "gyoza",
+            "has": [
+              "pork",
+              "wheat",
+              "soy-sauce",
+              "chili"
+            ],
+            "allergens": [
+              "gluten",
+              "soy"
+            ],
+            "tags": [
+              "spicy"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Салаты",
+        "items": [
+          {
+            "name": "Салат с креветками и авокадо",
+            "desc": "Микс салатов, кунжутная заправка",
+            "weight": "220 г",
+            "price": 640,
+            "kind": "salad",
+            "has": [
+              "shrimp",
+              "avocado",
+              "sesame",
+              "lime"
+            ],
+            "allergens": [
+              "crustaceans",
+              "sesame"
+            ],
+            "confirmed": true
+          }
+        ]
+      },
+      {
+        "title": "Десерты",
+        "items": [
+          {
+            "name": "Тирамису с матчей",
+            "desc": "Маскарпоне, савоярди, японский чай",
+            "weight": "140 г",
+            "price": 420,
+            "kind": "tiramisu",
+            "has": [
+              "mascarpone",
+              "savoiardi",
+              "eggs",
+              "matcha"
+            ],
+            "allergens": [
+              "gluten",
+              "eggs",
+              "milk"
+            ],
+            "tags": [
+              "new"
+            ],
+            "confirmed": true
+          },
+          {
+            "name": "Моти с манго",
+            "desc": "Рисовое тесто, манговый крем",
+            "weight": "2 штуки",
+            "price": 360,
+            "kind": "mochi",
+            "has": [
+              "rice",
+              "mango"
+            ],
+            "allergens": [],
+            "confirmed": true
+          }
+        ]
+      }
+    ],
+    "booking": {
+      "from": "12:00",
+      "to": "22:30",
+      "step": 30,
+      "leadMinutes": 15,
+      "confirmMinutes": 60,
+      "days": 7,
+      "maxGuests": 8
+    },
+    "plan": {
+      "w": 1000,
+      "h": 720,
+      "windows": [
+        {
+          "side": "top",
+          "from": 90,
+          "to": 290
+        },
+        {
+          "side": "top",
+          "from": 370,
+          "to": 570
+        },
+        {
+          "side": "top",
+          "from": 650,
+          "to": 850
+        }
+      ],
+      "doors": [
+        {
+          "side": "bottom",
+          "at": 70,
+          "width": 100,
+          "label": "Вход"
+        }
+      ],
+      "rooms": [
+        {
+          "x": 790,
+          "y": 590,
+          "w": 210,
+          "h": 130,
+          "label": "Кухня",
+          "kind": "kitchen"
+        }
+      ],
+      "bars": [
+        {
+          "x": 870,
+          "y": 110,
+          "w": 70,
+          "h": 400,
+          "stools": 5,
+          "stoolSide": "left",
+          "label": "Бар"
+        }
+      ],
+      "sofas": [],
+      "labels": [
+        {
+          "x": 470,
+          "y": 52,
+          "text": "окна на проспект Революции"
+        }
+      ],
+      "tables": [
+        {
+          "id": "1",
+          "x": 190,
+          "y": 160,
+          "shape": "round",
+          "r": 45,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "2",
+          "x": 470,
+          "y": 160,
+          "shape": "round",
+          "r": 45,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "3",
+          "x": 750,
+          "y": 160,
+          "shape": "round",
+          "r": 45,
+          "seats": 2,
+          "zone": "у окна"
+        },
+        {
+          "id": "4",
+          "x": 190,
+          "y": 350,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "5",
+          "x": 450,
+          "y": 350,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "6",
+          "x": 290,
+          "y": 540,
+          "shape": "rect",
+          "w": 150,
+          "h": 90,
+          "seats": 4,
+          "zone": "в зале"
+        },
+        {
+          "id": "7",
+          "x": 510,
+          "y": 560,
+          "shape": "rect",
+          "w": 230,
+          "h": 100,
+          "seats": 6,
+          "zone": "большой стол"
+        },
+        {
+          "id": "8",
+          "x": 720,
+          "y": 330,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у бара"
+        },
+        {
+          "id": "9",
+          "x": 720,
+          "y": 470,
+          "shape": "round",
+          "r": 40,
+          "seats": 2,
+          "zone": "у бара"
         }
       ]
     }
